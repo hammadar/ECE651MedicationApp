@@ -105,9 +105,25 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
     public void updateUI (FirebaseUser currentUser) {
         if (currentUser != null) {
-            Intent signedInIntent = new Intent(getBaseContext(), SignedInActivity.class);
-            signedInIntent.putExtra("userid", currentUser.getUid());
-            startActivity(signedInIntent);
+
+            if (processUser(currentUser)) {
+                Intent signedInIntent = new Intent(getBaseContext(), SignedInActivity.class);
+                signedInIntent.putExtra("userid", currentUser.getUid());
+                startActivity(signedInIntent);
+            } else {
+
+            }
+
+
+
         }
+    }
+
+    public boolean processUser (FirebaseUser currentUser) {
+        //process user to see if they are registered as a medical professional / patient. If not, take them to Register Activity to do that (return false). If yes, go to SignedIn Activity
+        //IPR
+
+        return false;
+
     }
 }

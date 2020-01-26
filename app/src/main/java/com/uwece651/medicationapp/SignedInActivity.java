@@ -17,7 +17,7 @@ public class SignedInActivity extends AppCompatActivity {
     }
 
     public void processUser(String userid) {
-        //check if user has been registered as a professional / patient, and if not, then take to a view to register them. Else display relevant info
+        //display relevant info
 
     }
 }
