@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "242727984314",
+    "firebase_url": "https://ece651medicationappv2.firebaseio.com",
+    "project_id": "ece651medicationappv2",
+    "storage_bucket": "ece651medicationappv2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:242727984314:android:1de9adc2be1be7f108b683",
+        "android_client_info": {
+          "package_name": "com.uwece651.medicationapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "242727984314-vinq741poomcfh6e0m763astf1n37tcc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uwece651.medicationapp",
+            "certificate_hash": "fdcdd348509e1c66ec99e8a8e9fee37448b8b36a"
+          }
+        },
+        {
+          "client_id": "242727984314-nbe6bohdbeflh47prs5ttaa52l7p4o6f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHWCTurnALaJtiZHJGC1C3hdl8zluXBv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "242727984314-nbe6bohdbeflh47prs5ttaa52l7p4o6f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
