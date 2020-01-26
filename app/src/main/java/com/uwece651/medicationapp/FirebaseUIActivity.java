@@ -69,12 +69,14 @@ public class FirebaseUIActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                updateUI(user);
                 // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
                 // ...
+                updateUI(null);
             }
         }
     }
@@ -102,6 +104,10 @@ public class FirebaseUIActivity extends AppCompatActivity {
     }
 
     public void updateUI (FirebaseUser currentUser) {
-
+        if (currentUser != null) {
+            Intent signedInIntent = new Intent(getBaseContext(), SignedInActivity.class);
+            signedInIntent.putExtra("userid", currentUser.getUid());
+            startActivity(signedInIntent);
+        }
     }
 }
