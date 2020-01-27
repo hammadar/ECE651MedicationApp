@@ -2,9 +2,11 @@ package com.uwece651.medicationapp;
 
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import androidx.annotation.NonNull;
@@ -111,11 +113,24 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 signedInIntent.putExtra("userid", currentUser.getUid());
                 startActivity(signedInIntent);
             } else {
-
+                Intent registerInent = new Intent(getBaseContext(), RegisterActivity.class);
+                registerInent.putExtra("userid", currentUser.getUid());
+                startActivity(registerInent);
             }
 
 
 
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+            builder.setMessage("No user was signed in. Please try again");
+            builder.setTitle("No User Signed In");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent fireBaseUIIntent = new Intent(getBaseContext(), FirebaseUIActivity.class);
+                    startActivity(fireBaseUIIntent);
+                }
+            });
         }
     }
 
