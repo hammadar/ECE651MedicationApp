@@ -5,25 +5,37 @@ package com.uwece651.medicationapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Collections;
-
+import java.util.Map;
 
 
 public class FirebaseUIActivity extends AppCompatActivity {
+    private static final String TAG = FirebaseUIActivity.class.getName();
     private static final int RC_SIGN_IN = 123;
     private FirebaseAuth mAuth;
 
@@ -39,6 +51,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+        createSignInIntent();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
@@ -113,9 +126,9 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 signedInIntent.putExtra("userid", currentUser.getUid());
                 startActivity(signedInIntent);
             } else {
-                Intent registerInent = new Intent(getBaseContext(), RegisterActivity.class);
-                registerInent.putExtra("userid", currentUser.getUid());
-                startActivity(registerInent);
+                Intent registerIntent = new Intent(getBaseContext(), RegisterActivity.class);
+                registerIntent.putExtra("userid", currentUser.getUid());
+                startActivity(registerIntent);
             }
 
 
@@ -134,10 +147,45 @@ public class FirebaseUIActivity extends AppCompatActivity {
         }
     }
 
+    public void add_sample_data_to_Firebase() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        CollectionReference Registration = db.collection("Registration");
+
+        Map<String, Object> data1 = new HashMap<>();
+        data1.put("name", "Jared Lenos");
+        data1.put("user-id", "000001");
+        data1.put("province", "ON");
+        data1.put("country", "CA");
+        data1.put("capital", false);
+        data1.put("user_type", "Doctor");
+        data1.put("Patients", Arrays.asList("000045", "000013", "000012"));
+        Registration.document("000001").set(data1);
+
+        DocumentReference docRef = db.collection("Registration").document("000001");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+    }
+
     public boolean processUser (FirebaseUser currentUser) {
         //process user to see if they are registered as a medical professional / patient. If not, take them to Register Activity to do that (return false). If yes, go to SignedIn Activity
         //IPR
-
+        add_sample_data_to_Firebase();
         return false;
 
     }
