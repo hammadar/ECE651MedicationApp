@@ -1,18 +1,20 @@
 package com.uwece651.medicationapp;
 
-public class Doctor {
+public class Doctor extends PersonalInformation {
 
-    private String uid;
     private Patient[] patients;
     private String[] specialties;
     private String[] bookedAppointments;
 
     public Doctor (String uid) {
-        this.uid = uid;
+        super(uid);
+        super.setType("Doctor");
         this.patients = new Patient[0];
         this.specialties = new String[0];
         this.bookedAppointments = new String[0];
     }
+
+    public String getUid () { return super.getUid(); }
 
     public Patient[] getPatients() {
         return this.patients;
@@ -22,9 +24,7 @@ public class Doctor {
         return this.specialties;
     }
 
-    public String[] getBookedAppointments() {
-        return this.getBookedAppointments();
-    }
+    public String[] getBookedAppointments() { return this.bookedAppointments; }
 
     public void addSpecialty (String specialty) {
         this.specialties = appArrayHandling.add(this.specialties, specialty);

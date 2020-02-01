@@ -4,7 +4,7 @@ package com.uwece651.medicationapp;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-public class Patient {
+public class Patient extends PersonalInformation {
     // Each user is identified by a Used ID, this is also linked to their Google Sign-in so that we can automatically determine
     // which user dataset the currently logged in user is associated with.
 
@@ -22,7 +22,7 @@ public class Patient {
     //   1
     // }
 
-    private String uid;
+
     private String[] associatedPrescriptions;
     private String lastVisitID;
     private String[] visitHistoryIDs;
@@ -30,14 +30,15 @@ public class Patient {
 
 
     public Patient(String uid) {
-        this.uid = uid;
+        super(uid);
+        super.setType("Patient");
         this.associatedPrescriptions = new String[0];
         this.visitHistoryIDs = new String[0];
     }
 
 
     public String getUid () {
-        return this.uid;
+        return super.getUid();
     }
 
     public String[] getAssociatedPrescriptions () {
