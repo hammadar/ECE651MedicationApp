@@ -78,4 +78,4 @@ public class MedicationSchedule {
         this.notificationhours = appArrayHandling.remove(this.notificationhours, dosagetime);
     }
 }
-}
+
