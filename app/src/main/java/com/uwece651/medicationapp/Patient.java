@@ -29,16 +29,16 @@ public class Patient extends PersonalInformation {
     private Doctor assignedDoctor;
 
 
-    public Patient(String uid) {
-        super(uid);
+    public Patient(String UID) {
+        super(UID);
         super.setType("Patient");
         this.associatedPrescriptions = new String[0];
         this.visitHistoryIDs = new String[0];
     }
 
 
-    public String getUid () {
-        return super.getUid();
+    public String getUID () {
+        return super.getUID();
     }
 
     public String[] getAssociatedPrescriptions () {

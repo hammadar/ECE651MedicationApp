@@ -1,128 +1,98 @@
 package com.uwece651.medicationapp;
 
+import java.time.LocalDate;
+
 public class PrescriptionData {
-    public String getPatientId() {
-        return patientId;
+    private String UID;
+    private String MedicationID;
+    private String ScheduleID;
+    private LocalDate StartDate;
+    private LocalDate EndDate;
+    private String MedicationName;
+    private String ScheduleShortName;
+    private Integer NumberOfRefills;
+    private String AssignedByDoctorID;
+    private String AssignedByDoctorName;
+
+    public PrescriptionData(String UID) {
+        this.MedicationID = null;
+        this.ScheduleID = null;
+        this.StartDate = null;
+        this.EndDate = null;
+        this.MedicationName = null;
+        this.ScheduleShortName = null;
+        this.NumberOfRefills = null;
+        this.AssignedByDoctorID = null;
+        this.AssignedByDoctorName = null;
     }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
+    public String getUID () {
+        return this.UID;
     }
 
-    public String getMedicationName() {
-        return medicationName;
+    public String getMedicationID () {
+        return this.MedicationID;
     }
 
-    public void setMedicationName(String medicationName) {
-        this.medicationName = medicationName;
+    public void setMedicationID (String MedicationID) {
+        this.MedicationID = MedicationID;
     }
 
-    public Boolean getMondayChecked() {
-        return isMondayChecked;
+    public String getScheduleID () {
+        return this.ScheduleID;
     }
 
-    public void setMondayChecked(Boolean mondayChecked) {
-        isMondayChecked = mondayChecked;
+    public void setScheduleID (String ScheduleID) {
+        this.ScheduleID = ScheduleID;
+    }
+    public LocalDate getStartDate () {
+        return this.StartDate;
     }
 
-    public Boolean getTuesdayChecked() {
-        return isTuesdayChecked;
+    public void setStartDate (LocalDate StartDate) {
+        this.StartDate = StartDate;
+    }
+    public LocalDate getEndDate () {
+        return this.EndDate;
     }
 
-    public void setTuesdayChecked(Boolean tuesdayChecked) {
-        isTuesdayChecked = tuesdayChecked;
+    public void setEndDate (LocalDate EndDate) {
+        this.EndDate = EndDate;
+    }
+    public String getMedicationName () {
+        return this.MedicationName;
     }
 
-    public Boolean getWednesdayChecked() {
-        return isWednesdayChecked;
+    public void setMedicationName (String MedicationName) {
+        this.MedicationName = MedicationName;
+    }
+    public String getScheduleShortName () {
+        return this.ScheduleShortName;
     }
 
-    public void setWednesdayChecked(Boolean wednesdayChecked) {
-        isWednesdayChecked = wednesdayChecked;
+    public void setScheduleShortName (String ScheduleShortName) {
+        this.ScheduleShortName = ScheduleShortName;
+    }
+    public Integer getNumberOfRefills () {
+        return this.NumberOfRefills;
     }
 
-    public Boolean getThursdayChecked() {
-        return isThursdayChecked;
+    public void setNumberOfRefills (Integer NumberOfRefills) {
+        this.NumberOfRefills = NumberOfRefills;
+    }
+    public String getAssignedByDoctorID () {
+        return this.AssignedByDoctorID;
     }
 
-    public void setThursdayChecked(Boolean thursdayChecked) {
-        isThursdayChecked = thursdayChecked;
+    public void setAssignedByDoctorID (String AssignedByDoctorID) {
+        this.AssignedByDoctorID = AssignedByDoctorID;
+    }
+    public String getAssignedByDoctorName () {
+        return this.AssignedByDoctorName;
     }
 
-    public Boolean getFridayChecked() {
-        return isFridayChecked;
+    public void setAssignedByDoctorName (String AssignedByDoctorName) {
+        this.AssignedByDoctorName = AssignedByDoctorName;
     }
 
-    public void setFridayChecked(Boolean fridayChecked) {
-        isFridayChecked = fridayChecked;
-    }
-
-    public Boolean getSaturdayChecked() {
-        return isSaturdayChecked;
-    }
-
-    public void setSaturdayChecked(Boolean saturdayChecked) {
-        isSaturdayChecked = saturdayChecked;
-    }
-
-    public Boolean getSundayChecked() {
-        return isSundayChecked;
-    }
-
-    public void setSundayChecked(Boolean sundayChecked) {
-        isSundayChecked = sundayChecked;
-    }
-
-    public String getDailyFrequency() {
-        return dailyFrequency;
-    }
-
-    public void setDailyFrequency(String dailyFrequency) {
-        this.dailyFrequency = dailyFrequency;
-    }
-
-    public String getTimeBetweenDosages() {
-        return timeBetweenDosages;
-    }
-
-    public void setTimeBetweenDosages(String timeBetweenDosages) {
-        this.timeBetweenDosages = timeBetweenDosages;
-    }
-
-    public String getTimeBetweenDosagesUnits() {
-        return timeBetweenDosagesUnits;
-    }
-
-    public void setTimeBetweenDosagesUnits(String timeBetweenDosagesUnits) {
-        this.timeBetweenDosagesUnits = timeBetweenDosagesUnits;
-    }
-
-    private String patientId;
-    private String medicationName;
-    private Boolean isMondayChecked;
-    private Boolean isTuesdayChecked;
-    private Boolean isWednesdayChecked;
-    private Boolean isThursdayChecked;
-    private Boolean isFridayChecked;
-    private Boolean isSaturdayChecked;
-    private Boolean isSundayChecked;
-    private String dailyFrequency;
-    private String timeBetweenDosages;
-    private String timeBetweenDosagesUnits;
-
-
-    public PrescriptionData(String patientId, String medicationName, Boolean isMondayChecked, Boolean isTuesdayChecked, Boolean isWednesdayChecked, Boolean isThursdayChecked, Boolean isFridayChecked, Boolean isSaturdayChecked, Boolean isSundayChecked, String dailyFrequency, String timeBetweenDosages, String timeBetweenDosagesUnits) {
-        this.patientId = patientId;
-        this.medicationName = medicationName;
-        this.isMondayChecked = isMondayChecked;
-        this.isTuesdayChecked = isTuesdayChecked;
-        this.isWednesdayChecked = isWednesdayChecked;
-        this.isThursdayChecked = isThursdayChecked;
-        this.isFridayChecked = isFridayChecked;
-        this.isSaturdayChecked = isSaturdayChecked;
-        this.isSundayChecked = isSundayChecked;
-        this.dailyFrequency = dailyFrequency;
-        this.timeBetweenDosages = timeBetweenDosages;
-        this.timeBetweenDosagesUnits = timeBetweenDosagesUnits;
-    }
 }

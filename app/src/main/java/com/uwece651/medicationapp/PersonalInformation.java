@@ -1,16 +1,16 @@
 package com.uwece651.medicationapp;
 
 public class PersonalInformation {
-    private String uid;
+    private String UID;
     private String type;
 
-    public PersonalInformation (String uid) {
-        this.uid = uid;
+    public PersonalInformation (String UID) {
+        this.UID = UID;
         this.type = null;
     }
 
-    public String getUid () {
-        return this.uid;
+    public String getUID () {
+        return this.UID;
     }
 
     public String getType () {

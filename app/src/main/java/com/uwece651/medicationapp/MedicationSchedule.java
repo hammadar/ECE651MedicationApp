@@ -4,78 +4,87 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class MedicationSchedule {
-    private String uid;
-    private String mealcode; // Before / After / During
-    private String mealtype; // Breakfast / Lunch / Dinner / All
-    private String timeofdaycode; // Morning / Afternoon / Evening / Bedtime / Night / Ad Lib
-    private String dailyfrequency; // daily / bid / tid / qid / 5daily
-    private String hoursfrequency; // hourly / q2h / q3h / q4h / q6h / q8h / q12h
-    private LocalTime[] notificationhours; // Generated from the above selections, but can selectively add/remove additional times as needed ?
+    private String UID;
+    private String MedicalCode; // q2h etc..
+    private String MealCode; // Before / After / During
+    private String MealType; // Breakfast / Lunch / Dinner / All
+    private String TimeOfDayCode; // Morning / Afternoon / Evening / Bedtime / Night / Ad Lib
+    private String DailyFrequency; // daily / bid / tid / qid / 5daily
+    private String HoursFrequency; // hourly / q2h / q3h / q4h / q6h / q8h / q12h
+    private LocalTime[] NotificationHours; // Generated from the above selections, but can selectively add/remove additional times as needed ?
 
-    public MedicationSchedule (String uid) {
-        this.uid = uid;
-        this.mealcode = null;
-        this.mealtype = null;
-        this.timeofdaycode = null;
-        this.dailyfrequency = null;
-        this.hoursfrequency = null;
-        this.notificationhours = new LocalTime[0];
+    public MedicationSchedule (String UID) {
+        this.UID = UID;
+        this.MealCode = null;
+        this.MealType = null;
+        this.TimeOfDayCode = null;
+        this.DailyFrequency = null;
+        this.HoursFrequency = null;
+        this.NotificationHours = new LocalTime[0];
     }
 
-    public String getUid () {
-        return this.uid;
+    public String getUID () {
+        return this.UID;
     }
 
-    public String getmealcode () {
-        return this.mealcode;
+    public String getMedicalCode () {
+        return this.MedicalCode;
     }
 
-    public void setmealcode (String mealcode) {
-        this.mealcode = mealcode;
+    public void setMedicalCode (String MedicalCode) {
+        this.MedicalCode = MedicalCode;
+    }
+    
+    public String getMealCode () {
+        return this.MealCode;
     }
 
-    public String getmealtype () {
-        return this.mealtype;
+    public void setMealCode (String MealCode) {
+        this.MealCode = MealCode;
     }
 
-    public void setmealtype (String mealtype) {
-        this.mealtype = mealtype;
+    public String getMealType () {
+        return this.MealType;
     }
 
-    public String gettimeofdaycode () {
-        return this.timeofdaycode;
+    public void setMealType (String MealType) {
+        this.MealType = MealType;
     }
 
-    public void settimeofdaycode (String timeofdaycode) {
-        this.timeofdaycode = timeofdaycode;
+    public String getTimeOfDayCode () {
+        return this.TimeOfDayCode;
     }
 
-    public String getdailyfrequency () {
-        return this.dailyfrequency;
+    public void setTimeOfDayCode (String TimeOfDayCode) {
+        this.TimeOfDayCode = TimeOfDayCode;
     }
 
-    public void setdailyfrequency (String dailyfrequency) {
-        this.dailyfrequency = dailyfrequency;
+    public String getDailyFrequency () {
+        return this.DailyFrequency;
     }
 
-    public String gethoursfrequency () {
-        return this.hoursfrequency;
+    public void setDailyFrequency (String DailyFrequency) {
+        this.DailyFrequency = DailyFrequency;
     }
 
-    public void sethoursfrequency (String hoursfrequency) {
-        this.hoursfrequency = hoursfrequency;
+    public String getHoursFrequency () {
+        return this.HoursFrequency;
+    }
+
+    public void setHoursFrequency (String HoursFrequency) {
+        this.HoursFrequency = HoursFrequency;
     }
 
     public LocalTime[] getNotificationHours() {
-        return this.notificationhours;
+        return this.NotificationHours;
     }
 
-    public void addnotificationhour(LocalTime dosagetime) {
-        this.notificationhours = appArrayHandling.add(this.notificationhours, dosagetime);
+    public void addNotificationHours(LocalTime dosagetime) {
+        this.NotificationHours = appArrayHandling.add(this.NotificationHours, dosagetime);
     }
 
-    public void removenotificationhour(LocalTime dosagetime) {
-        this.notificationhours = appArrayHandling.remove(this.notificationhours, dosagetime);
+    public void removeNotificationHours(LocalTime dosagetime) {
+        this.NotificationHours = appArrayHandling.remove(this.NotificationHours, dosagetime);
     }
 }
 
