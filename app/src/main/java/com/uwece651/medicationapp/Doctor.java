@@ -6,15 +6,15 @@ public class Doctor extends PersonalInformation {
     private String[] specialties;
     private String[] bookedAppointments;
 
-    public Doctor (String uid) {
-        super(uid);
+    public Doctor (String UID) {
+        super(UID);
         super.setType("Doctor");
         this.patients = new Patient[0];
         this.specialties = new String[0];
         this.bookedAppointments = new String[0];
     }
 
-    public String getUid () { return super.getUid(); }
+    public String getUID () { return super.getUID(); }
 
     public Patient[] getPatients() {
         return this.patients;
