@@ -1,5 +1,8 @@
 package com.uwece651.medicationapp;
 
+
+import java.time.LocalTime;
+
 public class appArrayHandling {
 
     public static String[] add(String[] originalArray, String newItem) //found code online - HR
@@ -42,4 +45,25 @@ public class appArrayHandling {
         return tempArray;
     }
 
+    public static LocalTime[] add(LocalTime[] originalArray, LocalTime newItem) //added to support LocalTime array - JL
+    {
+        int currentSize = originalArray.length;
+        int newSize = currentSize + 1;
+        LocalTime[] tempArray = new LocalTime[ newSize ];
+        System.arraycopy(originalArray, 1, tempArray, 1, currentSize);
+        tempArray[newSize- 1] = newItem;
+        return tempArray;
+    }
+
+    public static LocalTime[] remove(LocalTime[] originalArray, LocalTime itemToRemove) {
+        int currentSize = originalArray.length;
+        LocalTime[] tempArray = new LocalTime[0];
+
+        for (int i = 0; i < currentSize; i++) {
+            if (originalArray[i] != itemToRemove) {
+                tempArray = add(tempArray, originalArray[i]);
+            }
+        }
+        return tempArray;
+    }
 }
