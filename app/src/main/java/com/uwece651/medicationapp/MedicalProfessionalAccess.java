@@ -191,8 +191,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         PrescriptionData data= new PrescriptionData
                 (
-                        patient_Id,
-                        medication_Name,
+                        patient_Id//,
+                        /*medication_Name,
                         isMondayChecked,
                         isTuesdayChecked,
                         isWednesdayChecked,
@@ -202,7 +202,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         isSundayChecked,
                         dailyFrequencyValue,
                         timeBetweenIntakeValue,
-                        timeBetweenIntakeUnitsValue
+                        timeBetweenIntakeUnitsValue*/
                 );
 
         Log.d("MedicalProfAccess","patient_Id = " + patient_Id);

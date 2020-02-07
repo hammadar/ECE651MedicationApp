@@ -27,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Document;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -119,17 +121,32 @@ public class FirebaseUIActivity extends AppCompatActivity {
     }
 
     public void updateUI (FirebaseUser currentUser) {
+        final String user = currentUser.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference docRef = db.collection("Users").document(user);
+
         if (currentUser != null) {
 
-            if (processUser(currentUser)) {
-                Intent signedInIntent = new Intent(getBaseContext(), SignedInActivity.class);
-                signedInIntent.putExtra("userid", currentUser.getUid());
-                startActivity(signedInIntent);
-            } else {
-                Intent registerIntent = new Intent(getBaseContext(), RegisterActivity.class);
-                registerIntent.putExtra("userid", currentUser.getUid());
-                startActivity(registerIntent);
-            }
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Intent signedInIntent = new Intent(getBaseContext(), SignedInActivity.class);
+                            signedInIntent.putExtra("userid", user);
+                            startActivity(signedInIntent);
+                        } else {
+                            Intent registerIntent = new Intent(getBaseContext(), RegisterActivity.class);
+                            registerIntent.putExtra("userid", user);
+                            startActivity(registerIntent);
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
 
 
 
@@ -182,11 +199,5 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
     }
 
-    public boolean processUser (FirebaseUser currentUser) {
-        //process user to see if they are registered as a medical professional / patient. If not, take them to Register Activity to do that (return false). If yes, go to SignedIn Activity
-        //IPR
-        add_sample_data_to_Firebase();
-        return false;
 
-    }
 }
