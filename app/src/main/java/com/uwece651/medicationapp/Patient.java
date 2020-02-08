@@ -37,8 +37,8 @@ public class Patient extends PersonalInformation {
     }
 
 
-    public String getUID () {
-        return super.getUID();
+    public String getUid () {
+        return super.getUid();
     }
 
     public String[] getAssociatedPrescriptions () {

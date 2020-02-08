@@ -26,7 +26,7 @@ public class PrescriptionData {
         this.AssignedByDoctorName = null;
     }
 
-    public String getUID () {
+    public String getUid () {
         return this.UID;
     }
 

@@ -1,6 +1,8 @@
 package com.uwece651.medicationapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -90,12 +92,22 @@ public class RegistrationPage extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         CollectionReference Users = db.collection("Users");
-        Users.document(user.getUID()).set(user);
-        goToSignedInActivity(user.getType());
+        Users.document(user.getUid()).set(user);
+        if (user.getType() == "Patient") {
+            goToPatientAccess();
+        } else {
+            goToMedProfAccess();
+        }
     }
 
-    public void goToSignedInActivity (String type) {
+    public void goToMedProfAccess () {
+        Intent medProfIntent = new Intent(getBaseContext(), MedicalProfessionalAccess.class);
+        startActivity(medProfIntent);
+    }
 
+    public void goToPatientAccess () {
+        Intent patientIntent = new Intent(getBaseContext(), PatientAccess.class);
+        startActivity(patientIntent);
     }
 
 

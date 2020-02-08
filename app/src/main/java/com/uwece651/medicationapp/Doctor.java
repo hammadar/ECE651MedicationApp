@@ -14,7 +14,7 @@ public class Doctor extends PersonalInformation {
         this.bookedAppointments = new String[0];
     }
 
-    public String getUID () { return super.getUID(); }
+    public String getUid () { return super.getUid(); }
 
     public Patient[] getPatients() {
         return this.patients;
