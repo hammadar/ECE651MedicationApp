@@ -120,14 +120,15 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 });
     }
 
-    public void updateUI (FirebaseUser currentUser) {
-        final String user = currentUser.getUid();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public void updateUI (final FirebaseUser currentUser) {
+        //String user = currentUser.getUid();
 
-        DocumentReference docRef = db.collection("Users").document(user);
 
         if (currentUser != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+            CollectionReference Users = db.collection("Users");
+            DocumentReference docRef = Users.document(currentUser.getUid());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -135,11 +136,11 @@ public class FirebaseUIActivity extends AppCompatActivity {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Intent signedInIntent = new Intent(getBaseContext(), SignedInActivity.class);
-                            signedInIntent.putExtra("userid", user);
+                            signedInIntent.putExtra("userid", currentUser);
                             startActivity(signedInIntent);
                         } else {
-                            Intent registerIntent = new Intent(getBaseContext(), RegisterActivity.class);
-                            registerIntent.putExtra("userid", user);
+                            Intent registerIntent = new Intent(getBaseContext(), RegistrationPage.class);
+                            registerIntent.putExtra("userid", currentUser);
                             startActivity(registerIntent);
                         }
                     } else {
