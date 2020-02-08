@@ -135,12 +135,14 @@ public class FirebaseUIActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            Intent signedInIntent = new Intent(getBaseContext(), SignedInActivity.class);
-                            signedInIntent.putExtra("userid", currentUser);
-                            startActivity(signedInIntent);
+                            PersonalInformation user = document.toObject(PersonalInformation.class);
+                            if (user.getType().equals("Patient")) {
+                                goToPatientAccess();
+                            } else {
+                                goToMedProfAccess ();
+                            }
                         } else {
                             Intent registerIntent = new Intent(getBaseContext(), RegistrationPage.class);
-                            registerIntent.putExtra("userid", currentUser);
                             startActivity(registerIntent);
                         }
                     } else {
@@ -163,6 +165,16 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void goToMedProfAccess () {
+        Intent medProfIntent = new Intent(getBaseContext(), MedicalProfessionalAccess.class);
+        startActivity(medProfIntent);
+    }
+
+    public void goToPatientAccess () {
+        Intent patientIntent = new Intent(getBaseContext(), PatientAccess.class);
+        startActivity(patientIntent);
     }
 
     public void add_sample_data_to_Firebase() {
