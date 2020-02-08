@@ -5,6 +5,9 @@ public class PersonalInformation {
     private String type;
     private String name;
 
+
+    public PersonalInformation () {}
+
     public PersonalInformation (String UID) {
         this.UID = UID;
         this.type = null;
@@ -24,4 +27,6 @@ public class PersonalInformation {
     public void setType (String type) {
         this.type = type;
     }
+
+    public void setName (String name) { this.name = name; }
 }

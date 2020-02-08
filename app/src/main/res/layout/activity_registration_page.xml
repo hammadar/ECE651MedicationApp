@@ -22,6 +22,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/userDisplayNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        android:text="TextView" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -31,6 +40,7 @@
         android:layout_marginLeft="59dp"
         android:layout_marginTop="104dp"
         android:text="Choose user role:" />
+
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -63,50 +73,13 @@
 
     </RadioGroup>
 
-
-    <EditText
-        android:id="@+id/name_input"
-        android:layout_width="314dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="46dp"
-        android:layout_marginTop="182dp"
-        android:text="Enter full name"
-        android:inputType="text"
-        android:selectAllOnFocus="true"/>
-
-    <EditText
-        android:id="@+id/email_input"
-        android:layout_width="314dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="46dp"
-        android:layout_marginTop="228dp"
-        android:inputType="text"
-        android:text="Enter email"
-        android:selectAllOnFocus="true"/>
-
-    <EditText
-        android:id="@+id/password_input"
-        android:layout_width="314dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="46dp"
-        android:layout_marginTop="283dp"
-        android:inputType="text"
-        android:text="Enter password"
-        android:selectAllOnFocus="true"/>
-
     <Button
         android:id="@+id/submitRegistrationInfo"
         android:layout_width="260dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="485dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="302dp"
         android:text="Submit"
         tools:layout_editor_absoluteX="71dp"
         tools:layout_editor_absoluteY="413dp" />
