@@ -32,7 +32,7 @@ public class MedicationData {
         this.Contraindictions = null;
     }
 
-    public String getUID () {
+    public String getUid () {
         return this.UID;
     }
 

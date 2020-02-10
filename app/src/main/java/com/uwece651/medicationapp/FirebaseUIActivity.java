@@ -27,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Document;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -118,18 +120,36 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 });
     }
 
-    public void updateUI (FirebaseUser currentUser) {
-        if (currentUser != null) {
+    public void updateUI (final FirebaseUser currentUser) {
+        //String user = currentUser.getUid();
 
-            if (processUser(currentUser)) {
-                Intent signedInIntent = new Intent(getBaseContext(), SignedInActivity.class);
-                signedInIntent.putExtra("userid", currentUser.getUid());
-                startActivity(signedInIntent);
-            } else {
-                Intent registerIntent = new Intent(getBaseContext(), RegisterActivity.class);
-                registerIntent.putExtra("userid", currentUser.getUid());
-                startActivity(registerIntent);
-            }
+
+        if (currentUser != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            CollectionReference Users = db.collection("Users");
+            DocumentReference docRef = Users.document(currentUser.getUid());
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            PersonalInformation user = document.toObject(PersonalInformation.class);
+                            if (user.getType().equals("Patient")) {
+                                goToPatientAccess();
+                            } else {
+                                goToMedProfAccess ();
+                            }
+                        } else {
+                            Intent registerIntent = new Intent(getBaseContext(), RegistrationPage.class);
+                            startActivity(registerIntent);
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
 
 
 
@@ -145,6 +165,16 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void goToMedProfAccess () {
+        Intent medProfIntent = new Intent(getBaseContext(), MedicalProfessionalAccess.class);
+        startActivity(medProfIntent);
+    }
+
+    public void goToPatientAccess () {
+        Intent patientIntent = new Intent(getBaseContext(), PatientAccess.class);
+        startActivity(patientIntent);
     }
 
     public void add_sample_data_to_Firebase() {
@@ -182,11 +212,5 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
     }
 
-    public boolean processUser (FirebaseUser currentUser) {
-        //process user to see if they are registered as a medical professional / patient. If not, take them to Register Activity to do that (return false). If yes, go to SignedIn Activity
-        //IPR
-        add_sample_data_to_Firebase();
-        return false;
 
-    }
 }
