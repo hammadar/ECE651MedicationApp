@@ -2,9 +2,12 @@ package com.uwece651.medicationapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -24,6 +27,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     private CheckBox mondayCheckbox,tuesdayCheckbox,wednesdayCheckbox,thursdayCheckbox,fridayCheckbox,saturdayCheckbox,sundayCheckbox;
 
     private TextView medicationNameLabelObj, weeklyFrequencyLabelObj,dailyFrequencyLabelObj,timeBetweenIntakeLabelObj;
+    private LinearLayout checkboxLayout;
 
     private int numberOfMedications=1;
 
@@ -48,6 +52,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         timeBetweenIntakeUnits=findViewById(R.id.timeBetweenIntakeUnitsDropBox);
         dailyFrequency=findViewById(R.id.dailyFrequencyDropBox);
 
+        checkboxLayout=findViewById(R.id.checkBoxLayout);
         mondayCheckbox= findViewById(R.id.mondayCheckBox);
         tuesdayCheckbox= findViewById(R.id.tuesdayCheckBox);
         wednesdayCheckbox= findViewById(R.id.wednesdayCheckBox);
@@ -95,6 +100,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
 
         TableLayout tl = findViewById(R.id.patientDataTableLayout);
+
+        //Medication Name
         TableRow tr = new TableRow(this);
 
         LinearLayout ll= new LinearLayout(this);
@@ -104,55 +111,110 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         tv.setWidth(medicationNameLabelObj.getWidth());
 
         EditText et= new EditText(this);
-        et.setWidth(medicationName.getWidth());
-        et.setHeight(medicationName.getHeight());
+        et.setWidth(500);
 
+        //Weekly Frequency
         TableRow tr1 = new TableRow(this);
         LinearLayout ll1= new LinearLayout(this);
 
         ll1.setOrientation(LinearLayout.HORIZONTAL);
+//        ll1.setMinimumHeight(checkboxLayout.getHeight());
+//        ll1.setMinimumWidth(checkboxLayout.getWidth());
         TextView tv1 = new TextView(this);
         tv1.setText("Weekly Frequency:");
-        tv.setHeight(weeklyFrequencyLabelObj.getHeight());
-        tv.setWidth(weeklyFrequencyLabelObj.getWidth());
+//        tv.setHeight(weeklyFrequencyLabelObj.getHeight());
+//        tv.setWidth(weeklyFrequencyLabelObj.getWidth());
+
+//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
+//        params.leftMargin = 10;
+
 
         CheckBox cb = new CheckBox(this);
         cb.setText("S");
         cb.setGravity(Gravity.CENTER);
-        //cb.setBackground(mondayCheckbox.getBackground());
+        cb.setButtonDrawable(sundayCheckbox.getBackground());
 
         CheckBox cb1 = new CheckBox(this);
-        cb.setText("M");
-        cb.setGravity(Gravity.CENTER);
+        cb1.setText("M");
+        cb1.setGravity(Gravity.CENTER);
+        cb1.setButtonDrawable(sundayCheckbox.getBackground());
 
         CheckBox cb2 = new CheckBox(this);
-        cb.setText("T");
-        cb.setGravity(Gravity.CENTER);
+        cb2.setText("T");
+        cb2.setGravity(Gravity.CENTER);
+        cb2.setButtonDrawable(sundayCheckbox.getBackground());
 
         CheckBox cb3 = new CheckBox(this);
-        cb.setText("W");
-        cb.setGravity(Gravity.CENTER);
+        cb3.setText("W");
+        cb3.setGravity(Gravity.CENTER);
+        cb3.setButtonDrawable(sundayCheckbox.getBackground());
 
         CheckBox cb4 = new CheckBox(this);
-        cb.setText("T");
-        cb.setGravity(Gravity.CENTER);
+        cb4.setText("T");
+        cb4.setGravity(Gravity.CENTER);
+        cb4.setButtonDrawable(sundayCheckbox.getBackground());
 
         CheckBox cb5 = new CheckBox(this);
-        cb.setText("F");
-        cb.setGravity(Gravity.CENTER);
+        cb5.setText("F");
+        cb5.setGravity(Gravity.CENTER);
+        cb5.setButtonDrawable(sundayCheckbox.getBackground());
 
         CheckBox cb6 = new CheckBox(this);
-        cb.setText("S");
-        cb.setGravity(Gravity.CENTER);
+        cb6.setText("S");
+        cb6.setGravity(Gravity.CENTER);
+        cb6.setButtonDrawable(sundayCheckbox.getBackground());
+
+        //Daily Frequency
+        TableRow tr2 = new TableRow(this);
+        LinearLayout ll2= new LinearLayout(this);
+
+        TextView tv2 = new TextView(this);
+        tv2.setText("Times per day:");
+//        tv2.setHeight(dailyFrequencyLabelObj.getHeight());
+//        tv2.setWidth(dailyFrequencyLabelObj.getWidth());
+
+        Spinner dailyFrequencySpinner = new Spinner(this);
+//        dailyFrequencySpinner.setMinimumHeight(dailyFrequency.getHeight());
+//        dailyFrequencySpinner.setMinimumWidth(dailyFrequency.getWidth());
+        final String[] dailyFrequencyArray = getResources().getStringArray(R.array.medication_daily_frequency);
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dailyFrequencyArray);
+        dailyFrequencySpinner.setAdapter(arrayAdapter);
+
+        //Time between intake
+        TableRow tr3 = new TableRow(this);
+        LinearLayout ll3= new LinearLayout(this);
+
+        TextView tv3 = new TextView(this);
+        tv3.setText("Times between intake:");
+//        tv3.setHeight(timeBetweenIntakeLabelObj.getHeight());
+//        tv3.setWidth(timeBetweenIntakeLabelObj.getWidth());
+
+        EditText et1= new EditText(this);
+        et1.setWidth(150);
+//        et1.setHeight(timeBetweenIntake.getHeight());
+
+        Spinner intakeTimeUnitsSpinner = new Spinner(this);
+//        intakeTimeUnitsSpinner.setMinimumHeight(timeBetweenIntakeUnits.getHeight());
+//        intakeTimeUnitsSpinner.setMinimumWidth(timeBetweenIntakeUnits.getWidth());
+        final String[] intakeTimeUnitsArray = getResources().getStringArray(R.array.time_units);
+
+        ArrayAdapter intakeUnitsArrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, intakeTimeUnitsArray);
+        intakeTimeUnitsSpinner.setAdapter(intakeUnitsArrayAdapter);
 
 
 
 
+
+
+
+        //Medication Name
         ll.addView(tv);
         ll.addView(et);
         tr.addView(ll);
         tl.addView(tr);
 
+        //Weekly Frequency
         ll1.addView(tv1);
         ll1.addView(cb);
         ll1.addView(cb1);
@@ -163,6 +225,22 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         ll1.addView(cb6);
         tr1.addView(ll1);
         tl.addView(tr1);
+
+        //Daily Frequency
+        ll2.addView(tv2);
+        ll2.addView(dailyFrequencySpinner);
+        tr2.addView(ll2);
+        tl.addView(tr2);
+
+        //Time between intake
+        ll3.addView(tv3);
+        ll3.addView(et1);
+        ll3.addView(intakeTimeUnitsSpinner);
+
+        tr3.addView(ll3);
+        tl.addView(tr3);
+
+
 
 
 
