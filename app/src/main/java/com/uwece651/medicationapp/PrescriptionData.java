@@ -2,8 +2,10 @@ package com.uwece651.medicationapp;
 
 import java.time.LocalDate;
 
+
+
 public class PrescriptionData {
-    private String UID;
+    private String PrescriptionID;
     private String MedicationID;
     private String ScheduleID;
     private LocalDate StartDate;
@@ -14,7 +16,10 @@ public class PrescriptionData {
     private String AssignedByDoctorID;
     private String AssignedByDoctorName;
 
-    public PrescriptionData(String UID) {
+    public PrescriptionData() {}
+
+    public PrescriptionData(String PrescriptionID) {
+        this.PrescriptionID = PrescriptionID;
         this.MedicationID = null;
         this.ScheduleID = null;
         this.StartDate = null;
@@ -26,8 +31,8 @@ public class PrescriptionData {
         this.AssignedByDoctorName = null;
     }
 
-    public String getUid () {
-        return this.UID;
+    public String getPrescriptionID () {
+        return this.PrescriptionID;
     }
 
     public String getMedicationID () {
