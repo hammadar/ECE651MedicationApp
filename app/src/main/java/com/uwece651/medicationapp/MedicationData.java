@@ -15,6 +15,7 @@ public class MedicationData {
     private String Storage;
     private String Contraindictions;
 
+    public MedicationData() { }
 
     public MedicationData (String MedicationID) {
         this.MedicationID = MedicationID;

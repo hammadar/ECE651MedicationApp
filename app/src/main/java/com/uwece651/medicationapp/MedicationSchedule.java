@@ -20,6 +20,8 @@ public class MedicationSchedule {
     private Boolean isSaturdayChecked;
     private Boolean isSundayChecked;
 
+    public MedicationSchedule() { }
+
     public MedicationSchedule (String ScheduleID) {
         this.ScheduleID = ScheduleID;
         this.MealCode = null;
