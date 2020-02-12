@@ -60,7 +60,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     List<CheckBox> dayCheckboxList = new ArrayList<CheckBox>();
     List<Spinner> timesPerDaySpinnerList = new ArrayList<Spinner>();
     List<EditText> timeBetweenIntakeEditTextList = new ArrayList<EditText>();
-//    List<Spinner> intakeUnitsSpinnerList = new ArrayList<Spinner>();
     List<CalendarView> calendarList = new ArrayList<CalendarView>();
 
 
@@ -98,35 +97,157 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         });
     }
 
+    public void displayRetrievedData(){
+
+
+        //TODO for loop  number of prescriptions in patient class?
+
+        TableLayout tl = findViewById(R.id.medicationDataTableLayout);
+
+        //Medication Name
+        TableRow tr = new TableRow(this);
+
+        LinearLayout ll= new LinearLayout(this);
+        TextView tv = new TextView(this);
+        tv.setText("Medication "+medication_id+ " Name:");
+
+        EditText et= new EditText(this);
+        et.setWidth(500);
+        et.setText(medication_Name);
+        medicationNameEditTextList.add(et);
+
+        //Weekly Frequency
+        TableRow tr1 = new TableRow(this);
+        LinearLayout ll1= new LinearLayout(this);
+
+        ll1.setOrientation(LinearLayout.HORIZONTAL);
+
+        TextView tv1 = new TextView(this);
+        tv1.setText("Days:");
+
+
+        CheckBox cb = new CheckBox(this);
+        cb.setText("S");
+        cb.setGravity(Gravity.CENTER);
+        cb.setChecked(isSundayChecked);
+        dayCheckboxList.add(cb);
+
+        CheckBox cb1 = new CheckBox(this);
+        cb1.setText("M");
+        cb1.setGravity(Gravity.CENTER);
+        cb1.setChecked(isMondayChecked);
+        dayCheckboxList.add(cb1);
+
+        CheckBox cb2 = new CheckBox(this);
+        cb2.setText("T");
+        cb2.setGravity(Gravity.CENTER);
+        cb2.setChecked(isTuesdayChecked);
+        dayCheckboxList.add(cb2);
+
+        CheckBox cb3 = new CheckBox(this);
+        cb3.setText("W");
+        cb3.setGravity(Gravity.CENTER);
+        cb3.setChecked(isWednesdayChecked);
+        dayCheckboxList.add(cb3);
+
+        CheckBox cb4 = new CheckBox(this);
+        cb4.setText("T");
+        cb4.setGravity(Gravity.CENTER);
+        cb4.setChecked(isThursdayChecked);
+        dayCheckboxList.add(cb4);
+
+        CheckBox cb5 = new CheckBox(this);
+        cb5.setText("F");
+        cb5.setGravity(Gravity.CENTER);
+        cb5.setChecked(isFridayChecked);
+        dayCheckboxList.add(cb5);
+
+        CheckBox cb6 = new CheckBox(this);
+        cb6.setText("S");
+        cb6.setGravity(Gravity.CENTER);
+        cb6.setChecked(isSaturdayChecked);
+        dayCheckboxList.add(cb6);
+
+        //Daily Frequency
+        TableRow tr2 = new TableRow(this);
+        LinearLayout ll2= new LinearLayout(this);
+
+        TextView tv2 = new TextView(this);
+        tv2.setText("Times per day:");
+
+        Spinner dailyFrequencySpinner = new Spinner(this);
+        final String[] dailyFrequencyArray = getResources().getStringArray(R.array.medication_daily_frequency);
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dailyFrequencyArray);
+        dailyFrequencySpinner.setAdapter(arrayAdapter);
+        int spinnerposition = arrayAdapter.getPosition(dailyFrequencyValue);
+        dailyFrequencySpinner.setSelection(spinnerposition);
+        timesPerDaySpinnerList.add(dailyFrequencySpinner);
+
+        //Time between intake
+        TableRow tr3 = new TableRow(this);
+        LinearLayout ll3= new LinearLayout(this);
+
+        TextView tv3 = new TextView(this);
+        tv3.setText("Hours between intake:");
+
+        EditText et1= new EditText(this);
+        et1.setWidth(150);
+        et1.setText(timeBetweenIntakeValue);
+        timeBetweenIntakeEditTextList.add(et1);
+
+        //Medication Name
+        ll.addView(tv);
+        ll.addView(et);
+        tr.addView(ll);
+        tl.addView(tr);
+
+        //Weekly Frequency
+        ll1.addView(tv1);
+        ll1.addView(cb);
+        ll1.addView(cb1);
+        ll1.addView(cb2);
+        ll1.addView(cb3);
+        ll1.addView(cb4);
+        ll1.addView(cb5);
+        ll1.addView(cb6);
+        tr1.addView(ll1);
+        tl.addView(tr1);
+
+        //Daily Frequency
+        ll2.addView(tv2);
+        ll2.addView(dailyFrequencySpinner);
+        tr2.addView(ll2);
+        tl.addView(tr2);
+
+        //Time between intake
+        ll3.addView(tv3);
+        ll3.addView(et1);
+
+        tr3.addView(ll3);
+        tl.addView(tr3);
+    }
+
     public void retrievePatientInfo(){
         if (patientId.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Enter a patient ID", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Enter a Patient ID", Toast.LENGTH_SHORT).show();
             return;
         }
         else{
+            String prescriptionID=patientId.getText().toString().toLowerCase();
+
+            Log.d("MedicalProfAccess","prescriptionID = " + prescriptionID);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             CollectionReference PrescriptionDataDB = db.collection("PrescriptionData");
-            CollectionReference MedicationDataDB = db.collection("MedicationData");
-            CollectionReference MedicationScheduleDB = db.collection("MedicationSchedule");
-
-
-
-            String prescriptionID=patientId.getText().toString();
-
-            Log.d("MedicalProfAccess","prescriptionID = " + prescriptionID);
 
             DocumentReference docRef= PrescriptionDataDB.document(prescriptionID);
-            Log.d("MedicalProfAccess","HERE 4");
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    Log.d("MedicalProfAccess","HERE 3");
                     if (task.isSuccessful()) {
-                        Log.d("MedicalProfAccess","HERE 2");
                         DocumentSnapshot document = task.getResult();
-                        Log.d("MedicalProfAccess","HERE 5");
                         if (document.exists()) {
                             PrescriptionData prescription_data = document.toObject(PrescriptionData.class);
                             medication_id=prescription_data.getMedicationID();
@@ -135,190 +256,66 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                             Log.d("MedicalProfAccess","medication_id = " + medication_id);
                             Log.d("MedicalProfAccess","schedule_id = " + schedule_id);
 
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                            CollectionReference MedicationDataDB = db.collection("MedicationData");
+
+                            DocumentReference docRef= MedicationDataDB.document(medication_id);
+                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            MedicationData medication_data = document.toObject(MedicationData.class);
+                                            medication_Name=medication_data.getBrandName();
+
+                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                                            CollectionReference MedicationScheduleDB = db.collection("MedicationSchedule");
+
+                                            DocumentReference docRef= MedicationScheduleDB.document(schedule_id);
+                                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        DocumentSnapshot document = task.getResult();
+                                                        if (document.exists()) {
+                                                            MedicationSchedule schedule_data = document.toObject(MedicationSchedule.class);
+                                                            isMondayChecked=schedule_data.getMondayChecked();
+                                                            isTuesdayChecked=schedule_data.getTuesdayChecked();
+                                                            isWednesdayChecked=schedule_data.getWednesdayChecked();
+                                                            isThursdayChecked=schedule_data.getThursdayChecked();
+                                                            isFridayChecked=schedule_data.getFridayChecked();
+                                                            isSaturdayChecked=schedule_data.getSaturdayChecked();
+                                                            isSundayChecked=schedule_data.getSundayChecked();
+                                                            dailyFrequencyValue=schedule_data.getDailyFrequency();
+                                                            timeBetweenIntakeValue=schedule_data.getHoursFrequency();
+
+                                                            displayRetrievedData();
+                                                        }
+                                                    } else {
+                                                        Log.d("MedicalProfAccess", "get failed with ", task.getException());
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    } else {
+                                        Log.d("MedicalProfAccess", "get failed with ", task.getException());
+                                    }
+                                }
+                            });
+
                         }
                         else{
-                            Log.d("MedicalProfAccess","HERE 1");
+                            Toast.makeText(getApplicationContext(), "Invalid Patient ID", Toast.LENGTH_SHORT).show();
+                            return;
                         }
                     } else {
                         Log.d("MedicalProfAccess", "get failed with ", task.getException());
                     }
                 }
             });
-
-
-
-
-
-//            docRef= MedicationDataDB.document(medication_id);
-//            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                        DocumentSnapshot document = task.getResult();
-//                        if (document.exists()) {
-//                            MedicationData medication_data = document.toObject(MedicationData.class);
-//                            medication_Name=medication_data.getMedicationID();
-//                        }
-//                    } else {
-//                        Log.d("MedicalProfAccess", "get failed with ", task.getException());
-//                    }
-//                }
-//            });
-//
-//            docRef= MedicationScheduleDB.document(schedule_id);
-//            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                        DocumentSnapshot document = task.getResult();
-//                        if (document.exists()) {
-//                            MedicationSchedule schedule_data = document.toObject(MedicationSchedule.class);
-//                            isMondayChecked=schedule_data.getMondayChecked();;
-//                            isTuesdayChecked=schedule_data.getTuesdayChecked();;
-//                            isWednesdayChecked=schedule_data.getWednesdayChecked();;
-//                            isThursdayChecked=schedule_data.getThursdayChecked();;
-//                            isFridayChecked=schedule_data.getFridayChecked();;
-//                            isSaturdayChecked=schedule_data.getSaturdayChecked();;
-//                            isSundayChecked=schedule_data.getSundayChecked();;
-//                            dailyFrequencyValue=schedule_data.getDailyFrequency();;
-//                            timeBetweenIntakeValue=schedule_data.getHoursFrequency();;
-//                        }
-//                    } else {
-//                        Log.d("MedicalProfAccess", "get failed with ", task.getException());
-//                    }
-//                }
-//            });
-
-
-            //TODO for loop  number of prescriptions in patient class?
-
-            TableLayout tl = findViewById(R.id.medicationDataTableLayout);
-
-            //Medication Name
-            TableRow tr = new TableRow(this);
-
-            LinearLayout ll= new LinearLayout(this);
-            TextView tv = new TextView(this);
-            tv.setText("Medication "+medication_id+ " Name:");
-
-            EditText et= new EditText(this);
-            et.setWidth(500);
-            et.setText(medication_Name);
-            medicationNameEditTextList.add(et);
-
-            //Weekly Frequency
-            TableRow tr1 = new TableRow(this);
-            LinearLayout ll1= new LinearLayout(this);
-
-            ll1.setOrientation(LinearLayout.HORIZONTAL);
-
-            TextView tv1 = new TextView(this);
-            tv1.setText("Days:");
-
-
-            CheckBox cb = new CheckBox(this);
-            cb.setText("S");
-            cb.setGravity(Gravity.CENTER);
-            cb.setChecked(isSundayChecked);
-            dayCheckboxList.add(cb);
-
-            CheckBox cb1 = new CheckBox(this);
-            cb1.setText("M");
-            cb1.setGravity(Gravity.CENTER);
-            cb1.setChecked(isMondayChecked);
-            dayCheckboxList.add(cb1);
-
-            CheckBox cb2 = new CheckBox(this);
-            cb2.setText("T");
-            cb2.setGravity(Gravity.CENTER);
-            cb2.setChecked(isTuesdayChecked);
-            dayCheckboxList.add(cb2);
-
-            CheckBox cb3 = new CheckBox(this);
-            cb3.setText("W");
-            cb3.setGravity(Gravity.CENTER);
-            cb3.setChecked(isWednesdayChecked);
-            dayCheckboxList.add(cb3);
-
-            CheckBox cb4 = new CheckBox(this);
-            cb4.setText("T");
-            cb4.setGravity(Gravity.CENTER);
-            cb4.setChecked(isThursdayChecked);
-            dayCheckboxList.add(cb4);
-
-            CheckBox cb5 = new CheckBox(this);
-            cb5.setText("F");
-            cb5.setGravity(Gravity.CENTER);
-            cb5.setChecked(isFridayChecked);
-            dayCheckboxList.add(cb5);
-
-            CheckBox cb6 = new CheckBox(this);
-            cb6.setText("S");
-            cb6.setGravity(Gravity.CENTER);
-            cb6.setChecked(isSaturdayChecked);
-            dayCheckboxList.add(cb6);
-
-            //Daily Frequency
-            TableRow tr2 = new TableRow(this);
-            LinearLayout ll2= new LinearLayout(this);
-
-            TextView tv2 = new TextView(this);
-            tv2.setText("Times per day:");
-
-            Spinner dailyFrequencySpinner = new Spinner(this);
-            final String[] dailyFrequencyArray = getResources().getStringArray(R.array.medication_daily_frequency);
-
-            ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dailyFrequencyArray);
-            dailyFrequencySpinner.setAdapter(arrayAdapter);
-            int spinnerposition = arrayAdapter.getPosition(dailyFrequencyValue);
-            dailyFrequencySpinner.setSelection(spinnerposition);
-            timesPerDaySpinnerList.add(dailyFrequencySpinner);
-
-            //Time between intake
-            TableRow tr3 = new TableRow(this);
-            LinearLayout ll3= new LinearLayout(this);
-
-            TextView tv3 = new TextView(this);
-            tv3.setText("Hours between intake:");
-
-            EditText et1= new EditText(this);
-            et1.setWidth(150);
-            et1.setText(timeBetweenIntakeValue);
-            timeBetweenIntakeEditTextList.add(et1);
-
-            //Medication Name
-            ll.addView(tv);
-            ll.addView(et);
-            tr.addView(ll);
-            tl.addView(tr);
-
-            //Weekly Frequency
-            ll1.addView(tv1);
-            ll1.addView(cb);
-            ll1.addView(cb1);
-            ll1.addView(cb2);
-            ll1.addView(cb3);
-            ll1.addView(cb4);
-            ll1.addView(cb5);
-            ll1.addView(cb6);
-            tr1.addView(ll1);
-            tl.addView(tr1);
-
-            //Daily Frequency
-            ll2.addView(tv2);
-            ll2.addView(dailyFrequencySpinner);
-            tr2.addView(ll2);
-            tl.addView(tr2);
-
-            //Time between intake
-            ll3.addView(tv3);
-            ll3.addView(et1);
-
-            tr3.addView(ll3);
-            tl.addView(tr3);
-
-
-
         }
     }
 
@@ -352,43 +349,36 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         cb.setText("S");
         cb.setGravity(Gravity.CENTER);
         dayCheckboxList.add(cb);
-//        cb.setBackgroundResource(R.drawable.checkbox_weekday);
 
         CheckBox cb1 = new CheckBox(this);
         cb1.setText("M");
         cb1.setGravity(Gravity.CENTER);
         dayCheckboxList.add(cb1);
-//        cb1.setButtonDrawable(R.drawable.checkbox_weekday);
 
         CheckBox cb2 = new CheckBox(this);
         cb2.setText("T");
         cb2.setGravity(Gravity.CENTER);
         dayCheckboxList.add(cb2);
-//        cb2.setButtonDrawable(R.drawable.checkbox_weekday);
 
         CheckBox cb3 = new CheckBox(this);
         cb3.setText("W");
         cb3.setGravity(Gravity.CENTER);
         dayCheckboxList.add(cb3);
-//        cb3.setButtonDrawable(R.drawable.checkbox_weekday);
 
         CheckBox cb4 = new CheckBox(this);
         cb4.setText("T");
         cb4.setGravity(Gravity.CENTER);
         dayCheckboxList.add(cb4);
-//        cb4.setButtonDrawable(R.drawable.checkbox_weekday);
 
         CheckBox cb5 = new CheckBox(this);
         cb5.setText("F");
         cb5.setGravity(Gravity.CENTER);
         dayCheckboxList.add(cb5);
-//        cb5.setButtonDrawable(R.drawable.checkbox_weekday);
 
         CheckBox cb6 = new CheckBox(this);
         cb6.setText("S");
         cb6.setGravity(Gravity.CENTER);
         dayCheckboxList.add(cb6);
-//        cb6.setButtonDrawable(R.drawable.checkbox_weekday);
 
         //Daily Frequency
         TableRow tr2 = new TableRow(this);
@@ -414,13 +404,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         EditText et1= new EditText(this);
         et1.setWidth(150);
         timeBetweenIntakeEditTextList.add(et1);
-
-//        Spinner intakeTimeUnitsSpinner = new Spinner(this);
-//        final String[] intakeTimeUnitsArray = getResources().getStringArray(R.array.time_units);
-//
-//        ArrayAdapter intakeUnitsArrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, intakeTimeUnitsArray);
-//        intakeTimeUnitsSpinner.setAdapter(intakeUnitsArrayAdapter);
-//        intakeUnitsSpinnerList.add(intakeTimeUnitsSpinner);
 
         //Start/End date for medication
 //        TableRow tr4 = new TableRow(this);
@@ -460,8 +443,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         //Time between intake
         ll3.addView(tv3);
         ll3.addView(et1);
-//        ll3.addView(intakeTimeUnitsSpinner);
-//
         tr3.addView(ll3);
         tl.addView(tr3);
 
@@ -472,16 +453,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 //
 //        tl.addView(tr4);
 
-
-        //TODO: 27/01/20 Map medicationId with label maybe so we can keep track of medications
-
-
-
     }
 
     public void savePatientData(){
 
-        String patient_Id=patientId.getText().toString();
+        String patient_Id=patientId.getText().toString().toLowerCase();
         String medication_Name;
         Boolean isMondayChecked;
         Boolean isTuesdayChecked;
@@ -494,6 +470,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         String timeBetweenIntakeValue;
 
         PrescriptionData prescriptionData= new PrescriptionData(patient_Id);
+        //TODO Need to figure out this registration issue
         //prescriptionData.setAssignedByDoctorName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
         for (int i = 0; i < medicationNameEditTextList.size(); i++) {
@@ -509,7 +486,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
             dailyFrequencyValue=timesPerDaySpinnerList.get(i).getSelectedItem().toString();
             timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
-            //timeBetweenIntakeUnitsValue=intakeUnitsSpinnerList.get(i).getSelectedItem().toString();
 
             Log.d("MedicalProfAccess","patient_Id = " + patient_Id);
             Log.d("MedicalProfAccess","medication_Name = " + medication_Name);
@@ -522,7 +498,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             Log.d("MedicalProfAccess","isSundayChecked = " + isSundayChecked);
             Log.d("MedicalProfAccess","dailyFrequencyValue = " + dailyFrequencyValue);
             Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
-            //Log.d("MedicalProfAccess","timeBetweenIntakeUnitsValue = " + timeBetweenIntakeUnitsValue);
             Log.d("MedicalProfAccess","\n\n");
 
             MedicationData medData = new MedicationData(Integer.toString(i));
