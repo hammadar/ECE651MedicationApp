@@ -1,7 +1,7 @@
 package com.uwece651.medicationapp;
 
 public class MedicationData {
-    private String UID;
+    private String MedicationID;
     private String BrandName;
     private String GenericName;
     private String UsedFor;
@@ -15,9 +15,10 @@ public class MedicationData {
     private String Storage;
     private String Contraindictions;
 
+    public MedicationData() { }
 
-    public MedicationData (String UID) {
-        this.UID = UID;
+    public MedicationData (String MedicationID) {
+        this.MedicationID = MedicationID;
         this.BrandName = null;
         this.GenericName = null;
         this.UsedFor = null;
@@ -32,8 +33,8 @@ public class MedicationData {
         this.Contraindictions = null;
     }
 
-    public String getUid () {
-        return this.UID;
+    public String getMedicationID () {
+        return this.MedicationID;
     }
 
     public String getBrandName() {

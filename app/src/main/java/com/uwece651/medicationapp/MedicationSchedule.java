@@ -4,27 +4,43 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class MedicationSchedule {
-    private String UID;
+    private String ScheduleID;
     private String MedicalCode; // q2h etc..
     private String MealCode; // Before / After / During
     private String MealType; // Breakfast / Lunch / Dinner / All
     private String TimeOfDayCode; // Morning / Afternoon / Evening / Bedtime / Night / Ad Lib
     private String DailyFrequency; // daily / bid / tid / qid / 5daily
     private String HoursFrequency; // hourly / q2h / q3h / q4h / q6h / q8h / q12h
-    private LocalTime[] NotificationHours; // Generated from the above selections, but can selectively add/remove additional times as needed ?
+    //private LocalTime[] NotificationHours; // Generated from the above selections, but can selectively add/remove additional times as needed ?
+    private Boolean isMondayChecked;
+    private Boolean isTuesdayChecked;
+    private Boolean isWednesdayChecked;
+    private Boolean isThursdayChecked;
+    private Boolean isFridayChecked;
+    private Boolean isSaturdayChecked;
+    private Boolean isSundayChecked;
 
-    public MedicationSchedule (String UID) {
-        this.UID = UID;
+    public MedicationSchedule() { }
+
+    public MedicationSchedule (String ScheduleID) {
+        this.ScheduleID = ScheduleID;
         this.MealCode = null;
         this.MealType = null;
         this.TimeOfDayCode = null;
         this.DailyFrequency = null;
         this.HoursFrequency = null;
-        this.NotificationHours = new LocalTime[0];
+        //this.NotificationHours = new LocalTime[0];
+        this.isMondayChecked = null;
+        this.isTuesdayChecked = null;
+        this.isWednesdayChecked = null;
+        this.isThursdayChecked = null;
+        this.isFridayChecked = null;
+        this.isSaturdayChecked = null;
+        this.isSundayChecked = null;
     }
 
-    public String getUid () {
-        return this.UID;
+    public String getScheduleID () {
+        return this.ScheduleID;
     }
 
     public String getMedicalCode () {
@@ -75,16 +91,72 @@ public class MedicationSchedule {
         this.HoursFrequency = HoursFrequency;
     }
 
-    public LocalTime[] getNotificationHours() {
-        return this.NotificationHours;
+//    public LocalTime[] getNotificationHours() {
+//        return this.NotificationHours;
+//    }
+
+//    public void addNotificationHours(LocalTime dosagetime) {
+//        this.NotificationHours = appArrayHandling.add(this.NotificationHours, dosagetime);
+//    }
+//
+//    public void removeNotificationHours(LocalTime dosagetime) {
+//        this.NotificationHours = appArrayHandling.remove(this.NotificationHours, dosagetime);
+//    }
+
+    public Boolean getMondayChecked() {
+        return isMondayChecked;
     }
 
-    public void addNotificationHours(LocalTime dosagetime) {
-        this.NotificationHours = appArrayHandling.add(this.NotificationHours, dosagetime);
+    public void setMondayChecked(Boolean mondayChecked) {
+        isMondayChecked = mondayChecked;
     }
 
-    public void removeNotificationHours(LocalTime dosagetime) {
-        this.NotificationHours = appArrayHandling.remove(this.NotificationHours, dosagetime);
+    public Boolean getTuesdayChecked() {
+        return isTuesdayChecked;
+    }
+
+    public void setTuesdayChecked(Boolean tuesdayChecked) {
+        isTuesdayChecked = tuesdayChecked;
+    }
+
+    public Boolean getWednesdayChecked() {
+        return isWednesdayChecked;
+    }
+
+    public void setWednesdayChecked(Boolean wednesdayChecked) {
+        isWednesdayChecked = wednesdayChecked;
+    }
+
+    public Boolean getThursdayChecked() {
+        return isThursdayChecked;
+    }
+
+    public void setThursdayChecked(Boolean thursdayChecked) {
+        isThursdayChecked = thursdayChecked;
+    }
+
+    public Boolean getFridayChecked() {
+        return isFridayChecked;
+    }
+
+    public void setFridayChecked(Boolean fridayChecked) {
+        isFridayChecked = fridayChecked;
+    }
+
+    public Boolean getSaturdayChecked() {
+        return isSaturdayChecked;
+    }
+
+    public void setSaturdayChecked(Boolean saturdayChecked) {
+        isSaturdayChecked = saturdayChecked;
+    }
+
+    public Boolean getSundayChecked() {
+        return isSundayChecked;
+    }
+
+    public void setSundayChecked(Boolean sundayChecked) {
+        isSundayChecked = sundayChecked;
     }
 }
 
