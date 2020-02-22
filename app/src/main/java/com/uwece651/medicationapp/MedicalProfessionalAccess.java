@@ -1,6 +1,7 @@
 package com.uwece651.medicationapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,7 +74,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         retrievePatientInfoButton= findViewById(R.id.retrievePatientInfo);
         addNewMedicationButton= findViewById(R.id.addNewMedication);
         savePatientDataButton= findViewById(R.id.savePatientData);
-
+        Button signOutButton = findViewById(R.id.signOutButton);
         patientId=findViewById(R.id.patientId);
 
         retrievePatientInfoButton.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +95,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 savePatientData();
+            }
+        });
+
+
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                signOut();
             }
         });
     }
@@ -545,5 +554,22 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         CollectionReference PrescriptionData = db.collection("PrescriptionData");
         PrescriptionData.document(prescriptionData.getPrescriptionID()).set(prescriptionData);
+    }
+
+    public void signOut() {
+        AuthUI.getInstance().signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Intent fireBaseUIIntent = new Intent(getBaseContext(), FirebaseUIActivity.class);
+                            startActivity(fireBaseUIIntent);
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+                            builder.setMessage("Sign out unsuccessful. Please try again.");
+                            builder.setTitle("Sign Out Failed");
+                        }
+                    }
+                });
     }
 }

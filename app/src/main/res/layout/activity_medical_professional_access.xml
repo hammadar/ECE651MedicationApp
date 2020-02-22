@@ -74,6 +74,18 @@
         android:layout_marginBottom="507dp"
         android:text="Save Data" />
 
+    <Button
+        android:id="@+id/signOutButton"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginBottom="100dp"
+        android:text="Sign Out" />
+
     <ScrollView
         android:id="@+id/PatientDataScrollView"
         android:layout_width="342dp"
