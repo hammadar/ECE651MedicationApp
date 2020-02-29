@@ -252,11 +252,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 getPrescriptionData(prescription_ids[i]);
             } // got an array of all the asssociated prescriptions. Need to modify code now to display info for each prescription - HR
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            /*FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             CollectionReference PrescriptionDataDB = db.collection("PrescriptionData");
 
-            /*DocumentReference docRef= PrescriptionDataDB.document(prescriptionID);
+            DocumentReference docRef= PrescriptionDataDB.document(prescriptionID);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
