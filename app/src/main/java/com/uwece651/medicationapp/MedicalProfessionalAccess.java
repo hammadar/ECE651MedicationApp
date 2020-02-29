@@ -42,7 +42,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
     //for storing retrieved values
     String[] prescription_ids;
-    PrescriptionData[] prescriptions;
+    PrescriptionData[] prescriptions; //previous two are static for each patient. Items below will change for each prescription - HR
     String medication_id;
     String schedule_id;
     String medication_Name;
@@ -104,130 +104,136 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         //TODO for loop  number of prescriptions in patient class?
 
-        TableLayout tl = findViewById(R.id.medicationDataTableLayout);
+        for (int i = 0; i < prescriptions.length; i++) {
+            setClassVariables(prescriptions[i]);
 
-        //Medication Name
-        TableRow tr = new TableRow(this);
+            TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
-        LinearLayout ll= new LinearLayout(this);
-        TextView tv = new TextView(this);
-        tv.setText("Medication "+medication_id+ " Name:");
+            //Medication Name
+            TableRow tr = new TableRow(this);
 
-        EditText et= new EditText(this);
-        et.setWidth(500);
-        et.setText(medication_Name);
-        medicationNameEditTextList.add(et);
+            LinearLayout ll= new LinearLayout(this);
+            TextView tv = new TextView(this);
+            tv.setText("Medication "+medication_id+ " Name:");
 
-        //Weekly Frequency
-        TableRow tr1 = new TableRow(this);
-        LinearLayout ll1= new LinearLayout(this);
+            EditText et= new EditText(this);
+            et.setWidth(500);
+            et.setText(medication_Name);
+            medicationNameEditTextList.add(et);
 
-        ll1.setOrientation(LinearLayout.HORIZONTAL);
+            //Weekly Frequency
+            TableRow tr1 = new TableRow(this);
+            LinearLayout ll1= new LinearLayout(this);
 
-        TextView tv1 = new TextView(this);
-        tv1.setText("Days:");
+            ll1.setOrientation(LinearLayout.HORIZONTAL);
+
+            TextView tv1 = new TextView(this);
+            tv1.setText("Days:");
 
 
-        CheckBox cb = new CheckBox(this);
-        cb.setText("S");
-        cb.setGravity(Gravity.CENTER);
-        cb.setChecked(isSundayChecked);
-        dayCheckboxList.add(cb);
+            CheckBox cb = new CheckBox(this);
+            cb.setText("S");
+            cb.setGravity(Gravity.CENTER);
+            cb.setChecked(isSundayChecked);
+            dayCheckboxList.add(cb);
 
-        CheckBox cb1 = new CheckBox(this);
-        cb1.setText("M");
-        cb1.setGravity(Gravity.CENTER);
-        cb1.setChecked(isMondayChecked);
-        dayCheckboxList.add(cb1);
+            CheckBox cb1 = new CheckBox(this);
+            cb1.setText("M");
+            cb1.setGravity(Gravity.CENTER);
+            cb1.setChecked(isMondayChecked);
+            dayCheckboxList.add(cb1);
 
-        CheckBox cb2 = new CheckBox(this);
-        cb2.setText("T");
-        cb2.setGravity(Gravity.CENTER);
-        cb2.setChecked(isTuesdayChecked);
-        dayCheckboxList.add(cb2);
+            CheckBox cb2 = new CheckBox(this);
+            cb2.setText("T");
+            cb2.setGravity(Gravity.CENTER);
+            cb2.setChecked(isTuesdayChecked);
+            dayCheckboxList.add(cb2);
 
-        CheckBox cb3 = new CheckBox(this);
-        cb3.setText("W");
-        cb3.setGravity(Gravity.CENTER);
-        cb3.setChecked(isWednesdayChecked);
-        dayCheckboxList.add(cb3);
+            CheckBox cb3 = new CheckBox(this);
+            cb3.setText("W");
+            cb3.setGravity(Gravity.CENTER);
+            cb3.setChecked(isWednesdayChecked);
+            dayCheckboxList.add(cb3);
 
-        CheckBox cb4 = new CheckBox(this);
-        cb4.setText("T");
-        cb4.setGravity(Gravity.CENTER);
-        cb4.setChecked(isThursdayChecked);
-        dayCheckboxList.add(cb4);
+            CheckBox cb4 = new CheckBox(this);
+            cb4.setText("T");
+            cb4.setGravity(Gravity.CENTER);
+            cb4.setChecked(isThursdayChecked);
+            dayCheckboxList.add(cb4);
 
-        CheckBox cb5 = new CheckBox(this);
-        cb5.setText("F");
-        cb5.setGravity(Gravity.CENTER);
-        cb5.setChecked(isFridayChecked);
-        dayCheckboxList.add(cb5);
+            CheckBox cb5 = new CheckBox(this);
+            cb5.setText("F");
+            cb5.setGravity(Gravity.CENTER);
+            cb5.setChecked(isFridayChecked);
+            dayCheckboxList.add(cb5);
 
-        CheckBox cb6 = new CheckBox(this);
-        cb6.setText("S");
-        cb6.setGravity(Gravity.CENTER);
-        cb6.setChecked(isSaturdayChecked);
-        dayCheckboxList.add(cb6);
+            CheckBox cb6 = new CheckBox(this);
+            cb6.setText("S");
+            cb6.setGravity(Gravity.CENTER);
+            cb6.setChecked(isSaturdayChecked);
+            dayCheckboxList.add(cb6);
 
-        //Daily Frequency
-        TableRow tr2 = new TableRow(this);
-        LinearLayout ll2= new LinearLayout(this);
+            //Daily Frequency
+            TableRow tr2 = new TableRow(this);
+            LinearLayout ll2= new LinearLayout(this);
 
-        TextView tv2 = new TextView(this);
-        tv2.setText("Times per day:");
+            TextView tv2 = new TextView(this);
+            tv2.setText("Times per day:");
 
-        Spinner dailyFrequencySpinner = new Spinner(this);
-        final String[] dailyFrequencyArray = getResources().getStringArray(R.array.medication_daily_frequency);
+            Spinner dailyFrequencySpinner = new Spinner(this);
+            final String[] dailyFrequencyArray = getResources().getStringArray(R.array.medication_daily_frequency);
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dailyFrequencyArray);
-        dailyFrequencySpinner.setAdapter(arrayAdapter);
-        int spinnerposition = arrayAdapter.getPosition(dailyFrequencyValue);
-        dailyFrequencySpinner.setSelection(spinnerposition);
-        timesPerDaySpinnerList.add(dailyFrequencySpinner);
+            ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dailyFrequencyArray);
+            dailyFrequencySpinner.setAdapter(arrayAdapter);
+            int spinnerposition = arrayAdapter.getPosition(dailyFrequencyValue);
+            dailyFrequencySpinner.setSelection(spinnerposition);
+            timesPerDaySpinnerList.add(dailyFrequencySpinner);
 
-        //Time between intake
-        TableRow tr3 = new TableRow(this);
-        LinearLayout ll3= new LinearLayout(this);
+            //Time between intake
+            TableRow tr3 = new TableRow(this);
+            LinearLayout ll3= new LinearLayout(this);
 
-        TextView tv3 = new TextView(this);
-        tv3.setText("Hours between intake:");
+            TextView tv3 = new TextView(this);
+            tv3.setText("Hours between intake:");
 
-        EditText et1= new EditText(this);
-        et1.setWidth(150);
-        et1.setText(timeBetweenIntakeValue);
-        timeBetweenIntakeEditTextList.add(et1);
+            EditText et1= new EditText(this);
+            et1.setWidth(150);
+            et1.setText(timeBetweenIntakeValue);
+            timeBetweenIntakeEditTextList.add(et1);
 
-        //Medication Name
-        ll.addView(tv);
-        ll.addView(et);
-        tr.addView(ll);
-        tl.addView(tr);
+            //Medication Name
+            ll.addView(tv);
+            ll.addView(et);
+            tr.addView(ll);
+            tl.addView(tr);
 
-        //Weekly Frequency
-        ll1.addView(tv1);
-        ll1.addView(cb);
-        ll1.addView(cb1);
-        ll1.addView(cb2);
-        ll1.addView(cb3);
-        ll1.addView(cb4);
-        ll1.addView(cb5);
-        ll1.addView(cb6);
-        tr1.addView(ll1);
-        tl.addView(tr1);
+            //Weekly Frequency
+            ll1.addView(tv1);
+            ll1.addView(cb);
+            ll1.addView(cb1);
+            ll1.addView(cb2);
+            ll1.addView(cb3);
+            ll1.addView(cb4);
+            ll1.addView(cb5);
+            ll1.addView(cb6);
+            tr1.addView(ll1);
+            tl.addView(tr1);
 
-        //Daily Frequency
-        ll2.addView(tv2);
-        ll2.addView(dailyFrequencySpinner);
-        tr2.addView(ll2);
-        tl.addView(tr2);
+            //Daily Frequency
+            ll2.addView(tv2);
+            ll2.addView(dailyFrequencySpinner);
+            tr2.addView(ll2);
+            tl.addView(tr2);
 
-        //Time between intake
-        ll3.addView(tv3);
-        ll3.addView(et1);
+            //Time between intake
+            ll3.addView(tv3);
+            ll3.addView(et1);
 
-        tr3.addView(ll3);
-        tl.addView(tr3);
+            tr3.addView(ll3);
+            tl.addView(tr3);
+        }
+
+
     }
 
     public void retrievePatientInfo(){
@@ -466,6 +472,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     public void savePatientData(){
 
         String patient_Id=patientId.getText().toString().toLowerCase();
+        String prescriptionID;
         String medication_Name;
         Boolean isMondayChecked;
         Boolean isTuesdayChecked;
@@ -606,6 +613,46 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
 
         });
+
+    }
+
+    public void setClassVariables(PrescriptionData prescription) {
+        medication_id = prescription.getMedicationID();
+        schedule_id = prescription.getScheduleID();
+        medication_Name = prescription.getMedicationName();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference scheduleDb = db.collection("MedicationSchedule");
+        DocumentReference docRef = scheduleDb.document(schedule_id);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        MedicationSchedule schedule = document.toObject(MedicationSchedule.class);
+                        isMondayChecked = schedule.getMondayChecked();
+                        isTuesdayChecked = schedule.getTuesdayChecked();
+                        isWednesdayChecked = schedule.getWednesdayChecked();
+                        isThursdayChecked = schedule.getThursdayChecked();
+                        isFridayChecked = schedule.getFridayChecked();
+                        isSaturdayChecked = schedule.getSaturdayChecked();
+                        isSundayChecked = schedule.getSundayChecked();
+                        dailyFrequencyValue = schedule.getDailyFrequency();
+                        timeBetweenIntakeValue = schedule.getHoursFrequency();
+
+
+                    } else {
+                        Log.d("Schedule", "get failed with ", task.getException());
+                    }
+                }
+            };
+
+
+
+        });
+
 
     }
 }
