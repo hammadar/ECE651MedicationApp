@@ -43,6 +43,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     //for storing retrieved values
     String[] prescription_ids;
     PrescriptionData[] prescriptions; //previous two are static for each patient. Items below will change for each prescription - HR
+    String[] medication_ids;
+    String[] schedule_ids;
     String medication_id;
     String schedule_id;
     String medication_Name;
@@ -81,6 +83,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 retrievePatientInfo();
+                displayRetrievedData();
             }
         });
 
@@ -334,6 +337,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     }
 
     public void addNewMedication(View view){
+
         numberOfMedications++;
 
         TableLayout tl = findViewById(R.id.medicationDataTableLayout);
@@ -471,8 +475,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
     public void savePatientData(){
 
+        int newPrescriptions = medicationNameEditTextList.size() - prescriptions.length;
         String patient_Id=patientId.getText().toString().toLowerCase();
         String prescriptionID;
+        String medicationID;
+        String scheduleID;
         String medication_Name;
         Boolean isMondayChecked;
         Boolean isTuesdayChecked;
@@ -483,60 +490,169 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         Boolean isSundayChecked;
         String dailyFrequencyValue;
         String timeBetweenIntakeValue;
+        PrescriptionData prescriptionData;
 
-        PrescriptionData prescriptionData= new PrescriptionData(patient_Id);
+
+        //PrescriptionData prescriptionData= new PrescriptionData(prescriptionID);
         //TODO Need to figure out this registration issue
         //prescriptionData.setAssignedByDoctorName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
-        for (int i = 0; i < medicationNameEditTextList.size(); i++) {
-            medication_Name=medicationNameEditTextList.get(i).getText().toString();
+        if (newPrescriptions == 0) {
+            for (int i = 0; i < medicationNameEditTextList.size(); i++) {
+                medication_Name=medicationNameEditTextList.get(i).getText().toString();
 
-            isSundayChecked=dayCheckboxList.get(i*7).isChecked();
-            isMondayChecked=dayCheckboxList.get(i*7 +1).isChecked();
-            isTuesdayChecked=dayCheckboxList.get(i*7 + 2).isChecked();
-            isWednesdayChecked=dayCheckboxList.get(i*7 + 3).isChecked();
-            isThursdayChecked=dayCheckboxList.get(i*7 + 4).isChecked();
-            isFridayChecked=dayCheckboxList.get(i*7 + 5).isChecked();
-            isSaturdayChecked=dayCheckboxList.get(i*7 + 6).isChecked();
+                isSundayChecked=dayCheckboxList.get(i*7).isChecked();
+                isMondayChecked=dayCheckboxList.get(i*7 +1).isChecked();
+                isTuesdayChecked=dayCheckboxList.get(i*7 + 2).isChecked();
+                isWednesdayChecked=dayCheckboxList.get(i*7 + 3).isChecked();
+                isThursdayChecked=dayCheckboxList.get(i*7 + 4).isChecked();
+                isFridayChecked=dayCheckboxList.get(i*7 + 5).isChecked();
+                isSaturdayChecked=dayCheckboxList.get(i*7 + 6).isChecked();
 
-            dailyFrequencyValue=timesPerDaySpinnerList.get(i).getSelectedItem().toString();
-            timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
+                dailyFrequencyValue=timesPerDaySpinnerList.get(i).getSelectedItem().toString();
+                timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
 
-            Log.d("MedicalProfAccess","patient_Id = " + patient_Id);
-            Log.d("MedicalProfAccess","medication_Name = " + medication_Name);
-            Log.d("MedicalProfAccess","isMondayChecked = " + isMondayChecked);
-            Log.d("MedicalProfAccess","isTuesdayChecked = " + isTuesdayChecked);
-            Log.d("MedicalProfAccess","isWednesdayChecked = " + isWednesdayChecked);
-            Log.d("MedicalProfAccess","isThursdayChecked = " + isThursdayChecked);
-            Log.d("MedicalProfAccess","isFridayChecked = " + isFridayChecked);
-            Log.d("MedicalProfAccess","isSaturdayChecked = " + isSaturdayChecked);
-            Log.d("MedicalProfAccess","isSundayChecked = " + isSundayChecked);
-            Log.d("MedicalProfAccess","dailyFrequencyValue = " + dailyFrequencyValue);
-            Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
-            Log.d("MedicalProfAccess","\n\n");
+                Log.d("MedicalProfAccess","patient_Id = " + patient_Id);
+                Log.d("MedicalProfAccess", "prescription_id =" + prescription_ids[i]);
+                Log.d("MedicalProfAccess","medication_Name = " + medication_Name);
+                Log.d("MedicalProfAccess","isMondayChecked = " + isMondayChecked);
+                Log.d("MedicalProfAccess","isTuesdayChecked = " + isTuesdayChecked);
+                Log.d("MedicalProfAccess","isWednesdayChecked = " + isWednesdayChecked);
+                Log.d("MedicalProfAccess","isThursdayChecked = " + isThursdayChecked);
+                Log.d("MedicalProfAccess","isFridayChecked = " + isFridayChecked);
+                Log.d("MedicalProfAccess","isSaturdayChecked = " + isSaturdayChecked);
+                Log.d("MedicalProfAccess","isSundayChecked = " + isSundayChecked);
+                Log.d("MedicalProfAccess","dailyFrequencyValue = " + dailyFrequencyValue);
+                Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
+                Log.d("MedicalProfAccess","\n\n");
 
-            MedicationData medData = new MedicationData(Integer.toString(i));
-            medData.setBrandName(medication_Name);
-            storeMedicationData(medData);
+                MedicationData medData = new MedicationData(medication_ids[i]);
+                medData.setBrandName(medication_Name);
+                storeMedicationData(medData);
 
-            MedicationSchedule medSchedule = new MedicationSchedule(Integer.toString(i));
-            medSchedule.setMondayChecked(isMondayChecked);
-            medSchedule.setTuesdayChecked(isTuesdayChecked);
-            medSchedule.setWednesdayChecked(isWednesdayChecked);
-            medSchedule.setThursdayChecked(isThursdayChecked);
-            medSchedule.setFridayChecked(isFridayChecked);
-            medSchedule.setSaturdayChecked(isSaturdayChecked);
-            medSchedule.setSundayChecked(isSundayChecked);
-            medSchedule.setDailyFrequency(dailyFrequencyValue);
-            medSchedule.setHoursFrequency(timeBetweenIntakeValue);
-            storeMedicationSchedule(medSchedule);
+                MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids[i]);
+                medSchedule.setMondayChecked(isMondayChecked);
+                medSchedule.setTuesdayChecked(isTuesdayChecked);
+                medSchedule.setWednesdayChecked(isWednesdayChecked);
+                medSchedule.setThursdayChecked(isThursdayChecked);
+                medSchedule.setFridayChecked(isFridayChecked);
+                medSchedule.setSaturdayChecked(isSaturdayChecked);
+                medSchedule.setSundayChecked(isSundayChecked);
+                medSchedule.setDailyFrequency(dailyFrequencyValue);
+                medSchedule.setHoursFrequency(timeBetweenIntakeValue);
+                storeMedicationSchedule(medSchedule);
 
-            prescriptionData.setMedicationID(medData.getMedicationID());
-            prescriptionData.setScheduleID(medSchedule.getScheduleID());
-            storePrescriptionData(prescriptionData);
+                prescriptionData = new PrescriptionData(prescription_ids[i]);
+                prescriptionData.setMedicationID(medData.getMedicationID());
+                prescriptionData.setScheduleID(medSchedule.getScheduleID());
+                storePrescriptionData(prescriptionData);
 
-            //TODO Store medication/schedule ids in array in prescriptionData object
+                //TODO Store medication/schedule ids in array in prescriptionData object. Done - HR
 
+            }
+
+
+        } else {
+            for (int i = 0; i < prescription_ids.length; i++) {
+                medication_Name=medicationNameEditTextList.get(i).getText().toString();
+
+                isSundayChecked=dayCheckboxList.get(i*7).isChecked();
+                isMondayChecked=dayCheckboxList.get(i*7 +1).isChecked();
+                isTuesdayChecked=dayCheckboxList.get(i*7 + 2).isChecked();
+                isWednesdayChecked=dayCheckboxList.get(i*7 + 3).isChecked();
+                isThursdayChecked=dayCheckboxList.get(i*7 + 4).isChecked();
+                isFridayChecked=dayCheckboxList.get(i*7 + 5).isChecked();
+                isSaturdayChecked=dayCheckboxList.get(i*7 + 6).isChecked();
+
+                dailyFrequencyValue=timesPerDaySpinnerList.get(i).getSelectedItem().toString();
+                timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
+
+                Log.d("MedicalProfAccess","patient_Id = " + patient_Id);
+                Log.d("MedicalProfAccess", "prescription_id =" + prescription_ids[i]);
+                Log.d("MedicalProfAccess","medication_Name = " + medication_Name);
+                Log.d("MedicalProfAccess","isMondayChecked = " + isMondayChecked);
+                Log.d("MedicalProfAccess","isTuesdayChecked = " + isTuesdayChecked);
+                Log.d("MedicalProfAccess","isWednesdayChecked = " + isWednesdayChecked);
+                Log.d("MedicalProfAccess","isThursdayChecked = " + isThursdayChecked);
+                Log.d("MedicalProfAccess","isFridayChecked = " + isFridayChecked);
+                Log.d("MedicalProfAccess","isSaturdayChecked = " + isSaturdayChecked);
+                Log.d("MedicalProfAccess","isSundayChecked = " + isSundayChecked);
+                Log.d("MedicalProfAccess","dailyFrequencyValue = " + dailyFrequencyValue);
+                Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
+                Log.d("MedicalProfAccess","\n\n");
+
+                MedicationData medData = new MedicationData(medication_ids[i]);
+                medData.setBrandName(medication_Name);
+                storeMedicationData(medData);
+
+                MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids[i]);
+                medSchedule.setMondayChecked(isMondayChecked);
+                medSchedule.setTuesdayChecked(isTuesdayChecked);
+                medSchedule.setWednesdayChecked(isWednesdayChecked);
+                medSchedule.setThursdayChecked(isThursdayChecked);
+                medSchedule.setFridayChecked(isFridayChecked);
+                medSchedule.setSaturdayChecked(isSaturdayChecked);
+                medSchedule.setSundayChecked(isSundayChecked);
+                medSchedule.setDailyFrequency(dailyFrequencyValue);
+                medSchedule.setHoursFrequency(timeBetweenIntakeValue);
+                storeMedicationSchedule(medSchedule);
+
+                prescriptionData = new PrescriptionData(prescription_ids[i]);
+                prescriptionData.setMedicationID(medData.getMedicationID());
+                prescriptionData.setScheduleID(medSchedule.getScheduleID());
+                storePrescriptionData(prescriptionData);
+            }
+
+            for (int i = prescription_ids.length; i < medicationNameEditTextList.size(); i++) {
+                medication_Name=medicationNameEditTextList.get(i).getText().toString();
+
+                isSundayChecked=dayCheckboxList.get(i*7).isChecked();
+                isMondayChecked=dayCheckboxList.get(i*7 +1).isChecked();
+                isTuesdayChecked=dayCheckboxList.get(i*7 + 2).isChecked();
+                isWednesdayChecked=dayCheckboxList.get(i*7 + 3).isChecked();
+                isThursdayChecked=dayCheckboxList.get(i*7 + 4).isChecked();
+                isFridayChecked=dayCheckboxList.get(i*7 + 5).isChecked();
+                isSaturdayChecked=dayCheckboxList.get(i*7 + 6).isChecked();
+
+                dailyFrequencyValue=timesPerDaySpinnerList.get(i).getSelectedItem().toString();
+                timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
+
+                Log.d("MedicalProfAccess","patient_Id = " + patient_Id);
+                Log.d("MedicalProfAccess", "prescription_id =" + prescription_ids[i]);
+                Log.d("MedicalProfAccess","medication_Name = " + medication_Name);
+                Log.d("MedicalProfAccess","isMondayChecked = " + isMondayChecked);
+                Log.d("MedicalProfAccess","isTuesdayChecked = " + isTuesdayChecked);
+                Log.d("MedicalProfAccess","isWednesdayChecked = " + isWednesdayChecked);
+                Log.d("MedicalProfAccess","isThursdayChecked = " + isThursdayChecked);
+                Log.d("MedicalProfAccess","isFridayChecked = " + isFridayChecked);
+                Log.d("MedicalProfAccess","isSaturdayChecked = " + isSaturdayChecked);
+                Log.d("MedicalProfAccess","isSundayChecked = " + isSundayChecked);
+                Log.d("MedicalProfAccess","dailyFrequencyValue = " + dailyFrequencyValue);
+                Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
+                Log.d("MedicalProfAccess","\n\n");
+
+                MedicationData medData = new MedicationData(RandomGenerator.randomGenerator());
+                medData.setBrandName(medication_Name);
+                storeMedicationData(medData);
+
+                MedicationSchedule medSchedule = new MedicationSchedule(RandomGenerator.randomGenerator());
+                medSchedule.setMondayChecked(isMondayChecked);
+                medSchedule.setTuesdayChecked(isTuesdayChecked);
+                medSchedule.setWednesdayChecked(isWednesdayChecked);
+                medSchedule.setThursdayChecked(isThursdayChecked);
+                medSchedule.setFridayChecked(isFridayChecked);
+                medSchedule.setSaturdayChecked(isSaturdayChecked);
+                medSchedule.setSundayChecked(isSundayChecked);
+                medSchedule.setDailyFrequency(dailyFrequencyValue);
+                medSchedule.setHoursFrequency(timeBetweenIntakeValue);
+                storeMedicationSchedule(medSchedule);
+
+                prescriptionData = new PrescriptionData(RandomGenerator.randomGenerator());
+                prescriptionData.setMedicationID(medData.getMedicationID());
+                prescriptionData.setScheduleID(medSchedule.getScheduleID());
+                storePrescriptionData(prescriptionData);
+
+            }
         }
 
     }
@@ -620,6 +736,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         medication_id = prescription.getMedicationID();
         schedule_id = prescription.getScheduleID();
         medication_Name = prescription.getMedicationName();
+
+        medication_ids = appArrayHandling.add(medication_ids, medication_id);
+        schedule_ids = appArrayHandling.add(schedule_ids, schedule_id);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference scheduleDb = db.collection("MedicationSchedule");
