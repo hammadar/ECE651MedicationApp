@@ -41,6 +41,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     private EditText patientId;
 
     //for storing retrieved values
+    String[] prescription_ids;
+    PrescriptionData[] prescriptions;
     String medication_id;
     String schedule_id;
     String medication_Name;
@@ -234,15 +236,21 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             return;
         }
         else{
-            String prescriptionID=patientId.getText().toString().toLowerCase();
+            String patient_id=patientId.getText().toString().toLowerCase();
 
-            Log.d("MedicalProfAccess","prescriptionID = " + prescriptionID);
+            Log.d("MedicalProfAccess","prescriptionID = " + patient_id);
+
+            retrieveAssociatedPrescriptions(patient_id);
+
+            for (int i = 0; i < prescription_ids.length; i++) {
+                getPrescriptionData(prescription_ids[i]);
+            } // got an array of all the asssociated prescriptions. Need to modify code now to display info for each prescription - HR
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             CollectionReference PrescriptionDataDB = db.collection("PrescriptionData");
 
-            DocumentReference docRef= PrescriptionDataDB.document(prescriptionID);
+            /*DocumentReference docRef= PrescriptionDataDB.document(prescriptionID);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -315,7 +323,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         Log.d("MedicalProfAccess", "get failed with ", task.getException());
                     }
                 }
-            });
+            });*/
         }
     }
 
@@ -545,5 +553,59 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         CollectionReference PrescriptionData = db.collection("PrescriptionData");
         PrescriptionData.document(prescriptionData.getPrescriptionID()).set(prescriptionData);
+    }
+
+    public void retrieveAssociatedPrescriptions(String patientID) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference patientDb = db.collection("Patients");
+        DocumentReference docRef= patientDb.document(patientID);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Patient retrievedPatient = document.toObject(Patient.class);
+                        prescription_ids = retrievedPatient.getAssociatedPrescriptions();
+                        prescriptions = new PrescriptionData[prescription_ids.length];
+
+                        } else {
+                        Log.d("Pat. Prescr.", "get failed with ", task.getException());
+                            }
+                }
+                        };
+
+
+
+        });
+    }
+
+    public void getPrescriptionData(String prescriptionID) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference prescriptionDb = db.collection("PrescriptionData");
+        DocumentReference docRef = prescriptionDb.document(prescriptionID);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        PrescriptionData prescription = document.toObject(PrescriptionData.class);
+                        prescriptions = appArrayHandling.add(prescriptions, prescription);
+
+                    } else {
+                        Log.d("Prescrip..", "get failed with ", task.getException());
+                    }
+                }
+            };
+
+
+
+        });
+
     }
 }

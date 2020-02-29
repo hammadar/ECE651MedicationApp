@@ -66,4 +66,16 @@ public class appArrayHandling {
         }
         return tempArray;
     }
+
+    public static PrescriptionData[] add(PrescriptionData[] originalArray, PrescriptionData newItem) {
+        int currentSize = originalArray.length;
+        int newSize = currentSize + 1;
+        PrescriptionData[] tempArray = new PrescriptionData[newSize];
+        for (int i=0; i < currentSize; i++)
+        {
+            tempArray[i] = originalArray [i];
+        }
+        tempArray[newSize- 1] = newItem;
+        return tempArray;
+    }
 }
