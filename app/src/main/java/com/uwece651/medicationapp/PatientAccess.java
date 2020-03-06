@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,6 +37,7 @@ import java.util.List;
 public class PatientAccess extends AppCompatActivity {
 
     private EditText patientId;
+    private FirebaseAuth mAuth;
 
     //for storing retrieved values
     String medication_id;
@@ -50,6 +52,7 @@ public class PatientAccess extends AppCompatActivity {
     Boolean isSundayChecked;
     String dailyFrequencyValue;
     String timeBetweenIntakeValue;
+    String currentUserName;
 
     private int numberOfMedications=0;
 
@@ -62,6 +65,7 @@ public class PatientAccess extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_patient_access);
         Button signOutButton = findViewById(R.id.signOutButton);
         Button retrieveMyInfoButton = findViewById(R.id.retrieveMyInfo);
@@ -75,7 +79,6 @@ public class PatientAccess extends AppCompatActivity {
                 retrievePatientInfo();
             }
         });
-        patientId=findViewById(R.id.patientIdString);
     }
 
     public void signOut() {
@@ -227,93 +230,111 @@ public class PatientAccess extends AppCompatActivity {
     }
 
     public void retrievePatientInfo(){
-        if (patientId.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Enter a Patient ID", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        else{
 
-            FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-            String prescriptionID=patientId.getText().toString().toLowerCase();
+        if (currentUser != null) {
 
-            Log.d("MedicalProfAccess","prescriptionID = " + prescriptionID);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            FirebaseFirestore db1 = FirebaseFirestore.getInstance();
-
-            CollectionReference PrescriptionDataDB1 = db1.collection("PrescriptionData");
-
-            DocumentReference docRef= PrescriptionDataDB1.document(prescriptionID);
+            Log.d("PatientAccess", "currentUser.getUid() = " + currentUser.getUid());
+            CollectionReference Users = db.collection("Users");
+            DocumentReference docRef = Users.document(currentUser.getUid());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            PrescriptionData prescription_data = document.toObject(PrescriptionData.class);
-                            medication_id=prescription_data.getMedicationID();
-                            schedule_id=prescription_data.getScheduleID();
+                            PersonalInformation user = document.toObject(PersonalInformation.class);
+                            currentUserName = user.getName().toString().toLowerCase();
 
-                            Log.d("MedicalProfAccess","medication_id = " + medication_id);
-                            Log.d("MedicalProfAccess","schedule_id = " + schedule_id);
+                            Log.d("PatientAccess","currentUserName = " + currentUserName);
 
-                            FirebaseFirestore db1 = FirebaseFirestore.getInstance();
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                            CollectionReference MedicationDataDB1 = db1.collection("MedicationData");
+                            CollectionReference PrescriptionDataDB = db.collection("PrescriptionData");
 
-                            DocumentReference docRef= MedicationDataDB1.document(medication_id);
+                            DocumentReference docRef= PrescriptionDataDB.document(currentUserName);
                             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()) {
-                                            MedicationData medication_data = document.toObject(MedicationData.class);
-                                            medication_Name=medication_data.getBrandName();
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        PrescriptionData prescription_data = document.toObject(PrescriptionData.class);
+                                        medication_id=prescription_data.getMedicationID();
+                                        schedule_id=prescription_data.getScheduleID();
 
-                                            FirebaseFirestore db1 = FirebaseFirestore.getInstance();
+                                        Log.d("PatientAccess","medication_id = " + medication_id);
+                                        Log.d("PatientAccess","schedule_id = " + schedule_id);
 
-                                            CollectionReference MedicationScheduleDB1 = db1.collection("MedicationSchedule");
+                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                                            DocumentReference docRef= MedicationScheduleDB1.document(schedule_id);
-                                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        DocumentSnapshot document = task.getResult();
-                                                        if (document.exists()) {
-                                                            MedicationSchedule schedule_data = document.toObject(MedicationSchedule.class);
-                                                            isMondayChecked=schedule_data.getMondayChecked();
-                                                            isTuesdayChecked=schedule_data.getTuesdayChecked();
-                                                            isWednesdayChecked=schedule_data.getWednesdayChecked();
-                                                            isThursdayChecked=schedule_data.getThursdayChecked();
-                                                            isFridayChecked=schedule_data.getFridayChecked();
-                                                            isSaturdayChecked=schedule_data.getSaturdayChecked();
-                                                            isSundayChecked=schedule_data.getSundayChecked();
-                                                            dailyFrequencyValue=schedule_data.getDailyFrequency();
-                                                            timeBetweenIntakeValue=schedule_data.getHoursFrequency();
+                                        CollectionReference MedicationDataDB = db.collection("MedicationData");
 
-                                                            displayRetrievedData();
+                                        DocumentReference docRef= MedicationDataDB.document(medication_id);
+                                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+                                                    MedicationData medication_data = document.toObject(MedicationData.class);
+                                                    medication_Name=medication_data.getBrandName();
+
+                                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                                                    CollectionReference MedicationScheduleDB = db.collection("MedicationSchedule");
+
+                                                    DocumentReference docRef= MedicationScheduleDB.document(schedule_id);
+                                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            DocumentSnapshot document = task.getResult();
+                                                            if (document.exists()) {
+                                                                MedicationSchedule schedule_data = document.toObject(MedicationSchedule.class);
+                                                                isMondayChecked=schedule_data.getMondayChecked();
+                                                                isTuesdayChecked=schedule_data.getTuesdayChecked();
+                                                                isWednesdayChecked=schedule_data.getWednesdayChecked();
+                                                                isThursdayChecked=schedule_data.getThursdayChecked();
+                                                                isFridayChecked=schedule_data.getFridayChecked();
+                                                                isSaturdayChecked=schedule_data.getSaturdayChecked();
+                                                                isSundayChecked=schedule_data.getSundayChecked();
+                                                                dailyFrequencyValue=schedule_data.getDailyFrequency();
+                                                                timeBetweenIntakeValue=schedule_data.getHoursFrequency();
+
+                                                                displayRetrievedData();
+                                                            }
+                                                        } else {
+                                                            Log.d("PatientAccess", "get failed with ", task.getException());
                                                         }
-                                                    } else {
-                                                        Log.d("MedicalProfAccess", "get failed with ", task.getException());
-                                                    }
+                                                        }
+                                                    });
                                                 }
-                                            });
-                                        }
-                                    } else {
-                                        Log.d("MedicalProfAccess", "get failed with ", task.getException());
+                                            } else {
+                                                Log.d("PatientAccess", "get failed with ", task.getException());
+                                            }
+                                            }
+                                        });
+
                                     }
+                                    else{
+                                        Toast.makeText(getApplicationContext(), "Invalid Patient ID", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                } else {
+                                    Log.d("PatientAccess", "get failed with ", task.getException());
+                                }
                                 }
                             });
-
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Invalid Patient ID", Toast.LENGTH_SHORT).show();
-                            return;
+                        } else {
+                            Intent registerIntent = new Intent(getBaseContext(), RegistrationPage.class);
+                            startActivity(registerIntent);
                         }
                     } else {
-                        Log.d("MedicalProfAccess", "get failed with ", task.getException());
+                        Log.d("PatientAccess", "2 get failed with ", task.getException());
                     }
                 }
             });

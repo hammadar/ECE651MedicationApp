@@ -20,20 +20,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteY="413dp" />
 
-
-    <EditText
-        android:id="@+id/patientIdString"
-        android:layout_width="314dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="43dp"
-        android:layout_marginLeft="43dp"
-        android:layout_marginTop="35dp"
-        android:inputType="text"
-        android:selectAllOnFocus="true"
-        android:text="Enter patient ID" />
-
     <Button
         android:id="@+id/retrieveMyInfo"
         android:layout_width="220dp"

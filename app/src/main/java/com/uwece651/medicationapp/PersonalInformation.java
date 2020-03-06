@@ -11,7 +11,7 @@ public class PersonalInformation {
     public PersonalInformation (String uid) {
         this.uid = uid;
         this.type = null;
-        //this.name = name;
+        this.name = null;
     }
 
     public String getUid () {
