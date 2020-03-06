@@ -64,12 +64,20 @@ public class MedicationDataView extends AppCompatActivity {
         medicationData.setContraindications(ContraindicationsText.getText().toString());
         storeMedicationData(medicationData);
         TextView SuccessMsg = (TextView) findViewById(R.id.textSuccessMsg);
-        SuccessMsg.append(" - Saved to DB!");
+        SuccessMsg.append("New Medication has been saved to DB!");
 
         /* Clear all */
         BrandNameText.setText("");
         GenericNameText.setText("");
-
+        UsedForText.setText("");
+        InstructionsText.setText("");
+        MissedDoseText.setText("");
+        SideEffectsText.setText("");
+        PrecautionText.setText("");
+        InteractionsText.setText("");
+        OverdoseText.setText("");
+        NotesText.setText("");
+        StorageText.setText("");
         ContraindicationsText.setText("");
     }
 
