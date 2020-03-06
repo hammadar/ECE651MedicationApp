@@ -342,7 +342,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         prescription_ids = appArrayHandling.add(prescription_ids, RandomGenerator.randomGenerator(20));
         medication_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
-        schedule_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
+        schedule_ids = appArrayHandling.add(schedule_ids, RandomGenerator.randomGenerator(20));
 
         TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
@@ -541,10 +541,12 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 Log.d("MedicalProfAccess","\n\n");
 
                 MedicationData medData = new MedicationData(medication_ids[i]);
+                Log.d("Med ID", medication_ids[i]);
                 medData.setBrandName(medication_Name);
                 storeMedicationData(medData);
 
                 MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids[i]);
+                Log.d("Sched ID", schedule_ids[i]);
                 medSchedule.setMondayChecked(isMondayChecked);
                 medSchedule.setTuesdayChecked(isTuesdayChecked);
                 medSchedule.setWednesdayChecked(isWednesdayChecked);
@@ -557,6 +559,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 storeMedicationSchedule(medSchedule);
 
                 prescriptionData = new PrescriptionData(prescription_ids[i]);
+                Log.d("Pres ID", prescription_ids[i]);
                 prescriptionData.setMedicationID(medData.getMedicationID());
                 prescriptionData.setScheduleID(medSchedule.getScheduleID());
                 storePrescriptionData(prescriptionData);
