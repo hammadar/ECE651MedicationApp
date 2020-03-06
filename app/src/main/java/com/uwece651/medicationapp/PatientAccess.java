@@ -321,7 +321,7 @@ public class PatientAccess extends AppCompatActivity {
 
                                     }
                                     else{
-                                        Toast.makeText(getApplicationContext(), "Invalid Patient ID", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "No records found for current patient", Toast.LENGTH_SHORT).show();
                                         return;
                                     }
                                 } else {
