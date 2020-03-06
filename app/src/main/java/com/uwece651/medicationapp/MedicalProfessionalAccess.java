@@ -475,7 +475,17 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
     public void savePatientData(){
 
-        int newPrescriptions = medicationNameEditTextList.size() - prescriptions.length;
+
+
+
+        int newPrescriptions;// = medicationNameEditTextList.size() - prescriptions.length;
+
+        if (prescriptions != null) {
+            newPrescriptions = medicationNameEditTextList.size() - prescriptions.length;
+        } else {
+            newPrescriptions = medicationNameEditTextList.size();
+        }
+
         String patient_Id=patientId.getText().toString().toLowerCase();
         String prescriptionID;
         String medicationID;
@@ -721,7 +731,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         prescriptions = appArrayHandling.add(prescriptions, prescription);
 
                     } else {
-                        Log.d("Prescrip..", "get failed with ", task.getException());
+                        Log.d("Prescrip.", "get failed with ", task.getException());
                     }
                 }
             };
