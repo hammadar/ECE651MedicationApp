@@ -13,7 +13,7 @@ public class MedicationData {
     private String Notes;
     private String MissedDose;
     private String Storage;
-    private String Contraindictions;
+    private String Contraindications;
 
     public MedicationData() { }
 
@@ -30,7 +30,7 @@ public class MedicationData {
         this.Notes = null;
         this.MissedDose = null;
         this.Storage = null;
-        this.Contraindictions = null;
+        this.Contraindications = null;
     }
 
     public String getMedicationID () {
@@ -40,86 +40,79 @@ public class MedicationData {
     public String getBrandName() {
         return this.BrandName;
     }
-
     public void setBrandName(String BrandName) {
         this.BrandName = BrandName;
     }
+
     public String getGenericName() {
         return this.GenericName;
     }
-
     public void setGenericName(String GenericName) {
         this.GenericName = GenericName;
     }
+
     public String getUsedFor() {
         return this.UsedFor;
     }
-
     public void setUsedFor(String UsedFor) {
         this.UsedFor = UsedFor;
     }
+
     public String getInstructions() {
         return this.Instructions;
     }
-
     public void setInstructions(String Instructions) {
         this.Instructions = Instructions;
     }
+
     public String getSideEffects() {
         return this.SideEffects;
     }
-
     public void setSideEffects(String SideEffects) {
         this.SideEffects = SideEffects;
     }
+
     public String getPrecautions() {
         return this.Precautions;
     }
+    public void setPrecautions(String Precautions) {        this.Precautions = Precautions;    }
 
-    public void setPrecautions(String Precautions) {
-        this.Precautions = Precautions;
-    }
     public String getDrugInteractions() {
         return this.DrugInteractions;
     }
+    public void setDrugInteractions(String DrugInteractions) {        this.DrugInteractions = DrugInteractions;    }
 
-    public void setDrugInteractions(String DrugInteractions) {
-        this.DrugInteractions = DrugInteractions;
-    }
     public String getOverdose() {
         return this.Overdose;
     }
-
     public void setOverdose(String Overdose) {
         this.Overdose = Overdose;
     }
+
     public String getNotes() {
         return this.Notes;
     }
-
     public void setNotes(String Notes) {
         this.Notes = Notes;
     }
-    public String getMissedDose() {
-        return this.MissedDose;
-    }
 
+    public String getMissedDose() {        return this.MissedDose;    }
     public void setMissedDose(String MissedDose) {
         this.MissedDose = MissedDose;
     }
+
     public String getStorage() {
         return this.Storage;
     }
-
     public void setStorage(String Storage) {
         this.Storage = Storage;
     }
-    public String getContraindictions() {
-        return this.Contraindictions;
-    }
 
-    public void setContraindictions(String Contraindictions) {
-        this.Contraindictions = Contraindictions;
+    public String getContraindications() {
+        return this.Contraindications;
+    }
+    public void setContraindications(String Contraindications) {
+        this.Contraindications = Contraindications;
     }
 }
 
