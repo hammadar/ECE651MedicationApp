@@ -45,4 +45,14 @@
         android:layout_marginBottom="100dp"
         android:text="Sign Out" />
 
+    <Button
+        android:id="@+id/PB_addMedication"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="86dp"
+        android:layout_marginBottom="274dp"
+        android:text="Add Medication" />
+
 </RelativeLayout>
