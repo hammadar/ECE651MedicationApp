@@ -340,6 +340,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         numberOfMedications++;
 
+        prescription_ids = appArrayHandling.add(prescription_ids, RandomGenerator.randomGenerator(20));
+        medication_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
+        schedule_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
+
         TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
         //Medication Name
@@ -478,13 +482,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
 
 
-        int newPrescriptions;// = medicationNameEditTextList.size() - prescriptions.length;
+        /*int newPrescriptions;// = medicationNameEditTextList.size() - prescriptions.length;
 
         if (prescriptions != null) {
             newPrescriptions = medicationNameEditTextList.size() - prescriptions.length;
         } else {
             newPrescriptions = medicationNameEditTextList.size();
-        }
+        }*/
 
         String patient_Id=patientId.getText().toString().toLowerCase();
         String prescriptionID;
@@ -507,7 +511,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         //TODO Need to figure out this registration issue
         //prescriptionData.setAssignedByDoctorName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
-        if (newPrescriptions == 0) {
+        //if (newPrescriptions == 0) {
             for (int i = 0; i < medicationNameEditTextList.size(); i++) {
                 medication_Name=medicationNameEditTextList.get(i).getText().toString();
 
@@ -562,7 +566,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             }
 
 
-        } else {
+        /*} else {
             for (int i = 0; i < prescription_ids.length; i++) {
                 medication_Name=medicationNameEditTextList.get(i).getText().toString();
 
@@ -641,11 +645,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
                 Log.d("MedicalProfAccess","\n\n");
 
-                MedicationData medData = new MedicationData(RandomGenerator.randomGenerator());
+                MedicationData medData = new MedicationData(RandomGenerator.randomGenerator(20));
                 medData.setBrandName(medication_Name);
                 storeMedicationData(medData);
 
-                MedicationSchedule medSchedule = new MedicationSchedule(RandomGenerator.randomGenerator());
+                MedicationSchedule medSchedule = new MedicationSchedule(RandomGenerator.randomGenerator(20));
                 medSchedule.setMondayChecked(isMondayChecked);
                 medSchedule.setTuesdayChecked(isTuesdayChecked);
                 medSchedule.setWednesdayChecked(isWednesdayChecked);
@@ -657,13 +661,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 medSchedule.setHoursFrequency(timeBetweenIntakeValue);
                 storeMedicationSchedule(medSchedule);
 
-                prescriptionData = new PrescriptionData(RandomGenerator.randomGenerator());
+                prescriptionData = new PrescriptionData(prescription_ids[i]);
                 prescriptionData.setMedicationID(medData.getMedicationID());
                 prescriptionData.setScheduleID(medSchedule.getScheduleID());
                 storePrescriptionData(prescriptionData);
 
             }
-        }
+        }*/
 
     }
 

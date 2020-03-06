@@ -7,6 +7,12 @@ public class appArrayHandling {
 
     public static String[] add(String[] originalArray, String newItem) //found code online - HR
     {
+        if (originalArray == null) {
+            String[] item = new String[1];
+            item[0] = newItem;
+            return item;
+        }
+
         int currentSize = originalArray.length;
         int newSize = currentSize + 1;
         String[] tempArray = new String[ newSize ];
@@ -34,6 +40,12 @@ public class appArrayHandling {
 
     public static Patient[] add(Patient[] originalArray, Patient newItem) //found code online - HR
     {
+        if (originalArray == null) {
+            Patient[] item = new Patient[1];
+            item[0] = newItem;
+            return item;
+        }
+
         int currentSize = originalArray.length;
         int newSize = currentSize + 1;
         Patient[] tempArray = new Patient[ newSize ];
@@ -47,6 +59,12 @@ public class appArrayHandling {
 
     public static LocalTime[] add(LocalTime[] originalArray, LocalTime newItem) //added to support LocalTime array - JL
     {
+        if (originalArray == null) {
+            LocalTime[] item = new LocalTime[1];
+            item[0] = newItem;
+            return item;
+        }
+
         int currentSize = originalArray.length;
         int newSize = currentSize + 1;
         LocalTime[] tempArray = new LocalTime[ newSize ];
@@ -68,6 +86,13 @@ public class appArrayHandling {
     }
 
     public static PrescriptionData[] add(PrescriptionData[] originalArray, PrescriptionData newItem) {
+
+        if (originalArray == null) {
+            PrescriptionData[] item = new PrescriptionData[1];
+            item[0] = newItem;
+            return item;
+        }
+
         int currentSize = originalArray.length;
         int newSize = currentSize + 1;
         PrescriptionData[] tempArray = new PrescriptionData[newSize];
