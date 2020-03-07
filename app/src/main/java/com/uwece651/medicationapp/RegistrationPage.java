@@ -95,10 +95,12 @@ public class RegistrationPage extends AppCompatActivity {
         Users.document(user.getUid()).set(user);
         if (user.getType() == "Patient") {
             Patient patient = new Patient(user.getUid());
+            patient.setName(user.getName());
             registerPatient(patient);
             goToPatientAccess();
         } else {
             Doctor doctor = new Doctor(user.getUid());
+            doctor.setName(user.getName());
             registerDoctor(doctor);
             goToMedProfAccess();
         }
