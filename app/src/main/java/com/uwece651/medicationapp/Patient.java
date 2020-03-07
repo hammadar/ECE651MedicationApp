@@ -29,6 +29,8 @@ public class Patient extends PersonalInformation {
     private Doctor assignedDoctor;
 
 
+    public Patient() {}
+
     public Patient(String UID) {
         super(UID);
         super.setType("Patient");

@@ -6,6 +6,8 @@ public class Doctor extends PersonalInformation {
     private String[] specialties;
     private String[] bookedAppointments;
 
+    public Doctor () {}
+
     public Doctor (String UID) {
         super(UID);
         super.setType("Doctor");
