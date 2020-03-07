@@ -245,7 +245,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             return;
         }
         else{
-            String patient_id=patientId.getText().toString().toLowerCase();
+            String patient_id=patientId.getText().toString();
 
             Log.d("MedicalProfAccess","prescriptionID = " + patient_id);
 
@@ -490,7 +490,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             newPrescriptions = medicationNameEditTextList.size();
         }*/
 
-        String patient_Id=patientId.getText().toString().toLowerCase();
+        String patient_Id=patientId.getText().toString();
         String prescriptionID;
         String medicationID;
         String scheduleID;
@@ -563,6 +563,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 prescriptionData.setMedicationID(medData.getMedicationID());
                 prescriptionData.setScheduleID(medSchedule.getScheduleID());
                 storePrescriptionData(prescriptionData);
+
+                savePatientPrescriptions(patient_Id);
 
                 //TODO Store medication/schedule ids in array in prescriptionData object. Done - HR
 
@@ -747,6 +749,32 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         });
 
+    }
+
+    public void savePatientPrescriptions(String patientID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference patientsDb = db.collection("Patients");
+        final DocumentReference docRef = patientsDb.document(patientID);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Patient patient = document.toObject(Patient.class);
+                        patient.setAssociatedPrescriptions(prescription_ids);
+                        docRef.set(patient);
+
+                    } else {
+                        Log.d("SavePrescrip.", "get failed with ", task.getException());
+                    }
+                }
+            };
+
+
+
+        });
     }
 
     public void setClassVariables(PrescriptionData prescription) {
