@@ -32,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MedicalProfessionalAccess extends AppCompatActivity {
@@ -57,6 +58,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     Boolean isSundayChecked;
     String dailyFrequencyValue;
     String timeBetweenIntakeValue;
+    Patient currentPatient;
 
     private int numberOfMedications=0;
 
@@ -754,27 +756,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     public void savePatientPrescriptions(String patientID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference patientsDb = db.collection("Patients");
-        final DocumentReference docRef = patientsDb.document(patientID);
+        DocumentReference docRef = patientsDb.document(patientID);
 
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Patient patient = document.toObject(Patient.class);
-                        patient.setAssociatedPrescriptions(prescription_ids);
-                        docRef.set(patient);
-
-                    } else {
-                        Log.d("SavePrescrip.", "get failed with ", task.getException());
-                    }
-                }
-            };
+        docRef.update("associatedPrescriptions", Arrays.asList(prescription_ids));
 
 
-
-        });
     }
 
     public void setClassVariables(PrescriptionData prescription) {
