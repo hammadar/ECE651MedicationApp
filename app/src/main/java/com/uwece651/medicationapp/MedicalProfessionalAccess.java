@@ -42,7 +42,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     private EditText patientId;
 
     //for storing retrieved values
-    String[] prescription_ids;
+    List<String> prescription_ids;
     PrescriptionData[] prescriptions; //previous two are static for each patient. Items below will change for each prescription - HR
     String[] medication_ids;
     String[] schedule_ids;
@@ -85,7 +85,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 retrievePatientInfo();
-                displayRetrievedData();
+                //displayRetrievedData();
             }
         });
 
@@ -109,8 +109,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         //TODO for loop  number of prescriptions in patient class?
 
-        for (int i = 0; i < prescriptions.length; i++) {
-            setClassVariables(prescriptions[i]);
+
+            //setClassVariables(prescription);
+
 
             TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
@@ -236,7 +237,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
             tr3.addView(ll3);
             tl.addView(tr3);
-        }
+
 
 
     }
@@ -249,13 +250,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         else{
             String patient_id=patientId.getText().toString();
 
-            Log.d("MedicalProfAccess","prescriptionID = " + patient_id);
+            Log.d("MedicalProfAccess","patientID = " + patient_id);
 
             retrieveAssociatedPrescriptions(patient_id);
 
-            for (int i = 0; i < prescription_ids.length; i++) {
-                getPrescriptionData(prescription_ids[i]);
-            } // got an array of all the asssociated prescriptions. Need to modify code now to display info for each prescription - HR
+            // got an array of all the asssociated prescriptions. Need to modify code now to display info for each prescription - HR
 
             /*FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -342,7 +341,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         numberOfMedications++;
 
-        prescription_ids = appArrayHandling.add(prescription_ids, RandomGenerator.randomGenerator(20));
+        prescription_ids.add(RandomGenerator.randomGenerator(20));
         medication_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
         schedule_ids = appArrayHandling.add(schedule_ids, RandomGenerator.randomGenerator(20));
 
@@ -529,7 +528,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
 
                 Log.d("MedicalProfAccess","patient_Id = " + patient_Id);
-                Log.d("MedicalProfAccess", "prescription_id =" + prescription_ids[i]);
+                Log.d("MedicalProfAccess", "prescription_id =" + prescription_ids.get(i));
                 Log.d("MedicalProfAccess","medication_Name = " + medication_Name);
                 Log.d("MedicalProfAccess","isMondayChecked = " + isMondayChecked);
                 Log.d("MedicalProfAccess","isTuesdayChecked = " + isTuesdayChecked);
@@ -560,8 +559,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 medSchedule.setHoursFrequency(timeBetweenIntakeValue);
                 storeMedicationSchedule(medSchedule);
 
-                prescriptionData = new PrescriptionData(prescription_ids[i]);
-                Log.d("Pres ID", prescription_ids[i]);
+                prescriptionData = new PrescriptionData(prescription_ids.get(i));
+                Log.d("Pres ID", prescription_ids.get(i));
                 prescriptionData.setMedicationID(medData.getMedicationID());
                 prescriptionData.setScheduleID(medSchedule.getScheduleID());
                 storePrescriptionData(prescriptionData);
@@ -711,11 +710,25 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Patient retrievedPatient = document.toObject(Patient.class);
-                        prescription_ids = retrievedPatient.getAssociatedPrescriptions();
-                        prescriptions = new PrescriptionData[prescription_ids.length];
+                        //Patient retrievedPatient = document.toObject(Patient.class);
+                        //Log.d("retrievedPatient", retrievedPatient.getUid());
+                        prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
+                        //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
 
-                        } else {
+                        for (int i = 0; i < prescription_ids.size(); i++) {
+                            Log.d("prescriptionID", prescription_ids.get(i));
+                        }
+
+                        if (prescription_ids != null) {
+                            prescriptions = new PrescriptionData[prescription_ids.size()];
+                            for (int i = 0; i < prescription_ids.size(); i++) {
+                                Log.d("RAP", "running " + i + " time\n");
+                                getPrescriptionData(prescription_ids.get(i));
+                            }
+                        }
+
+
+                    } else {
                         Log.d("Pat. Prescr.", "get failed with ", task.getException());
                             }
                 }
@@ -740,6 +753,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                     if (document.exists()) {
                         PrescriptionData prescription = document.toObject(PrescriptionData.class);
                         prescriptions = appArrayHandling.add(prescriptions, prescription);
+                        Log.d("GPD", "running with " + prescription.getPrescriptionID() + "\n");
+                        setClassVariables(prescription);
 
                     } else {
                         Log.d("Prescrip.", "get failed with ", task.getException());
@@ -758,7 +773,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         CollectionReference patientsDb = db.collection("Patients");
         DocumentReference docRef = patientsDb.document(patientID);
 
-        docRef.update("associatedPrescriptions", Arrays.asList(prescription_ids));
+        docRef.update("associatedPrescriptions", prescription_ids);
 
 
     }
@@ -791,6 +806,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         isSundayChecked = schedule.getSundayChecked();
                         dailyFrequencyValue = schedule.getDailyFrequency();
                         timeBetweenIntakeValue = schedule.getHoursFrequency();
+                        displayRetrievedData();
 
 
                     } else {

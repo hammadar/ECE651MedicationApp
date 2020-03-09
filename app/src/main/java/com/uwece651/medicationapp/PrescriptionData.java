@@ -35,6 +35,10 @@ public class PrescriptionData {
         return this.PrescriptionID;
     }
 
+    public void setPrescriptionID (String prescriptionID) {
+        this.PrescriptionID = prescriptionID;
+    }
+
     public String getMedicationID () {
         return this.MedicationID;
     }
