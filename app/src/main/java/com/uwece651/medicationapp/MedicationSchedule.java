@@ -104,59 +104,59 @@ public class MedicationSchedule {
 //    }
 
     public Boolean getMondayChecked() {
-        return isMondayChecked;
+        return this.isMondayChecked;
     }
 
     public void setMondayChecked(Boolean mondayChecked) {
-        isMondayChecked = mondayChecked;
+        this.isMondayChecked = mondayChecked;
     }
 
     public Boolean getTuesdayChecked() {
-        return isTuesdayChecked;
+        return this.isTuesdayChecked;
     }
 
     public void setTuesdayChecked(Boolean tuesdayChecked) {
-        isTuesdayChecked = tuesdayChecked;
+        this.isTuesdayChecked = tuesdayChecked;
     }
 
     public Boolean getWednesdayChecked() {
-        return isWednesdayChecked;
+        return this.isWednesdayChecked;
     }
 
     public void setWednesdayChecked(Boolean wednesdayChecked) {
-        isWednesdayChecked = wednesdayChecked;
+        this.isWednesdayChecked = wednesdayChecked;
     }
 
     public Boolean getThursdayChecked() {
-        return isThursdayChecked;
+        return this.isThursdayChecked;
     }
 
     public void setThursdayChecked(Boolean thursdayChecked) {
-        isThursdayChecked = thursdayChecked;
+        this.isThursdayChecked = thursdayChecked;
     }
 
     public Boolean getFridayChecked() {
-        return isFridayChecked;
+        return this.isFridayChecked;
     }
 
     public void setFridayChecked(Boolean fridayChecked) {
-        isFridayChecked = fridayChecked;
+        this.isFridayChecked = fridayChecked;
     }
 
     public Boolean getSaturdayChecked() {
-        return isSaturdayChecked;
+        return this.isSaturdayChecked;
     }
 
     public void setSaturdayChecked(Boolean saturdayChecked) {
-        isSaturdayChecked = saturdayChecked;
+        this.isSaturdayChecked = saturdayChecked;
     }
 
     public Boolean getSundayChecked() {
-        return isSundayChecked;
+        return this.isSundayChecked;
     }
 
     public void setSundayChecked(Boolean sundayChecked) {
-        isSundayChecked = sundayChecked;
+        this.isSundayChecked = sundayChecked;
     }
 }
 

@@ -71,6 +71,7 @@ public class Patient extends PersonalInformation {
 
     public void addPrescription (String prescription) {
         this.associatedPrescriptions.add(prescription);
+        //this.associatedPrescriptions = appArrayHandling.add(this.associatedPrescriptions, prescription);
     }
 
     public void emptyPrescriptions () {
