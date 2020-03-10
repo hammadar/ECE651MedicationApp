@@ -1,8 +1,12 @@
 package com.uwece651.medicationapp;
 
 
+import com.google.firebase.firestore.Exclude;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Patient extends PersonalInformation {
     // Each user is identified by a Used ID, this is also linked to their Google Sign-in so that we can automatically determine
@@ -23,17 +27,19 @@ public class Patient extends PersonalInformation {
     // }
 
 
-    private String[] associatedPrescriptions;
+    private List<String> associatedPrescriptions;
     private String lastVisitID;
-    private String[] visitHistoryIDs;
-    private Doctor assignedDoctor;
+    private List<String> visitHistoryIDs;
+    private String assignedDoctor; //Doctor UID
 
+
+    public Patient() {}
 
     public Patient(String UID) {
         super(UID);
         super.setType("Patient");
-        this.associatedPrescriptions = new String[0];
-        this.visitHistoryIDs = new String[0];
+        this.associatedPrescriptions = new ArrayList<>();
+        this.visitHistoryIDs = new ArrayList<>();
     }
 
 
@@ -41,32 +47,39 @@ public class Patient extends PersonalInformation {
         return super.getUid();
     }
 
+    @Exclude
     public String[] getAssociatedPrescriptions () {
-        return this.associatedPrescriptions;
+        return this.associatedPrescriptions.toArray(new String[this.associatedPrescriptions.size()]);
     }
 
     public String getLastVisit () {
         return this.lastVisitID;
     }
 
+    @Exclude
     public String[] getVisitHistoryIDs () {
-        return this.visitHistoryIDs;
+        return this.visitHistoryIDs.toArray(new String[this.visitHistoryIDs.size()]);
     }
 
-    public Doctor getAssignedDoctor () {
+    public String getAssignedDoctor () {
         return this.assignedDoctor;
     }
 
     public void setAssociatedPrescriptions (String[] prescriptions) {
-        this.associatedPrescriptions = prescriptions;
+        this.associatedPrescriptions = Arrays.asList(prescriptions);
+    }
+
+    public void setVisitHistoryIDs (String[] visits) {
+        this.visitHistoryIDs = Arrays.asList(visits);
     }
 
     public void addPrescription (String prescription) {
-        this.associatedPrescriptions = appArrayHandling.add(this.associatedPrescriptions, prescription);
+        this.associatedPrescriptions.add(prescription);
+        //this.associatedPrescriptions = appArrayHandling.add(this.associatedPrescriptions, prescription);
     }
 
     public void emptyPrescriptions () {
-        this.associatedPrescriptions = new String[0];
+        this.associatedPrescriptions = new ArrayList<>();
     }
 
     public void setLastVisit (String visitID) {
@@ -74,10 +87,10 @@ public class Patient extends PersonalInformation {
     }
 
     public void addVisit (String visitID) {
-        this.visitHistoryIDs = appArrayHandling.add(visitHistoryIDs, visitID);
+        this.visitHistoryIDs.add(visitID);
     }
 
-    public void setDoctor (Doctor doctor) {
+    public void setDoctor (String doctor) {
         this.assignedDoctor = doctor;
     }
 
