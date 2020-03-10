@@ -74,11 +74,17 @@ public class PatientAccess extends AppCompatActivity {
                 signOut();
             }
         });
+        Button PB_addMedication_button = findViewById(R.id.PB_addMedication);
+        PB_addMedication_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                PB_addMedication();
+            }});
         retrieveMyInfoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 retrievePatientInfo();
             }
         });
+
     }
 
     public void signOut() {
@@ -96,6 +102,12 @@ public class PatientAccess extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+
+    public void PB_addMedication() {
+        Intent intent = new Intent(getBaseContext(), MedicationDataView.class);
+        startActivity(intent);
     }
 
     public void displayRetrievedData(){

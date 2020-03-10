@@ -25,10 +25,8 @@
         android:layout_width="220dp"
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="42dp"
-        android:layout_marginLeft="42dp"
         android:layout_marginBottom="602dp"
         android:text="Retrieve Patient Data"
         tools:layout_editor_absoluteX="71dp"
@@ -39,25 +37,31 @@
         android:layout_width="220dp"
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="43dp"
-        android:layout_marginLeft="43dp"
         android:layout_marginBottom="548dp"
         android:text="Sign Out" />
+
+    <Button
+        android:id="@+id/PB_addMedication"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="257dp"
+        android:layout_marginBottom="668dp"
+        android:text="Add Medication" />
 
     <ScrollView
         android:id="@+id/PatientInfoScrollView"
         android:layout_width="342dp"
         android:layout_height="494dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="31dp">
+        android:layout_marginStart="34dp"
+        android:layout_marginBottom="29dp">
 
         <TableLayout
             android:id="@+id/patientMedDataTableLayout"
@@ -67,6 +71,5 @@
         </TableLayout>
 
     </ScrollView>
-
 
 </RelativeLayout>
