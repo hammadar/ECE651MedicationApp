@@ -51,7 +51,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="257dp"
         android:layout_marginBottom="668dp"
-        android:text="Add Medication" />
+        android:text="Add Medication"
+        android:visibility="gone"/>
 
     <ScrollView
         android:id="@+id/PatientInfoScrollView"

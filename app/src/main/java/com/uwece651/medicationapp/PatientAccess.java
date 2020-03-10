@@ -40,6 +40,11 @@ public class PatientAccess extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     //for storing retrieved values
+    //for storing retrieved values
+    List<String> prescription_ids;
+    PrescriptionData[] prescriptions; //previous two are static for each patient. Items below will change for each prescription - HR
+    String[] medication_ids;
+    String[] schedule_ids;
     String medication_id;
     String schedule_id;
     String medication_Name;
@@ -52,7 +57,7 @@ public class PatientAccess extends AppCompatActivity {
     Boolean isSundayChecked;
     String dailyFrequencyValue;
     String timeBetweenIntakeValue;
-    String currentUserName;
+    String currentUID;
 
     private int numberOfMedications=0;
 
@@ -115,7 +120,11 @@ public class PatientAccess extends AppCompatActivity {
 
         //TODO for loop  number of prescriptions in patient class?
 
-        TableLayout tl = findViewById(R.id.patientMedDataTableLayout);
+
+        //setClassVariables(prescription);
+
+
+        TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
         //Medication Name
         TableRow tr = new TableRow(this);
@@ -239,118 +248,123 @@ public class PatientAccess extends AppCompatActivity {
 
         tr3.addView(ll3);
         tl.addView(tr3);
+
+
+
     }
 
     public void retrievePatientInfo(){
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
+        Log.d("PatientAccess","CurrentUser ID = " + currentUser.getUid());
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+        retrieveAssociatedPrescriptions(currentUser.getUid());
 
-            Log.d("PatientAccess", "currentUser.getUid() = " + currentUser.getUid());
-            CollectionReference Users = db.collection("Users");
-            DocumentReference docRef = Users.document(currentUser.getUid());
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            PersonalInformation user = document.toObject(PersonalInformation.class);
-                            currentUserName = user.getName().toString().toLowerCase();
 
-                            Log.d("PatientAccess","currentUserName = " + currentUserName);
+    }
 
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public void retrieveAssociatedPrescriptions(String patientID) {
 
-                            CollectionReference PrescriptionDataDB = db.collection("PrescriptionData");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference patientDb = db.collection("Patients");
+        DocumentReference docRef= patientDb.document(patientID);
 
-                            DocumentReference docRef= PrescriptionDataDB.document(currentUserName);
-                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        PrescriptionData prescription_data = document.toObject(PrescriptionData.class);
-                                        medication_id=prescription_data.getMedicationID();
-                                        schedule_id=prescription_data.getScheduleID();
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //Patient retrievedPatient = document.toObject(Patient.class);
+                        //Log.d("retrievedPatient", retrievedPatient.getUid());
+                        prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
+                        //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
 
-                                        Log.d("PatientAccess","medication_id = " + medication_id);
-                                        Log.d("PatientAccess","schedule_id = " + schedule_id);
+                        for (int i = 0; i < prescription_ids.size(); i++) {
+                            Log.d("prescriptionID", prescription_ids.get(i));
+                        }
 
-                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                                        CollectionReference MedicationDataDB = db.collection("MedicationData");
-
-                                        DocumentReference docRef= MedicationDataDB.document(medication_id);
-                                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                DocumentSnapshot document = task.getResult();
-                                                if (document.exists()) {
-                                                    MedicationData medication_data = document.toObject(MedicationData.class);
-                                                    medication_Name=medication_data.getBrandName();
-
-                                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                                                    CollectionReference MedicationScheduleDB = db.collection("MedicationSchedule");
-
-                                                    DocumentReference docRef= MedicationScheduleDB.document(schedule_id);
-                                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            DocumentSnapshot document = task.getResult();
-                                                            if (document.exists()) {
-                                                                MedicationSchedule schedule_data = document.toObject(MedicationSchedule.class);
-                                                                isMondayChecked=schedule_data.getMondayChecked();
-                                                                isTuesdayChecked=schedule_data.getTuesdayChecked();
-                                                                isWednesdayChecked=schedule_data.getWednesdayChecked();
-                                                                isThursdayChecked=schedule_data.getThursdayChecked();
-                                                                isFridayChecked=schedule_data.getFridayChecked();
-                                                                isSaturdayChecked=schedule_data.getSaturdayChecked();
-                                                                isSundayChecked=schedule_data.getSundayChecked();
-                                                                dailyFrequencyValue=schedule_data.getDailyFrequency();
-                                                                timeBetweenIntakeValue=schedule_data.getHoursFrequency();
-
-                                                                displayRetrievedData();
-                                                            }
-                                                        } else {
-                                                            Log.d("PatientAccess", "get failed with ", task.getException());
-                                                        }
-                                                        }
-                                                    });
-                                                }
-                                            } else {
-                                                Log.d("PatientAccess", "get failed with ", task.getException());
-                                            }
-                                            }
-                                        });
-
-                                    }
-                                    else{
-                                        Toast.makeText(getApplicationContext(), "No records found for current patient", Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-                                } else {
-                                    Log.d("PatientAccess", "get failed with ", task.getException());
-                                }
-                                }
-                            });
-                        } else {
-                            Intent registerIntent = new Intent(getBaseContext(), RegistrationPage.class);
-                            startActivity(registerIntent);
+                        if (prescription_ids != null) {
+                            prescriptions = new PrescriptionData[prescription_ids.size()];
+                            for (int i = 0; i < prescription_ids.size(); i++) {
+                                Log.d("RAP", "running " + i + " time\n");
+                                getPrescriptionData(prescription_ids.get(i));
+                            }
                         }
                     } else {
-                        Log.d("PatientAccess", "2 get failed with ", task.getException());
+                        Log.d("Pat. Prescr.", "get failed with ", task.getException());
                     }
                 }
-            });
-        }
+            };
+        });
+    }
+
+    public void getPrescriptionData(String prescriptionID) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference prescriptionDb = db.collection("PrescriptionData");
+        DocumentReference docRef = prescriptionDb.document(prescriptionID);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        PrescriptionData prescription = document.toObject(PrescriptionData.class);
+                        prescriptions = appArrayHandling.add(prescriptions, prescription);
+                        Log.d("GPD", "running with " + prescription.getPrescriptionID() + "\n");
+                        setClassVariables(prescription);
+
+                    } else {
+                        Log.d("Prescrip.", "get failed with ", task.getException());
+                    }
+                }
+            };
+        });
+    }
+
+    public void setClassVariables(PrescriptionData prescription) {
+        medication_id = prescription.getMedicationID();
+        schedule_id = prescription.getScheduleID();
+        medication_Name = prescription.getMedicationName();
+
+        medication_ids = appArrayHandling.add(medication_ids, medication_id);
+        schedule_ids = appArrayHandling.add(schedule_ids, schedule_id);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference scheduleDb = db.collection("MedicationSchedule");
+        DocumentReference docRef = scheduleDb.document(schedule_id);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        MedicationSchedule schedule = document.toObject(MedicationSchedule.class);
+                        isMondayChecked = schedule.getMondayChecked();
+                        isTuesdayChecked = schedule.getTuesdayChecked();
+                        isWednesdayChecked = schedule.getWednesdayChecked();
+                        isThursdayChecked = schedule.getThursdayChecked();
+                        isFridayChecked = schedule.getFridayChecked();
+                        isSaturdayChecked = schedule.getSaturdayChecked();
+                        isSundayChecked = schedule.getSundayChecked();
+                        dailyFrequencyValue = schedule.getDailyFrequency();
+                        timeBetweenIntakeValue = schedule.getHoursFrequency();
+                        displayRetrievedData();
+
+
+                    } else {
+                        Log.d("Schedule", "get failed with ", task.getException());
+                    }
+                }
+            };
+
+
+
+        });
     }
 }
 
