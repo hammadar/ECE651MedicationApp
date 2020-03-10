@@ -80,6 +80,7 @@ public class RegistrationPage extends AppCompatActivity {
         if (patientButton.isChecked()) { type = "Patient"; } else { type = "Doctor";}
 
         user = new PersonalInformation(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        Log.d("Registration","CurrentUser display name = " + FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         user.setName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         user.setType(type);
         registerUser(user);
