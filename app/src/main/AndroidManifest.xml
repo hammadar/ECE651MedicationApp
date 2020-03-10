@@ -12,6 +12,7 @@
         <activity android:name=".MainActivity"/>
         <activity android:name=".RegistrationPage"></activity>
         <activity android:name=".PatientAccess" />
+        <activity android:name=".MedicationDataView" />
         <activity
             android:name=".MedicalProfessionalAccess"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"/>
