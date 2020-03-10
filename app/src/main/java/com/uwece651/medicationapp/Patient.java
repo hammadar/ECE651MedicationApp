@@ -69,6 +69,10 @@ public class Patient extends PersonalInformation {
         this.associatedPrescriptions = Arrays.asList(prescriptions);
     }
 
+    public void setVisitHistoryIDs (String[] visits) {
+        this.visitHistoryIDs = Arrays.asList(visits);
+    }
+
     public void addPrescription (String prescription) {
         this.associatedPrescriptions.add(prescription);
         //this.associatedPrescriptions = appArrayHandling.add(this.associatedPrescriptions, prescription);
