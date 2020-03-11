@@ -129,7 +129,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
             LinearLayout ll= new LinearLayout(this);
             TextView tv = new TextView(this);
-            tv.setText("Medication "+medication_id+ " Name:");
+            tv.setText("Medication Name:");
 
             EditText et= new EditText(this);
             et.setWidth(500);
@@ -269,6 +269,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         numberOfMedications++;
 
+        if(prescription_ids == null){
+            prescription_ids = new ArrayList<>();
+        }
+
         prescription_ids.add(RandomGenerator.randomGenerator(20));
         medication_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
         schedule_ids = appArrayHandling.add(schedule_ids, RandomGenerator.randomGenerator(20));
@@ -280,7 +284,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         LinearLayout ll= new LinearLayout(this);
         TextView tv = new TextView(this);
-        tv.setText("Medication "+numberOfMedications+ " Name:");
+        tv.setText("Medication Name:");
 
         EditText et= new EditText(this);
         et.setWidth(500);

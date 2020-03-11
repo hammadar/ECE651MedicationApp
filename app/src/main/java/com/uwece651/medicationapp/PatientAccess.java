@@ -131,7 +131,7 @@ public class PatientAccess extends AppCompatActivity {
 
         LinearLayout ll= new LinearLayout(this);
         TextView tv = new TextView(this);
-        tv.setText("Medication "+medication_id+ " Name:");
+        tv.setText("Medication Name:");
 
         EditText et= new EditText(this);
         et.setWidth(500);
