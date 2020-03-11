@@ -477,6 +477,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             Log.d("Pres ID", prescription_ids.get(i));
             prescriptionData.setMedicationID(medData.getMedicationID());
             prescriptionData.setScheduleID(medSchedule.getScheduleID());
+            prescriptionData.setMedicationName(medication_Name);
             storePrescriptionData(prescriptionData);
 
             savePatientPrescriptions(patient_Id);
