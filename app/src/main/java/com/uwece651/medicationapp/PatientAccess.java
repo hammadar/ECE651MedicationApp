@@ -200,7 +200,7 @@ public class PatientAccess extends AppCompatActivity {
         Spinner dailyFrequencySpinner = new Spinner(this);
         final String[] dailyFrequencyArray = getResources().getStringArray(R.array.medication_daily_frequency);
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dailyFrequencyArray);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dailyFrequencyArray);
         dailyFrequencySpinner.setAdapter(arrayAdapter);
         int spinnerposition = arrayAdapter.getPosition(dailyFrequencyValue);
         dailyFrequencySpinner.setSelection(spinnerposition);
@@ -278,19 +278,23 @@ public class PatientAccess extends AppCompatActivity {
                     if (document.exists()) {
                         //Patient retrievedPatient = document.toObject(Patient.class);
                         //Log.d("retrievedPatient", retrievedPatient.getUid());
-                        prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
+                        prescription_ids = (List<String>) document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
                         //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
-
-                        for (int i = 0; i < prescription_ids.size(); i++) {
-                            Log.d("prescriptionID", prescription_ids.get(i));
-                        }
-
                         if (prescription_ids != null) {
-                            prescriptions = new PrescriptionData[prescription_ids.size()];
                             for (int i = 0; i < prescription_ids.size(); i++) {
-                                Log.d("RAP", "running " + i + " time\n");
-                                getPrescriptionData(prescription_ids.get(i));
+                                Log.d("prescriptionID", prescription_ids.get(i));
                             }
+
+                            if (prescription_ids.size() != 0) {
+                                prescriptions = new PrescriptionData[prescription_ids.size()];
+                                for (int i = 0; i < prescription_ids.size(); i++) {
+                                    Log.d("RAP", "running " + i + " time\n");
+                                    getPrescriptionData(prescription_ids.get(i));
+                                }
+                            }
+                        } else {
+                            Log.d("Pat. Prescr.", "fetched 0 records ", task.getException());
+                            Toast.makeText(getApplicationContext(),"No Prescriptions Found under your ID",Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Log.d("Pat. Prescr.", "get failed with ", task.getException());
