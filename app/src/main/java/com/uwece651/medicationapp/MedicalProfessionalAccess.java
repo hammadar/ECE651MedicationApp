@@ -36,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class MedicalProfessionalAccess extends AppCompatActivity {
     private Button retrievePatientInfoButton;
@@ -266,9 +267,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             prescription_ids = new ArrayList<>();
         }
 
-        prescription_ids.add(RandomGenerator.randomGenerator(20));
-        medication_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
-        schedule_ids = appArrayHandling.add(schedule_ids, RandomGenerator.randomGenerator(20));
+        prescription_ids.add(UUID.randomUUID().toString());
+        medication_ids = appArrayHandling.add(medication_ids, UUID.randomUUID().toString());
+        schedule_ids = appArrayHandling.add(schedule_ids, UUID.randomUUID().toString());
 
         TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
