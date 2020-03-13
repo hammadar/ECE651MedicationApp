@@ -11,7 +11,7 @@ public class MedicationDataTest {
     @Before
     public void before() {
         this.medicationData.setBrandName("BrandName");
-        this.medicationData.setContraindictions("Weirdness");
+        this.medicationData.setContraindications("Weirdness");
         this.medicationData.setDrugInteractions("Another Drug");
         this.medicationData.setGenericName("Meh");
         this.medicationData.setInstructions("Eat once a day");
@@ -32,7 +32,7 @@ public class MedicationDataTest {
 
     @Test
     public void testContraindictions() {
-        assertEquals("Testing contraindictions: ", "Weirdness", this.medicationData.getContraindictions());
+        assertEquals("Testing contraindictions: ", "Weirdness", this.medicationData.getContraindications());
     }
 
     @Test
