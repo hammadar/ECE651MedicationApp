@@ -53,8 +53,9 @@ public class FirebaseUIActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        createSignInIntent();
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
         updateUI(currentUser);
     }
 
@@ -154,7 +155,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
 
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+            /*AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
             builder.setMessage("No user was signed in. Please try again");
             builder.setTitle("No User Signed In");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -163,7 +164,8 @@ public class FirebaseUIActivity extends AppCompatActivity {
                     Intent fireBaseUIIntent = new Intent(getBaseContext(), FirebaseUIActivity.class);
                     startActivity(fireBaseUIIntent);
                 }
-            });
+            });*/
+            createSignInIntent();
         }
     }
 
