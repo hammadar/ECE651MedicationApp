@@ -84,12 +84,7 @@ public class PatientAccess extends AppCompatActivity {
             public void onClick(View v) {
                 PB_addMedication();
             }});
-        retrieveMyInfoButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                retrievePatientInfo();
-            }
-        });
-
+        retrievePatientInfo();
     }
 
     public void signOut() {
