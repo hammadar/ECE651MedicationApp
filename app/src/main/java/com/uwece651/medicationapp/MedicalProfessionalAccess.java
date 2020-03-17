@@ -46,8 +46,8 @@ import static java.lang.Thread.sleep;
 
 public class MedicalProfessionalAccess extends AppCompatActivity {
     // Public Variables
-    public static final String[] medicationNames = new String[11];
-    public static final String[] medicationIDs = new String[11];
+    public static final ArrayList<String> medicationNames = new ArrayList<String>();
+    public static final ArrayList<String> medicationIDs = new ArrayList<String>();
 
     // Private Variables
     private Button retrievePatientInfoButton;
@@ -141,13 +141,12 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                if (task.isSuccessful()) {
 
-                                                   Integer counter = 0;
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                       medicationNames[counter] = (String) document.get("genericName");
-                                                       medicationIDs[counter] = (String) document.get("medicationID");
-                                                       Log.d("DB", "Record " + counter + ": Name " + medicationNames[counter]);
-                                                       counter++;
+                                                       medicationNames.add((String) document.get("genericName"));
+                                                       medicationIDs.add((String) document.get("medicationID"));
                                                    }
+                                                   for(String obj:medicationNames)
+                                                       Log.d("DB", "Found Name " + obj);
                                                } else {
                                                    Log.d("DB", "Error getting documents: ", task.getException());
                                                }
@@ -338,8 +337,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         // Add autocomplete to the edittext
         //Nothing special, create database reference.
 
-        Log.d("DB", "ID 1" + medicationIDs[1] + "Name 1" + medicationNames[1]);
-        Log.d("DB", "ID 1" + medicationIDs[2] + "Name 1" + medicationNames[2]);
+        Log.d("DB", "ID 1" + medicationIDs.get(1) + "Name 1" + medicationNames.get(1));
+        Log.d("DB", "ID 2" + medicationIDs.get(2) + "Name 2" + medicationNames.get(2));
         //Create a new ArrayAdapter with your context and the simple layout for the dropdown menu provided by Android
         String[] fruits = {"apple", "banana", "pear"};
         ArrayAdapter<String> autoComplete = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, medicationNames); // , fruits);
