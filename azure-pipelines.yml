@@ -24,6 +24,5 @@ jobs:
         testResultsFiles: '**/TEST-*.xml'
         tasks: 'build'
 
-- job: Button test
   
 
