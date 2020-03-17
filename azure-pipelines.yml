@@ -12,7 +12,7 @@ pool:
 
 jobs
 - job: Gradle
-  steps
+  steps:
     - task: Gradle@2
       inputs:
         workingDirectory: ''
@@ -25,7 +25,6 @@ jobs
         testResultsFiles: '**/TEST-*.xml'
         tasks: 'build'
 
-jobs:
 - job: Debug
   steps:
     - script: echo hello from the Debug build
