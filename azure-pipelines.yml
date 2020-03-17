@@ -21,3 +21,14 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
     tasks: 'build'
+
+jobs:
+- job: Debug
+  steps:
+    - script: echo hello from the Debug build
+
+- job: Release
+  dependsOn: Debug
+  steps:
+    - script: echo hello from the Release build
+
