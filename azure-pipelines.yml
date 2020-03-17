@@ -9,8 +9,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-
-jobs
+jobs:
 - job: Gradle
   steps:
     - task: Gradle@2
