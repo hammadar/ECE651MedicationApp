@@ -46,6 +46,7 @@ import static java.lang.Thread.sleep;
 
 public class MedicalProfessionalAccess extends AppCompatActivity {
     // Public Variables
+    public static final ArrayList<String> patientList = new ArrayList<String>();
     public static final ArrayList<String> medicationNames = new ArrayList<String>();
     public static final ArrayList<String> medicationIDs = new ArrayList<String>();
 
@@ -127,6 +128,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             }
         });
 
+        getPatientList();
         getMedicationData();
     }
 
@@ -135,6 +137,32 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         CollectionReference medicationDb = db.collection("MedicationData");
 
         medicationDb.whereGreaterThan("medicationID", "")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                               if (task.isSuccessful()) {
+
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                       medicationNames.add((String) document.get("genericName"));
+                                                       medicationIDs.add((String) document.get("medicationID"));
+                                                   }
+                                                   for(String obj:medicationNames)
+                                                       Log.d("DB", "Found Name " + obj);
+                                               } else {
+                                                   Log.d("DB", "Error getting documents: ", task.getException());
+                                               }
+                                           }
+                                       }
+                );
+    }
+
+
+    public void getPatientList(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference medicationDb = db.collection("Patients");
+
+        medicationDb.whereEqualTo("assignedDoctor", "")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                            @Override
