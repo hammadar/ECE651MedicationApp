@@ -26,7 +26,7 @@ jobs:
 
 - job: Debug
   steps:
-    - script: echo hello from the Debug build
+    - script: run DoctorTest
 
 - job: Release
   dependsOn: Debug
