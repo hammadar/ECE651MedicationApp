@@ -23,13 +23,3 @@ jobs:
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
         tasks: 'build'
-
-- job: Debug
-  steps:
-    - script: run DoctorTest
-
-- job: Release
-  dependsOn: Debug
-  steps:
-    - script: echo hello from the Release build
-
