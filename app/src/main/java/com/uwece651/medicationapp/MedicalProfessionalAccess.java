@@ -49,11 +49,15 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     public static final String[] medicationNames = new String[11];
     public static final String[] medicationIDs = new String[11];
 
+    public static final ArrayList<String> patientsOfAssignedDoctor = new ArrayList<String>();
+
     // Private Variables
     private Button retrievePatientInfoButton;
     private Button addNewMedicationButton;
     private Button savePatientDataButton;
-    private EditText patientId;
+    private Button addNewPatientButton;
+    private Spinner patientNameDropdown;
+    private FirebaseAuth mAuth;
 
     //for storing retrieved values
     List<String> prescription_ids;
@@ -73,6 +77,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     String dailyFrequencyValue;
     String timeBetweenIntakeValue;
     Patient currentPatient;
+    String currentUserName="";
 
     private int numberOfMedications=0;
 
@@ -87,13 +92,18 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUserName=currentUser.getDisplayName();
+
         setContentView(R.layout.activity_medical_professional_access);
 
         retrievePatientInfoButton= findViewById(R.id.retrievePatientInfo);
         addNewMedicationButton= findViewById(R.id.addNewMedication);
         savePatientDataButton= findViewById(R.id.savePatientData);
+        addNewPatientButton= findViewById(R.id.addNewPatient);
         Button signOutButton = findViewById(R.id.signOutButton);
-        patientId=findViewById(R.id.patientId);
+        patientNameDropdown=findViewById(R.id.patientId);
 
         retrievePatientInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +130,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             }
         });
 
+        addNewPatientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewPatient();
+            }
+        });
+
 
         signOutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -128,6 +145,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         });
 
         getMedicationData();
+        getAssignedPatients();
     }
 
     public void getMedicationData(){
@@ -154,6 +172,45 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                            }
                                        }
                 );
+    }
+
+    public void getAssignedPatients(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference patientDb = db.collection("Patients");
+
+        patientDb.whereGreaterThan("name", "")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                               if (task.isSuccessful()) {
+                                                   String patientName;
+                                                   String assignedDoctor="";
+                                                   Integer assignedPatientsCounter = 0;
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                                       patientName = (String) document.get("name");
+                                                       assignedDoctor = (String) document.get("assignedDoctor");
+                                                       //Log.d("PatientDB", "patientName: " + patientName +" assignedDoctor= " +(String) document.get("assignedDoctor"));
+                                                       if(assignedDoctor != null){
+                                                           int isMatch = assignedDoctor.compareToIgnoreCase(currentUserName);
+                                                           if(isMatch==0){
+                                                               patientsOfAssignedDoctor.add((String) document.get("name"));
+                                                               Log.d("PatientDB", "Record " + assignedPatientsCounter + ": Name " + patientsOfAssignedDoctor.get(assignedPatientsCounter));
+                                                               assignedPatientsCounter++;
+                                                           }
+                                                       }
+                                                   }
+                                                   updatePatientList();
+                                               } else {
+                                                   Log.d("PatientDB", "Error getting documents: ", task.getException());
+                                               }
+                                           }
+                                       }
+
+                );
+
+
     }
 
     public void displayRetrievedData(){
@@ -295,12 +352,12 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     }
 
     public void retrievePatientInfo(){
-        if (patientId.getText().toString().isEmpty()) {
+        if (patientNameDropdown.getSelectedItem().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Enter a Patient ID", Toast.LENGTH_SHORT).show();
             return;
         }
         else{
-            String patient_id=patientId.getText().toString();
+            String patient_id=patientNameDropdown.getSelectedItem().toString();
 
             Log.d("MedicalProfAccess","patientID = " + patient_id);
 
@@ -341,7 +398,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         Log.d("DB", "ID 1" + medicationIDs[1] + "Name 1" + medicationNames[1]);
         Log.d("DB", "ID 1" + medicationIDs[2] + "Name 1" + medicationNames[2]);
         //Create a new ArrayAdapter with your context and the simple layout for the dropdown menu provided by Android
-        String[] fruits = {"apple", "banana", "pear"};
         ArrayAdapter<String> autoComplete = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, medicationNames); // , fruits);
         //Child the root before all the push() keys are found and add a ValueEventListener()
         // AutoCompleteTextView actv = new AutoCompleteTextView(this);
@@ -472,7 +528,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
     public void savePatientData(){
 
-        String patient_Id=patientId.getText().toString();
+        String patient_Id = patientNameDropdown.getSelectedItem().toString();
+
+        //Need to get UID based on name
+
+
         String prescriptionID;
         String medicationID;
         String scheduleID;
@@ -715,4 +775,62 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                     }
                 });
     }
+
+    public void updatePatientList(){
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, patientsOfAssignedDoctor);
+        patientNameDropdown.setAdapter(arrayAdapter);
+    }
+
+    public void addNewPatient() {
+
+        // String patient_Id=patientId.getText().toString();
+
+        Log.d("Registration", "CurrentUser display name = " + currentUserName);
+
+    }
+
+    public void getUID(final String providedName){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference patientDb = db.collection("Patients");
+
+        patientDb.whereGreaterThan("name", "")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                               if (task.isSuccessful()) {
+                                                   String patientName;
+                                                   String uid;
+
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                                       patientName = (String) document.get("name");
+                                                       uid = (String) document.get("uid");
+
+                                                       //Log.d("PatientDB", "patientName: " + patientName +" assignedDoctor= " +(String) document.get("assignedDoctor"));
+                                                       if(patientName != null){
+                                                           int isMatch = patientName.compareToIgnoreCase(providedName);
+                                                           if(isMatch==0){
+                                                               patientsOfAssignedDoctor.add((String) document.get("name"));
+                                                               Log.d("PatientDB", "Patient name: " + patientName + ", UID:  " + uid);
+                                                               return uid;
+
+                                                           }
+                                                       }
+                                                   }
+                                                   updatePatientList();
+                                               } else {
+                                                   Log.d("PatientDB", "Error getting documents: ", task.getException());
+                                               }
+                                           }
+                                       }
+
+                );
+
+    }
+
+
 }
+
+
