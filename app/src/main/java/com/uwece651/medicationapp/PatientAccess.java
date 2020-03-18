@@ -31,6 +31,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,8 @@ public class PatientAccess extends AppCompatActivity {
     //for storing retrieved values
     //for storing retrieved values
     List<String> prescription_ids;
-    PrescriptionData[] prescriptions; //previous two are static for each patient. Items below will change for each prescription - HR
+    MedicationSchedule[] schedules;
+    PrescriptionData[] prescriptions; //previous three are static for each patient. Items below will change for each prescription - HR
     String[] medication_ids;
     String[] schedule_ids;
     String medication_id;
@@ -74,6 +77,7 @@ public class PatientAccess extends AppCompatActivity {
         setContentView(R.layout.activity_patient_access);
         Button signOutButton = findViewById(R.id.signOutButton);
         Button retrieveMyInfoButton = findViewById(R.id.retrieveMyInfo);
+        Button calendarButton = findViewById(R.id.addToCalendarButton);
         signOutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 signOut();
@@ -84,6 +88,23 @@ public class PatientAccess extends AppCompatActivity {
             public void onClick(View v) {
                 PB_addMedication();
             }});
+        calendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (prescriptions != null && schedules != null) {
+                    for (int i = 0; i < prescriptions.length; i++) {
+                        try {
+                            Log.d("Cal on Click", "running the " + Integer.toString(i) + " time\n");
+                            GoogleCalendarInterface.addSchedule(schedules[i], prescriptions[i]);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (GeneralSecurityException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
         retrievePatientInfo();
     }
 
@@ -352,6 +373,7 @@ public class PatientAccess extends AppCompatActivity {
                         isSundayChecked = schedule.getSundayChecked();
                         dailyFrequencyValue = schedule.getDailyFrequency();
                         timeBetweenIntakeValue = schedule.getHoursFrequency();
+                        schedules = appArrayHandling.add(schedules, schedule);
                         displayRetrievedData();
 
 

@@ -46,8 +46,8 @@ import static java.lang.Thread.sleep;
 
 public class MedicalProfessionalAccess extends AppCompatActivity {
     // Public Variables
-    public static final String[] medicationNames = new String[11];
-    public static final String[] medicationIDs = new String[11];
+    public static final String[] medicationNames = new String[12];
+    public static final String[] medicationIDs = new String[12];
 
     // Private Variables
     private Button retrievePatientInfoButton;
@@ -319,9 +319,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         /* TODO we shouldn't create the prescription ID until we click 'save' */
         /* UUID uuid = UUID.randomUUID();
            String randomUUIDString = uuid.toString(); */
-        prescription_ids.add(RandomGenerator.randomGenerator(20));
-        /* medication_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20)); */
-        schedule_ids = appArrayHandling.add(schedule_ids, RandomGenerator.randomGenerator(20));
+        prescription_ids.add(UUID.randomUUID().toString());
+        medication_ids = appArrayHandling.add(medication_ids, UUID.randomUUID().toString());
+        schedule_ids = appArrayHandling.add(schedule_ids, UUID.randomUUID().toString());
 
         TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
@@ -594,11 +594,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
                         //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
 
-                        for (int i = 0; i < prescription_ids.size(); i++) {
-                            Log.d("prescriptionID", prescription_ids.get(i));
-                        }
+
 
                         if (prescription_ids != null) {
+                            for (int i = 0; i < prescription_ids.size(); i++) {
+                                Log.d("prescriptionID", prescription_ids.get(i));
+                            }
+
                             prescriptions = new PrescriptionData[prescription_ids.size()];
                             for (int i = 0; i < prescription_ids.size(); i++) {
                                 Log.d("RAP", "running " + i + " time\n");
@@ -636,6 +638,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         setClassVariables(prescription);
 
                     } else {
+                        Toast.makeText(getApplicationContext(), "No prescriptions available for that patient.", Toast.LENGTH_SHORT).show();
                         Log.d("Prescrip.", "get failed with ", task.getException());
                     }
                 }
