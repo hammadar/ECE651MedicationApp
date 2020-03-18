@@ -103,4 +103,23 @@ public class appArrayHandling {
         tempArray[newSize- 1] = newItem;
         return tempArray;
     }
+
+    public static MedicationSchedule[] add(MedicationSchedule[] originalArray, MedicationSchedule newItem) {
+
+        if (originalArray == null) {
+            MedicationSchedule[] item = new MedicationSchedule[1];
+            item[0] = newItem;
+            return item;
+        }
+
+        int currentSize = originalArray.length;
+        int newSize = currentSize + 1;
+        MedicationSchedule[] tempArray = new MedicationSchedule[newSize];
+        for (int i=0; i < currentSize; i++)
+        {
+            tempArray[i] = originalArray [i];
+        }
+        tempArray[newSize- 1] = newItem;
+        return tempArray;
+    }
 }

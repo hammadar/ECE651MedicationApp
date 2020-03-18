@@ -47,10 +47,12 @@ import static java.lang.Thread.sleep;
 
 public class MedicalProfessionalAccess extends AppCompatActivity {
     // Public Variables
+
     public static final ArrayList<String> medicationNames = new ArrayList<String>();
     public static final ArrayList<String> medicationIDs = new ArrayList<String>();
     public static final ArrayList<String> patientsOfAssignedDoctor = new ArrayList<String>();
     public static final ArrayList<String> patientsOfAssignedDoctorUID = new ArrayList<String>();
+
 
     // Private Variables
     private Button retrievePatientInfoButton;
@@ -366,9 +368,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         /* TODO we shouldn't create the prescription ID until we click 'save' */
         /* UUID uuid = UUID.randomUUID();
            String randomUUIDString = uuid.toString(); */
-        prescription_ids.add(RandomGenerator.randomGenerator(20));
-        //medication_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
-        schedule_ids = appArrayHandling.add(schedule_ids, RandomGenerator.randomGenerator(20));
+
+        prescription_ids.add(UUID.randomUUID().toString());
+        medication_ids = appArrayHandling.add(medication_ids, UUID.randomUUID().toString());
+        schedule_ids = appArrayHandling.add(schedule_ids, UUID.randomUUID().toString());
+
 
         TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
@@ -646,6 +650,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
                         //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
 
+
                         if (prescription_ids != null) {
                             for (int i = 0; i < prescription_ids.size(); i++) {
                                 Log.d("prescriptionID", prescription_ids.get(i));
@@ -688,6 +693,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         setClassVariables(prescription);
 
                     } else {
+                        Toast.makeText(getApplicationContext(), "No prescriptions available for that patient.", Toast.LENGTH_SHORT).show();
                         Log.d("Prescrip.", "get failed with ", task.getException());
                     }
                 }
