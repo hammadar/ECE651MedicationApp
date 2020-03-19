@@ -60,7 +60,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     private Button addNewMedicationButton;
     private Button savePatientDataButton;
     private Button addNewPatientButton;
+    private Button signOutButton;
     private Spinner patientNameDropdown;
+    private AutoCompleteTextView patientID;
     private FirebaseAuth mAuth;
 
     //for storing retrieved values
@@ -101,12 +103,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         setContentView(R.layout.activity_medical_professional_access);
 
-        Button retrievePatientInfoButton= findViewById(R.id.retrievePatientInfo);
-        Button addNewMedicationButton= findViewById(R.id.addNewMedication);
-        Button savePatientDataButton= findViewById(R.id.savePatientData);
-        Button addNewPatientButton= findViewById(R.id.addNewPatient);
-        Button signOutButton = findViewById(R.id.signOutButton);
+         retrievePatientInfoButton= findViewById(R.id.retrievePatientInfo);
+         addNewMedicationButton= findViewById(R.id.addNewMedication);
+         savePatientDataButton= findViewById(R.id.savePatientData);
+         addNewPatientButton= findViewById(R.id.addNewPatient);
+         signOutButton = findViewById(R.id.signOutButton);
         // Spinner patientNameDropdown=findViewById(R.id.patientId);
+        patientID = findViewById(R.id.patientID);
 
         retrievePatientInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
