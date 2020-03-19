@@ -39,6 +39,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
@@ -47,6 +48,7 @@ import static java.lang.Thread.sleep;
 public class MedicalProfessionalAccess extends AppCompatActivity {
     // Public Variables
     public static final ArrayList<String> patientList = new ArrayList<String>();
+    public static final ArrayList<String> patientIDs = new ArrayList<String>();
     public static final ArrayList<String> medicationNames = new ArrayList<String>();
     public static final ArrayList<String> medicationIDs = new ArrayList<String>();
 
@@ -155,14 +157,21 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                            }
                                        }
                 );
+        AutoCompleteTextView NameText = (AutoCompleteTextView) findViewById(R.id.patientId);
+        ArrayAdapter<String> autoComplete = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, patientList); // , fruits);
+        //Child the root before all the push() keys are found and add a ValueEventListener()
+        // AutoCompleteTextView actv = new AutoCompleteTextView(this);
+        NameText.setThreshold(1);
+        NameText.setAdapter(autoComplete);
     }
 
 
     public void getPatientList(){
+        String DoctorID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference medicationDb = db.collection("Patients");
-
-        medicationDb.whereEqualTo("assignedDoctor", "")
+        CollectionReference patientDb = db.collection("Patients");
+        Log.d("DB", "Doctor ID is " + DoctorID);
+        patientDb.whereEqualTo("assignedDoctor", DoctorID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                            @Override
@@ -170,13 +179,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                                if (task.isSuccessful()) {
 
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                       medicationNames.add((String) document.get("genericName"));
-                                                       medicationIDs.add((String) document.get("medicationID"));
+                                                       patientList.add((String) document.get("name"));
+                                                       patientIDs.add((String) document.get("uid"));
                                                    }
-                                                   for(String obj:medicationNames)
+                                                   for(String obj:patientList)
                                                        Log.d("DB", "Found Name " + obj);
                                                } else {
-                                                   Log.d("DB", "Error getting documents: ", task.getException());
+                                                   Log.d("DB", "Error getting patient list: ", task.getException());
                                                }
                                            }
                                        }
@@ -328,7 +337,14 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         }
         else{
             String patient_id=patientId.getText().toString();
+            Integer count = 0;
+            for (String username:patientList) {
 
+                if (patient_id.equals(username)) {
+                    patient_id = patientIDs.get(count);
+                }
+                count++;
+            }
             Log.d("MedicalProfAccess","patientID = " + patient_id);
 
             retrieveAssociatedPrescriptions(patient_id);
@@ -621,11 +637,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
                         //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
 
+                        if (prescription_ids != null)
                         for (int i = 0; i < prescription_ids.size(); i++) {
                             Log.d("prescriptionID", prescription_ids.get(i));
                         }
 
-                        if (prescription_ids != null) {
                             prescriptions = new PrescriptionData[prescription_ids.size()];
                             for (int i = 0; i < prescription_ids.size(); i++) {
                                 Log.d("RAP", "running " + i + " time\n");
@@ -638,10 +654,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         Log.d("Pat. Prescr.", "get failed with ", task.getException());
                             }
                 }
-                        };
-
-
-
         });
     }
 
