@@ -9,20 +9,28 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-jobs:
-- job: Gradle
-  steps:
-    - task: Gradle@2
-      inputs:
-        workingDirectory: ''
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.8'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml'
-        tasks: 'build'
+stages:
+- stage: FunctionalTest
+  jobs:
+    - job: Gradle
+      steps:
+        - task: Gradle@2
+          inputs:
+            workingDirectory: ''
+            gradleWrapperFile: 'gradlew'
+            gradleOptions: '-Xmx3072m'
+            javaHomeOption: 'JDKVersion'
+            jdkVersionOption: '1.8'
+            jdkArchitectureOption: 'x64'
+            publishJUnitResults: true
+            testResultsFiles: '**/TEST-*.xml'
+            tasks: 'build'
 
-  
+pr:
+
+    - job: Button test
+        dependsOn: Gr
+        steps:
+          - task: 
+
 
