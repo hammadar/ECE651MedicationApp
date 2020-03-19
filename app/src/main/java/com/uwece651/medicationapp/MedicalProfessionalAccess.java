@@ -39,6 +39,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
@@ -46,9 +47,8 @@ import static java.lang.Thread.sleep;
 
 public class MedicalProfessionalAccess extends AppCompatActivity {
     // Public Variables
-    public static final String[] medicationNames = new String[11];
-    public static final String[] medicationIDs = new String[11];
-
+    public static final ArrayList<String> medicationNames = new ArrayList<String>();
+    public static final ArrayList<String> medicationIDs = new ArrayList<String>();
     public static final ArrayList<String> patientsOfAssignedDoctor = new ArrayList<String>();
     public static final ArrayList<String> patientsOfAssignedDoctorUID = new ArrayList<String>();
 
@@ -161,9 +161,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
                                                    Integer counter = 0;
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                       medicationNames[counter] = (String) document.get("genericName");
-                                                       medicationIDs[counter] = (String) document.get("medicationID");
-                                                       Log.d("DB", "Record " + counter + ": Name " + medicationNames[counter]);
+                                                       medicationNames.add((String) document.get("genericName"));
+                                                       medicationIDs.add((String) document.get("medicationID"));
+                                                       Log.d("DB", "Record " + counter + ": Name " + medicationNames.get(counter));
                                                        counter++;
                                                    }
                                                } else {
@@ -175,43 +175,30 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     }
 
     public void getAssignedPatients(){
+        String DoctorID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference patientDb = db.collection("Patients");
-
-        patientDb.whereGreaterThan("name", "")
+        Log.d("DB", "Doctor ID is " + DoctorID);
+        patientDb.whereEqualTo("assignedDoctor", DoctorID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                            @Override
                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                if (task.isSuccessful()) {
-                                                   String patientName;
-                                                   String assignedDoctor="";
-                                                   Integer assignedPatientsCounter = 0;
-                                                   for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                                       patientName = (String) document.get("name");
-                                                       assignedDoctor = (String) document.get("assignedDoctor");
-                                                       //Log.d("PatientDB", "patientName: " + patientName +" assignedDoctor= " +(String) document.get("assignedDoctor"));
-                                                       if(assignedDoctor != null){
-                                                           int isMatch = assignedDoctor.compareToIgnoreCase(currentUserName);
-                                                           if(isMatch==0){
-                                                               patientsOfAssignedDoctor.add((String) document.get("name"));
-                                                               patientsOfAssignedDoctorUID.add((String) document.get("uid"));
-                                                               Log.d("PatientDB", "Record: " + assignedPatientsCounter + ", Name: " + patientsOfAssignedDoctor.get(assignedPatientsCounter) +", UID: " + patientsOfAssignedDoctorUID.get(assignedPatientsCounter) );
-                                                               assignedPatientsCounter++;
-                                                           }
-                                                       }
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                       patientsOfAssignedDoctor.add((String) document.get("name"));
+                                                       patientsOfAssignedDoctorUID.add((String) document.get("uid"));
+                                                       updatePatientList();
                                                    }
-                                                   updatePatientList();
+                                                   for(String obj:patientsOfAssignedDoctor)
+                                                       Log.d("PatientDB", "Found Patient Name " + obj);
                                                } else {
-                                                   Log.d("PatientDB", "Error getting documents: ", task.getException());
+                                                   Log.d("PatientDB", "Error getting patient list: ", task.getException());
                                                }
                                            }
                                        }
-
                 );
-
-
     }
 
     public void displayRetrievedData(){
@@ -354,7 +341,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
     public void retrievePatientInfo(){
         if (patientNameDropdown.getSelectedItem().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Enter a Patient ID", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Select a Patient", Toast.LENGTH_SHORT).show();
             return;
         }
         else{
@@ -801,10 +788,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     }
 
     public String getMedicationID(String medication_name){
-        for (int i =0; i < medicationNames.length; i++){
-            int isMatch = medicationNames[i].compareToIgnoreCase(medication_name);
+        for (int i =0; i < medicationNames.size(); i++){
+            int isMatch = medicationNames.get(i).compareToIgnoreCase(medication_name);
             if(isMatch == 0){
-                return medicationIDs[i];
+                return medicationIDs.get(i);
             }
         }
         return "";
