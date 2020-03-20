@@ -1,9 +1,11 @@
 package com.uwece651.medicationapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
@@ -16,6 +18,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -36,8 +39,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -77,6 +83,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     Boolean isFridayChecked;
     Boolean isSaturdayChecked;
     Boolean isSundayChecked;
+    LocalDate startDate;
+    LocalDate endDate;
     String dailyFrequencyValue;
     String timeBetweenIntakeValue;
     String currentUserName="";
@@ -88,6 +96,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     List<Spinner> timesPerDaySpinnerList = new ArrayList<Spinner>();
     List<EditText> timeBetweenIntakeEditTextList = new ArrayList<EditText>();
     List<CalendarView> calendarList = new ArrayList<CalendarView>();
+    List<EditText> startDateEditTextList = new ArrayList<EditText>();
+    List<EditText> endDateEditTextList = new ArrayList<EditText>();
 
 
 
@@ -306,6 +316,69 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             et1.setText(timeBetweenIntakeValue);
             timeBetweenIntakeEditTextList.add(et1);
 
+        //Start/End date for medication
+        TableRow tr4 = new TableRow(this);
+        LinearLayout ll4= new LinearLayout(this);
+
+        TextView tv4 = new TextView(this);
+        tv4.setText("Start Date:");
+
+        final EditText et2 = new EditText(this);
+        et2.setWidth(600);
+        et2.setText(startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-d")));
+        startDateEditTextList.add(et2);
+
+
+
+        et2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                DatePickerDialog startDatePicker;
+                startDatePicker = new DatePickerDialog(MedicalProfessionalAccess.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        et2.setText(year + "-" + month + "-" + dayOfMonth);
+                    }
+                }, year, month, day);
+                startDatePicker.show();
+
+            }
+        });
+
+        TableRow tr5 = new TableRow(this);
+        LinearLayout ll5 = new LinearLayout(this);
+
+        TextView tv5 = new TextView(this);
+        tv5.setText("End Date:");
+
+        final EditText et3 = new EditText(this);
+        et3.setWidth(600);
+        et3.setText(endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-d")));
+        endDateEditTextList.add(et3);
+
+        et3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                DatePickerDialog endDatePicker;
+                endDatePicker = new DatePickerDialog(MedicalProfessionalAccess.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        et3.setText(year + "-" + month + "-" + dayOfMonth);
+                    }
+                }, year, month, day);
+                endDatePicker.show();
+
+            }
+        });
+
             //Medication Name
             ll.addView(tv);
             ll.addView(et);
@@ -336,6 +409,16 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
             tr3.addView(ll3);
             tl.addView(tr3);
+
+            ll4.addView(tv4);
+            ll4.addView(et2);
+            tr4.addView(ll4);
+            tl.addView(tr4);
+
+            ll5.addView(tv5);
+            ll5.addView(et3);
+            tr5.addView(ll5);
+            tl.addView(tr5);
 
 
 
@@ -471,13 +554,67 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         timeBetweenIntakeEditTextList.add(et1);
 
         //Start/End date for medication
-//        TableRow tr4 = new TableRow(this);
-//        LinearLayout ll4= new LinearLayout(this);
-//
-//        TextView tv4 = new TextView(this);
-//        tv4.setText("Duration of prescription:");
-//
-//        CalendarView calendar = new CalendarView(this);
+        TableRow tr4 = new TableRow(this);
+        LinearLayout ll4= new LinearLayout(this);
+
+        TextView tv4 = new TextView(this);
+        tv4.setText("Start Date:");
+
+        final EditText et2 = new EditText(this);
+        et2.setWidth(600);
+        startDateEditTextList.add(et2);
+
+
+
+        et2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                DatePickerDialog startDatePicker;
+                startDatePicker = new DatePickerDialog(MedicalProfessionalAccess.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        et2.setText(year + "-" + month + "-" + dayOfMonth);
+                    }
+                }, year, month, day);
+                startDatePicker.show();
+
+            }
+        });
+
+        TableRow tr5 = new TableRow(this);
+        LinearLayout ll5 = new LinearLayout(this);
+
+        TextView tv5 = new TextView(this);
+        tv5.setText("End Date:");
+
+        final EditText et3 = new EditText(this);
+        et3.setWidth(600);
+        endDateEditTextList.add(et3);
+
+        et3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                DatePickerDialog endDatePicker;
+                endDatePicker = new DatePickerDialog(MedicalProfessionalAccess.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        et3.setText(year + "-" + month + "-" + dayOfMonth);
+                    }
+                }, year, month, day);
+                endDatePicker.show();
+
+            }
+        });
+
+        //CalendarView calendar = new CalendarView(this);
 
 
 
@@ -518,6 +655,16 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 //
 //        tl.addView(tr4);
 
+        ll4.addView(tv4);
+        ll4.addView(et2);
+        tr4.addView(ll4);
+        tl.addView(tr4);
+
+        ll5.addView(tv5);
+        ll5.addView(et3);
+        tr5.addView(ll5);
+        tl.addView(tr5);
+
     }
 
     public void savePatientData(){
@@ -542,6 +689,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         String dailyFrequencyValue;
         String timeBetweenIntakeValue;
         PrescriptionData prescriptionData;
+        LocalDate startDate;
+        LocalDate endDate;
 
 
         //PrescriptionData prescriptionData= new PrescriptionData(prescriptionID);
@@ -562,6 +711,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
             dailyFrequencyValue=timesPerDaySpinnerList.get(i).getSelectedItem().toString();
             timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
+            startDate = LocalDate.parse(startDateEditTextList.get(i).getText(), formatter);
+            endDate = LocalDate.parse(endDateEditTextList.get(i).getText(), formatter);
 
             Log.d("MedicalProfAccess","patient_Id = " + patient_Id);
             Log.d("MedicalProfAccess", "prescription_id =" + prescription_ids.get(i));
@@ -601,6 +754,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             prescriptionData.setMedicationID(medData.getMedicationID());
             prescriptionData.setScheduleID(medSchedule.getScheduleID());
             prescriptionData.setMedicationName(medication_Name);
+            prescriptionData.setStartDate(startDate);
+            prescriptionData.setEndDate(endDate);
+
+
             storePrescriptionData(prescriptionData);
 
             savePatientPrescriptions(patient_Id);
@@ -713,7 +870,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         docRef.update("associatedPrescriptions", prescription_ids);
     }
 
-    public void setClassVariables(PrescriptionData prescription) {
+    public void setClassVariables(final PrescriptionData prescription) {
         medication_id = prescription.getMedicationID();
         schedule_id = prescription.getScheduleID();
         medication_Name = prescription.getMedicationName();
@@ -741,6 +898,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         isSundayChecked = schedule.getSundayChecked();
                         dailyFrequencyValue = schedule.getDailyFrequency();
                         timeBetweenIntakeValue = schedule.getHoursFrequency();
+                        endDate = prescription.getEndDate();
+                        startDate = prescription.getStartDate();
                         displayRetrievedData();
 
 
