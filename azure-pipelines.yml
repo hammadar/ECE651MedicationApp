@@ -26,13 +26,18 @@ stages:
             testResultsFiles: '**/TEST-*.xml'
             tasks: 'build'
 
+# Publish code coverage results
+# Publish JaCoCo code coverage results from a build
 - task: PublishCodeCoverageResults@1
   inputs:
-    codeCoverageTool: "JaCoCo"
+    codeCoverageTool: 'JaCoCo' 
     summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/site/jacoco/jacoco.xml"
+    #pathToSources: # Optional
     reportDirectory: "$(System.DefaultWorkingDirectory)/**/site/jacoco"
-    failIfCoverageEmpty: false
 
+    #additionalCodeCoverageFiles: # Optional
+    failIfCoverageEmpty: true 
+    
 
 
 #gradleWrapperFile: 'gradlew' 
