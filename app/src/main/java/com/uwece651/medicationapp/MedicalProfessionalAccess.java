@@ -54,10 +54,12 @@ import static java.lang.Thread.sleep;
 public class MedicalProfessionalAccess extends AppCompatActivity {
     // Public Variables
 
+
     public static final ArrayList<String> medicationNames = new ArrayList<String>();
     public static final ArrayList<String> medicationIDs = new ArrayList<String>();
     public static final ArrayList<String> patientsOfAssignedDoctor = new ArrayList<String>();
     public static final ArrayList<String> patientsOfAssignedDoctorUID = new ArrayList<String>();
+
 
 
     // Private Variables
@@ -806,6 +808,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         //Log.d("retrievedPatient", retrievedPatient.getUid());
                         prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
                         //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
+
 
 
                         if (prescription_ids != null) {
