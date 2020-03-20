@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
@@ -32,17 +33,32 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
+
+import static java.lang.Thread.sleep;
 
 public class MedicalProfessionalAccess extends AppCompatActivity {
+    // Public Variables
+    public static final ArrayList<String> medicationNames = new ArrayList<String>();
+    public static final ArrayList<String> medicationIDs = new ArrayList<String>();
+    public static final ArrayList<String> patientsOfAssignedDoctor = new ArrayList<String>();
+    public static final ArrayList<String> patientsOfAssignedDoctorUID = new ArrayList<String>();
+
+    // Private Variables
     private Button retrievePatientInfoButton;
     private Button addNewMedicationButton;
     private Button savePatientDataButton;
-    private EditText patientId;
+    private Button addNewPatientButton;
+    private Spinner patientNameDropdown;
+    private FirebaseAuth mAuth;
 
     //for storing retrieved values
     List<String> prescription_ids;
@@ -61,7 +77,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     Boolean isSundayChecked;
     String dailyFrequencyValue;
     String timeBetweenIntakeValue;
-    Patient currentPatient;
+    String currentUserName="";
 
     private int numberOfMedications=0;
 
@@ -76,13 +92,18 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUserName=currentUser.getDisplayName();
+
         setContentView(R.layout.activity_medical_professional_access);
 
         retrievePatientInfoButton= findViewById(R.id.retrievePatientInfo);
         addNewMedicationButton= findViewById(R.id.addNewMedication);
         savePatientDataButton= findViewById(R.id.savePatientData);
-
-        patientId=findViewById(R.id.patientId);
+        addNewPatientButton= findViewById(R.id.addNewPatient);
+        Button signOutButton = findViewById(R.id.signOutButton);
+        patientNameDropdown=findViewById(R.id.patientId);
 
         retrievePatientInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,11 +112,14 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 //displayRetrievedData();
             }
         });
-
         addNewMedicationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addNewMedication(v);
+                try {
+                    addNewMedication(v);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -105,6 +129,76 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 savePatientData();
             }
         });
+
+        addNewPatientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewPatient();
+            }
+        });
+
+
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+
+        getMedicationData();
+        getAssignedPatients();
+    }
+
+    public void getMedicationData(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference medicationDb = db.collection("MedicationData");
+
+        medicationDb.whereGreaterThan("medicationID", "")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                               if (task.isSuccessful()) {
+
+                                                   Integer counter = 0;
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                       medicationNames.add((String) document.get("genericName"));
+                                                       medicationIDs.add((String) document.get("medicationID"));
+                                                       Log.d("DB", "Record " + counter + ": Name " + medicationNames.get(counter));
+                                                       counter++;
+                                                   }
+                                               } else {
+                                                   Log.d("DB", "Error getting documents: ", task.getException());
+                                               }
+                                           }
+                                       }
+                );
+    }
+
+    public void getAssignedPatients(){
+        String DoctorID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference patientDb = db.collection("Patients");
+        Log.d("DB", "Doctor ID is " + DoctorID);
+        patientDb.whereEqualTo("assignedDoctor", DoctorID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                               if (task.isSuccessful()) {
+
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                       patientsOfAssignedDoctor.add((String) document.get("name"));
+                                                       patientsOfAssignedDoctorUID.add((String) document.get("uid"));
+                                                       updatePatientList();
+                                                   }
+                                                   for(String obj:patientsOfAssignedDoctor)
+                                                       Log.d("PatientDB", "Found Patient Name " + obj);
+                                               } else {
+                                                   Log.d("PatientDB", "Error getting patient list: ", task.getException());
+                                               }
+                                           }
+                                       }
+                );
     }
 
     public void displayRetrievedData(){
@@ -246,12 +340,14 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     }
 
     public void retrievePatientInfo(){
-        if (patientId.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Enter a Patient ID", Toast.LENGTH_SHORT).show();
+        if (patientNameDropdown.getSelectedItem().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Select a Patient", Toast.LENGTH_SHORT).show();
             return;
         }
         else{
-            String patient_id=patientId.getText().toString();
+            String patient_name = patientNameDropdown.getSelectedItem().toString();
+            Log.d("MedicalProfAccess","patient_name= " + patient_name);
+            String patient_id=getUID(patient_name);
 
             Log.d("MedicalProfAccess","patientID = " + patient_id);
 
@@ -259,7 +355,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         }
     }
 
-    public void addNewMedication(View view){
+    public void addNewMedication(View view) throws InterruptedException {
 
         numberOfMedications++;
 
@@ -267,9 +363,12 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             prescription_ids = new ArrayList<>();
         }
 
-        prescription_ids.add(UUID.randomUUID().toString());
-        medication_ids = appArrayHandling.add(medication_ids, UUID.randomUUID().toString());
-        schedule_ids = appArrayHandling.add(schedule_ids, UUID.randomUUID().toString());
+        /* TODO we shouldn't create the prescription ID until we click 'save' */
+        /* UUID uuid = UUID.randomUUID();
+           String randomUUIDString = uuid.toString(); */
+        prescription_ids.add(RandomGenerator.randomGenerator(20));
+        //medication_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
+        schedule_ids = appArrayHandling.add(schedule_ids, RandomGenerator.randomGenerator(20));
 
         TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
@@ -280,9 +379,22 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         TextView tv = new TextView(this);
         tv.setText("Medication Name:");
 
-        EditText et= new EditText(this);
+        AutoCompleteTextView et= new AutoCompleteTextView(this);
         et.setWidth(500);
         medicationNameEditTextList.add(et);
+        // Add autocomplete to the edittext
+        //Nothing special, create database reference.
+
+//        Log.d("DB", "ID 1" + medicationIDs[1] + "Name 1" + medicationNames[1]);
+//        Log.d("DB", "ID 1" + medicationIDs[2] + "Name 1" + medicationNames[2]);
+        //Create a new ArrayAdapter with your context and the simple layout for the dropdown menu provided by Android
+        ArrayAdapter<String> autoComplete = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, medicationNames); // , fruits);
+        //Child the root before all the push() keys are found and add a ValueEventListener()
+        // AutoCompleteTextView actv = new AutoCompleteTextView(this);
+        et.setThreshold(1);
+        et.setAdapter(autoComplete);
+
+
 
         //Weekly Frequency
         TableRow tr1 = new TableRow(this);
@@ -406,7 +518,12 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
     public void savePatientData(){
 
-        String patient_Id=patientId.getText().toString();
+        String patient_name = patientNameDropdown.getSelectedItem().toString();
+        String patient_Id=getUID(patient_name);
+
+        //Need to get UID based on name
+
+
         String prescriptionID;
         String medicationID;
         String scheduleID;
@@ -456,13 +573,14 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
             Log.d("MedicalProfAccess","\n\n");
 
-            MedicationData medData = new MedicationData(medication_ids[i]);
-            Log.d("Med ID", medication_ids[i]);
+            MedicationData medData = new MedicationData(getMedicationID(medication_Name));
+
+            Log.d("Med ID", getMedicationID(medication_Name));
             medData.setBrandName(medication_Name);
             storeMedicationData(medData);
 
             MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids[i]);
-            Log.d("Sched ID", schedule_ids[i]);
+            Log.d("schedule_id: ", schedule_ids[i]);
             medSchedule.setMondayChecked(isMondayChecked);
             medSchedule.setTuesdayChecked(isTuesdayChecked);
             medSchedule.setWednesdayChecked(isWednesdayChecked);
@@ -475,7 +593,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             storeMedicationSchedule(medSchedule);
 
             prescriptionData = new PrescriptionData(prescription_ids.get(i));
-            Log.d("Pres ID", prescription_ids.get(i));
+            Log.d("prescription_id: ", prescription_ids.get(i));
             prescriptionData.setMedicationID(medData.getMedicationID());
             prescriptionData.setScheduleID(medSchedule.getScheduleID());
             prescriptionData.setMedicationName(medication_Name);
@@ -490,10 +608,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     }
 
     public void storeMedicationData(MedicationData medData) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        CollectionReference MedicationData = db.collection("MedicationData");
-        MedicationData.document(medData.getMedicationID()).set(medData);
+        //CollectionReference MedicationData = db.collection("MedicationData");
+        //MedicationData.document(medData.getMedicationID()).set(medData);
     }
 
     public void storeMedicationSchedule(MedicationSchedule medSchedule) {
@@ -509,6 +627,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         CollectionReference PrescriptionData = db.collection("PrescriptionData");
         PrescriptionData.document(prescriptionData.getPrescriptionID()).set(prescriptionData);
     }
+
 
     public void retrieveAssociatedPrescriptions(String patientID) {
 
@@ -527,16 +646,19 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
                         //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
 
-                        for (int i = 0; i < prescription_ids.size(); i++) {
-                            Log.d("prescriptionID", prescription_ids.get(i));
-                        }
-
                         if (prescription_ids != null) {
+                            for (int i = 0; i < prescription_ids.size(); i++) {
+                                Log.d("prescriptionID", prescription_ids.get(i));
+                            }
+
                             prescriptions = new PrescriptionData[prescription_ids.size()];
                             for (int i = 0; i < prescription_ids.size(); i++) {
                                 Log.d("RAP", "running " + i + " time\n");
                                 getPrescriptionData(prescription_ids.get(i));
                             }
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "No prescriptions saved", Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -544,10 +666,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         Log.d("Pat. Prescr.", "get failed with ", task.getException());
                             }
                 }
-                        };
-
-
-
+            };
         });
     }
 
@@ -586,8 +705,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         DocumentReference docRef = patientsDb.document(patientID);
 
         docRef.update("associatedPrescriptions", prescription_ids);
-
-
     }
 
     public void setClassVariables(PrescriptionData prescription) {
@@ -648,4 +765,38 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                     }
                 });
     }
+
+    public void updatePatientList(){
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, patientsOfAssignedDoctor);
+        patientNameDropdown.setAdapter(arrayAdapter);
+    }
+
+    public void addNewPatient() {
+
+        Log.d("Registration", "CurrentUser display name = " + currentUserName);
+    }
+
+    public String getUID(String name){
+        for (int i =0; i < patientsOfAssignedDoctor.size(); i++){
+            int isMatch = name.compareToIgnoreCase(patientsOfAssignedDoctor.get(i));
+            if(isMatch == 0){
+                return patientsOfAssignedDoctorUID.get(i);
+            }
+        }
+
+        return "";
+    }
+
+    public String getMedicationID(String medication_name){
+        for (int i =0; i < medicationNames.size(); i++){
+            int isMatch = medicationNames.get(i).compareToIgnoreCase(medication_name);
+            if(isMatch == 0){
+                return medicationIDs.get(i);
+            }
+        }
+        return "";
+    }
+
 }
+
+

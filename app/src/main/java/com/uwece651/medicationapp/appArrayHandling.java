@@ -20,7 +20,7 @@ public class appArrayHandling {
         {
             tempArray[i] = originalArray [i];
         }
-        tempArray[newSize - 1] = newItem;
+        tempArray[newSize- 1] = newItem;
         return tempArray;
     }
 

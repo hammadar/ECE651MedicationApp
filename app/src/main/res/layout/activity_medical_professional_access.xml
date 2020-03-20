@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MedicalProfessionalAccess">
 
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,18 +23,29 @@
         tools:layout_editor_absoluteY="413dp" />
 
 
-    <EditText
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="53dp"
+        android:text="Patient Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="413dp" />
+
+    <Spinner
         android:id="@+id/patientId"
-        android:layout_width="314dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="43dp"
-        android:layout_marginLeft="43dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="49dp"
         android:inputType="text"
-        android:selectAllOnFocus="true"
-        android:text="Enter patient ID" />
+        android:selectAllOnFocus="true" />
 
     <Button
         android:id="@+id/retrievePatientInfo"
@@ -63,6 +76,20 @@
         tools:layout_editor_absoluteY="413dp" />
 
     <Button
+        android:id="@+id/addNewPatient"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginBottom="461dp"
+        android:text="Add New Patient"
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="413dp" />
+
+    <Button
         android:id="@+id/savePatientData"
         android:layout_width="220dp"
         android:layout_height="40dp"
@@ -74,6 +101,22 @@
         android:layout_marginBottom="507dp"
         android:text="Save Data" />
 
+    <Button
+        android:id="@+id/signOutButton"
+        android:layout_width="102dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="false"
+        android:gravity="right"
+        android:textSize="11sp"
+        android:layout_marginStart="297dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="698dp"
+        android:background="@android:color/transparent"
+        android:text="Sign Out" />
+
     <ScrollView
         android:id="@+id/PatientDataScrollView"
         android:layout_width="342dp"
@@ -81,8 +124,10 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp">
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="39dp"
+        android:layout_marginLeft="39dp"
+        android:layout_marginBottom="-48dp">
 
         <TableLayout
             android:id="@+id/medicationDataTableLayout"

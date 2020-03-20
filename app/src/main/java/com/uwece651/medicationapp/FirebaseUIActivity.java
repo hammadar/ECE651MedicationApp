@@ -153,6 +153,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
             });
 
 
+
         } else {
             /*AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
             builder.setMessage("No user was signed in. Please try again");

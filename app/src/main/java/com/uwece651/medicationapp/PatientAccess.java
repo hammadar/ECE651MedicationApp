@@ -119,7 +119,7 @@ public class PatientAccess extends AppCompatActivity {
         //setClassVariables(prescription);
 
 
-        TableLayout tl = findViewById(R.id.medicationDataTableLayout);
+        TableLayout tl = findViewById(R.id.patientMedDataTableLayout);
 
         //Medication Name
         TableRow tr = new TableRow(this);
