@@ -353,13 +353,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         String month_str;
                         String day_str;
-                        if (month < 10) {
-                            month_str = "0"+ Integer.toString(month);
+                        if (month < 9) {
+                            month_str = "0"+ Integer.toString(month+1);
                         } else {
-                            month_str = Integer.toString(month);
+                            month_str = Integer.toString(month+1);
                         }
 
-                        if (dayOfMonth < 10) {
+                        if (dayOfMonth < 9) {
                             day_str = "0" + Integer.toString(dayOfMonth);
                         } else {
                             day_str = Integer.toString(dayOfMonth);
@@ -396,13 +396,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         String month_str;
                         String day_str;
-                        if (month < 10) {
-                            month_str = "0"+ Integer.toString(month);
+                        if (month < 9) {
+                            month_str = "0"+ Integer.toString(month+1);
                         } else {
-                            month_str = Integer.toString(month);
+                            month_str = Integer.toString(month+1);
                         }
 
-                        if (dayOfMonth < 10) {
+                        if (dayOfMonth < 9) {
                             day_str = "0" + Integer.toString(dayOfMonth);
                         } else {
                             day_str = Integer.toString(dayOfMonth);
@@ -615,10 +615,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         String month_str;
                         String day_str;
-                        if (month < 10) {
-                            month_str = "0"+ Integer.toString(month);
+                        if (month < 9) {
+                            month_str = "0"+ Integer.toString(month+1);
                         } else {
-                            month_str = Integer.toString(month);
+                            month_str = Integer.toString(month+1);
                         }
 
                         if (dayOfMonth < 10) {
@@ -657,10 +657,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         String month_str;
                         String day_str;
-                        if (month < 10) {
-                            month_str = "0"+ Integer.toString(month);
+                        if (month < 9) {
+                            month_str = "0"+ Integer.toString(month+1);
                         } else {
-                            month_str = Integer.toString(month);
+                            month_str = Integer.toString(month+1);
                         }
 
                         if (dayOfMonth < 10) {

@@ -260,7 +260,7 @@ public class PatientAccess extends AppCompatActivity {
 
 
 
-        et2.setOnClickListener(new View.OnClickListener() {
+        /*et2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar cldr = Calendar.getInstance();
@@ -277,7 +277,7 @@ public class PatientAccess extends AppCompatActivity {
                 startDatePicker.show();
 
             }
-        });
+        });*/
 
         TableRow tr5 = new TableRow(this);
         LinearLayout ll5 = new LinearLayout(this);
@@ -290,7 +290,7 @@ public class PatientAccess extends AppCompatActivity {
         et3.setText((new SimpleDateFormat("yyyy-MM-d").format(endDate)));
         endDateEditTextList.add(et3);
 
-        et3.setOnClickListener(new View.OnClickListener() {
+        /*et3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar cldr = Calendar.getInstance();
@@ -307,7 +307,7 @@ public class PatientAccess extends AppCompatActivity {
                 endDatePicker.show();
 
             }
-        });
+        });*/
 
         //Medication Name
         ll.addView(tv);
