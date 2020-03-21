@@ -707,10 +707,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         docRef.update("associatedPrescriptions", prescription_ids);
     }
 
-    public void setClassVariables(PrescriptionData prescription) {
+    public void setClassVariables(final PrescriptionData prescription) {
         medication_id = prescription.getMedicationID();
         schedule_id = prescription.getScheduleID();
-        medication_Name = prescription.getMedicationName();
 
         medication_ids = appArrayHandling.add(medication_ids, medication_id);
         schedule_ids = appArrayHandling.add(schedule_ids, schedule_id);
@@ -735,6 +734,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         isSundayChecked = schedule.getSundayChecked();
                         dailyFrequencyValue = schedule.getDailyFrequency();
                         timeBetweenIntakeValue = schedule.getHoursFrequency();
+                        medication_Name = prescription.getMedicationName();
                         displayRetrievedData();
 
 
