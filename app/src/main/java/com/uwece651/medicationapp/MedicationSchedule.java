@@ -43,6 +43,8 @@ public class MedicationSchedule {
         return this.ScheduleID;
     }
 
+    public void setScheduleID (String scheduleID) {this.ScheduleID = scheduleID;}
+
     public String getMedicalCode () {
         return this.MedicalCode;
     }

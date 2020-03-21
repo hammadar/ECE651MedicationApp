@@ -1,4 +1,11 @@
 package com.uwece651.medicationapp;
+import android.content.pm.PackageManager;
+import android.os.Environment;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -17,21 +24,27 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.Events;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.security.AccessController.getContext;
+
 
 public class GoogleCalendarInterface {
     private static final String APPLICATION_NAME = "MedicationReminder";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String TOKENS_DIRECTORY_PATH = "tokens";
+    private static final String TOKENS_DIRECTORY_PATH = /*Environment.getExternalStorageDirectory() +
+            File.separator +*/ "tokens";
 
     /**
      * Global instance of the scopes required by this quickstart.
@@ -40,6 +53,7 @@ public class GoogleCalendarInterface {
 
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final int STORAGE_PERMISSION_CODE = 101;
 
     /**
      * Creates an authorized Credential object.
@@ -55,10 +69,16 @@ public class GoogleCalendarInterface {
         }
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
+        File tokenFolder = new File(TOKENS_DIRECTORY_PATH);
+        if (!tokenFolder.exists()) {
+            tokenFolder.mkdirs();
+        }
+
+
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
+                .setDataStoreFactory(new FileDataStoreFactory(tokenFolder))
                 .setAccessType("offline")
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
@@ -67,15 +87,18 @@ public class GoogleCalendarInterface {
 
     public static void addSchedule(MedicationSchedule medicationSchedule, PrescriptionData prescriptionData) throws IOException, GeneralSecurityException {
 
-        String startDate = prescriptionData.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
-        String endDate = prescriptionData.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        String startDate = dt.format(prescriptionData.getStartDate());
+        String endDate = dt.format(prescriptionData.getEndDate());
         String recurrence = medicationSchedule.getDailyFrequency(); //for now assume no hourly frequency set... just go by daily frequency
 
-        DateTime startDateTime = new DateTime(startDate + processTimeOfDay(medicationSchedule.getTimeOfDayCode()));
-        DateTime endDateTime = new DateTime(endDate + processTimeOfDay(medicationSchedule.getTimeOfDayCode()));
+
+        DateTime startDateTime = new DateTime(startDate);// + processTimeOfDay(medicationSchedule.getTimeOfDayCode()));
+        DateTime endDateTime = new DateTime(endDate);// + processTimeOfDay(medicationSchedule.getTimeOfDayCode()));
 
         // Build a new authorized API client service.
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        final NetHttpTransport HTTP_TRANSPORT = new NetHttpTransport();//GoogleNetHttpTransport.newTrustedTransport();
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
@@ -109,6 +132,11 @@ public class GoogleCalendarInterface {
     }
 
     public static String processTimeOfDay(String timeOfDay) {
+
+        if (timeOfDay == null) {
+            return "T08:00:00Z";
+        }
+
         switch (timeOfDay) {
             case "Morning":
                 return "T08:00:00Z";
@@ -121,9 +149,11 @@ public class GoogleCalendarInterface {
             case "Bedtime":
                 return "T23:00:00Z";
             default:
-                return null;
+                return "T08:00:00Z";
 
         }
     }
+
+
 
 }

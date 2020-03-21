@@ -2,15 +2,20 @@ package com.uwece651.medicationapp;
 
 
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -39,6 +44,7 @@ import java.util.Map;
 public class FirebaseUIActivity extends AppCompatActivity {
     private static final String TAG = FirebaseUIActivity.class.getName();
     private static final int RC_SIGN_IN = 123;
+    private static final int STORAGE_PERMISSION_CODE = 101;
     private FirebaseAuth mAuth;
 
     @Override
@@ -47,13 +53,14 @@ public class FirebaseUIActivity extends AppCompatActivity {
         setContentView(R.layout.activity_firebase_ui);
         mAuth = FirebaseAuth.getInstance();
 
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-
+        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         updateUI(currentUser);
@@ -212,6 +219,50 @@ public class FirebaseUIActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void checkPermission(String permission, int requestCode)
+    {
+        if (ContextCompat.checkSelfPermission(FirebaseUIActivity.this, permission)
+                == PackageManager.PERMISSION_DENIED) {
+
+            // Requesting the permission
+            ActivityCompat.requestPermissions(FirebaseUIActivity.this,
+                    new String[] { permission },
+                    requestCode);
+        }
+        else {
+            Toast.makeText(FirebaseUIActivity.this,
+                    "Permission already granted",
+                    Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+        super
+                .onRequestPermissionsResult(requestCode,
+                        permissions,
+                        grantResults);
+
+         if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(FirebaseUIActivity.this,
+                        "Storage Permission Granted",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+            else {
+                Toast.makeText(FirebaseUIActivity.this,
+                        "Storage Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
     }
 
 
