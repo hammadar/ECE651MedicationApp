@@ -63,12 +63,12 @@
     <ScrollView
         android:id="@+id/PatientInfoScrollView"
         android:layout_width="342dp"
-        android:layout_height="494dp"
+        android:layout_height="500dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="34dp"
-        android:layout_marginBottom="29dp">
+        android:layout_centerInParent="true"
+        android:layout_marginStart="38dp"
+        android:layout_marginBottom="116dp">
 
         <TableLayout
             android:id="@+id/patientMedDataTableLayout"
@@ -84,9 +84,9 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_below="@+id/signOutButton"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentEnd="false"
         android:layout_marginTop="-680dp"
-        android:layout_marginEnd="0dp"
+        android:layout_marginLeft="35dp"
         android:text="Add To Calendar" />
 
 </RelativeLayout>

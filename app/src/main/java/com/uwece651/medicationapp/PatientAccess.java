@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -72,14 +73,6 @@ public class PatientAccess extends AppCompatActivity {
     String currentUID;
 
     private int numberOfMedications=0;
-
-    List<EditText> medicationNameEditTextList = new ArrayList<EditText>();
-    List<CheckBox> dayCheckboxList = new ArrayList<CheckBox>();
-    List<Spinner> timesPerDaySpinnerList = new ArrayList<Spinner>();
-    List<EditText> timeBetweenIntakeEditTextList = new ArrayList<EditText>();
-    List<CalendarView> calendarList = new ArrayList<CalendarView>();
-    List<EditText> startDateEditTextList = new ArrayList<EditText>();
-    List<EditText> endDateEditTextList = new ArrayList<EditText>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,12 +153,12 @@ public class PatientAccess extends AppCompatActivity {
 
         LinearLayout ll= new LinearLayout(this);
         TextView tv = new TextView(this);
-        tv.setText("Medication Name:");
+        tv.setText("Medication Name: ");
 
-        EditText et= new EditText(this);
-        et.setWidth(500);
-        et.setText(medication_Name);
-        medicationNameEditTextList.add(et);
+        TextView tv6= new TextView(this);
+        tv6.setWidth(500);
+        tv6.setText(medication_Name);
+        tv6.setTypeface(null, Typeface.BOLD);
 
         //Weekly Frequency
         TableRow tr1 = new TableRow(this);
@@ -181,43 +174,44 @@ public class PatientAccess extends AppCompatActivity {
         cb.setText("S");
         cb.setGravity(Gravity.CENTER);
         cb.setChecked(isSundayChecked);
-        dayCheckboxList.add(cb);
+        cb.setEnabled(false);
 
         CheckBox cb1 = new CheckBox(this);
         cb1.setText("M");
         cb1.setGravity(Gravity.CENTER);
         cb1.setChecked(isMondayChecked);
-        dayCheckboxList.add(cb1);
+        cb1.setEnabled(false);
+
 
         CheckBox cb2 = new CheckBox(this);
         cb2.setText("T");
         cb2.setGravity(Gravity.CENTER);
         cb2.setChecked(isTuesdayChecked);
-        dayCheckboxList.add(cb2);
+        cb2.setEnabled(false);
 
         CheckBox cb3 = new CheckBox(this);
         cb3.setText("W");
         cb3.setGravity(Gravity.CENTER);
         cb3.setChecked(isWednesdayChecked);
-        dayCheckboxList.add(cb3);
+        cb3.setEnabled(false);
 
         CheckBox cb4 = new CheckBox(this);
         cb4.setText("T");
         cb4.setGravity(Gravity.CENTER);
         cb4.setChecked(isThursdayChecked);
-        dayCheckboxList.add(cb4);
+        cb4.setEnabled(false);
 
         CheckBox cb5 = new CheckBox(this);
         cb5.setText("F");
         cb5.setGravity(Gravity.CENTER);
         cb5.setChecked(isFridayChecked);
-        dayCheckboxList.add(cb5);
+        cb5.setEnabled(false);
 
         CheckBox cb6 = new CheckBox(this);
         cb6.setText("S");
         cb6.setGravity(Gravity.CENTER);
         cb6.setChecked(isSaturdayChecked);
-        dayCheckboxList.add(cb6);
+        cb6.setEnabled(false);
 
         //Daily Frequency
         TableRow tr2 = new TableRow(this);
@@ -233,86 +227,47 @@ public class PatientAccess extends AppCompatActivity {
         dailyFrequencySpinner.setAdapter(arrayAdapter);
         int spinnerposition = arrayAdapter.getPosition(dailyFrequencyValue);
         dailyFrequencySpinner.setSelection(spinnerposition);
-        timesPerDaySpinnerList.add(dailyFrequencySpinner);
+        dailyFrequencySpinner.setEnabled(false);
 
         //Time between intake
         TableRow tr3 = new TableRow(this);
         LinearLayout ll3= new LinearLayout(this);
 
         TextView tv3 = new TextView(this);
-        tv3.setText("Hours between intake:");
+        tv3.setText("Hours between intake: ");
 
-        EditText et1= new EditText(this);
-        et1.setWidth(150);
-        et1.setText(timeBetweenIntakeValue);
-        timeBetweenIntakeEditTextList.add(et1);
+        TextView tv7= new TextView(this);
+        tv7.setWidth(150);
+        tv7.setText(timeBetweenIntakeValue);
+        tv7.setTypeface(null, Typeface.BOLD);
 
         TableRow tr4 = new TableRow(this);
         LinearLayout ll4= new LinearLayout(this);
 
         TextView tv4 = new TextView(this);
-        tv4.setText("Start Date:");
+        tv4.setText("Start Date: ");
 
-        final EditText et2 = new EditText(this);
-        et2.setWidth(600);
-        et2.setText(new SimpleDateFormat("yyyy-MM-d").format(startDate));
-        startDateEditTextList.add(et2);
-
-
-
-        /*et2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                DatePickerDialog startDatePicker;
-                startDatePicker = new DatePickerDialog(PatientAccess.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        //et2.setText(year + "-" + month + "-" + dayOfMonth);
-                    }
-                }, year, month, day);
-                startDatePicker.show();
-
-            }
-        });*/
+        final TextView tv8 = new TextView(this);
+        tv8.setWidth(600);
+        tv8.setText(new SimpleDateFormat("yyyy-MM-d").format(startDate));
+        tv8.setTypeface(null, Typeface.BOLD);
 
         TableRow tr5 = new TableRow(this);
         LinearLayout ll5 = new LinearLayout(this);
 
         TextView tv5 = new TextView(this);
-        tv5.setText("End Date:");
+        tv5.setText("End Date: ");
 
-        final EditText et3 = new EditText(this);
-        et3.setWidth(600);
-        et3.setText((new SimpleDateFormat("yyyy-MM-d").format(endDate)));
-        endDateEditTextList.add(et3);
-
-        /*et3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                DatePickerDialog endDatePicker;
-                endDatePicker = new DatePickerDialog(PatientAccess.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        //et3.setText(year + "-" + month + "-" + dayOfMonth);
-                    }
-                }, year, month, day);
-                endDatePicker.show();
-
-            }
-        });*/
+        final TextView tv9 = new TextView(this);
+        tv9.setWidth(600);
+        tv9.setText((new SimpleDateFormat("yyyy-MM-d").format(endDate)));
+        tv9.setTypeface(null, Typeface.BOLD);
 
         //Medication Name
         ll.addView(tv);
-        ll.addView(et);
+        ll.addView(tv6);
         tr.addView(ll);
+        tr.setPadding(0,60,0,0);
         tl.addView(tr);
 
         //Weekly Frequency
@@ -335,18 +290,18 @@ public class PatientAccess extends AppCompatActivity {
 
         //Time between intake
         ll3.addView(tv3);
-        ll3.addView(et1);
+        ll3.addView(tv7);
 
         tr3.addView(ll3);
         tl.addView(tr3);
 
         ll4.addView(tv4);
-        ll4.addView(et2);
+        ll4.addView(tv8);
         tr4.addView(ll4);
         tl.addView(tr4);
 
         ll5.addView(tv5);
-        ll5.addView(et3);
+        ll5.addView(tv9);
         tr5.addView(ll5);
         tl.addView(tr5);
 
