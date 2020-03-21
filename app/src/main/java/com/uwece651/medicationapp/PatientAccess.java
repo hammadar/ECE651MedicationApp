@@ -4,9 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -36,10 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +43,7 @@ public class PatientAccess extends AppCompatActivity {
 
     private EditText patientId;
     private FirebaseAuth mAuth;
+    private GoogleCalendarServiceModule googleCalendarServiceModule;
 
     //for storing retrieved values
     //for storing retrieved values
@@ -95,10 +92,18 @@ public class PatientAccess extends AppCompatActivity {
             }
         });
         Button PB_addMedication_button = findViewById(R.id.PB_addMedication);
+        googleCalendarServiceModule = new GoogleCalendarServiceModule(this.getBaseContext(), mAuth.getCurrentUser());
         PB_addMedication_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 PB_addMedication();
             }});
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build();
+        StrictMode.setThreadPolicy(policy);
+
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +113,7 @@ public class PatientAccess extends AppCompatActivity {
                             Log.d("Cal on Click", "running the " + Integer.toString(i) + " time\n");
                             //Log.d("Cal Sch ID", schedules[i].getScheduleID());
                             Log.d("Cal Pres ID", prescriptions[i].getPrescriptionID());
-                            GoogleCalendarInterface.addSchedule(schedules[i], prescriptions[i]);
+                            googleCalendarServiceModule.addSchedule(schedules[i], prescriptions[i]);
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (GeneralSecurityException e) {
