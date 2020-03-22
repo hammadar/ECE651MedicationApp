@@ -32,7 +32,7 @@ import java.util.List;
 
 public class GoogleCalendarServiceModule {
 
-    private static final String APPLICATION_NAME = "MedicationReminder";
+    private static final String APPLICATION_NAME = "ECE651MedicationAppv2";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = /*Environment.getExternalStorageDirectory() +
             File.separator +*/ "tokens";

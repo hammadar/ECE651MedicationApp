@@ -3,6 +3,7 @@ package com.uwece651.medicationapp;
 
 
 import android.Manifest;
+import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -50,6 +51,8 @@ public class FirebaseUIActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BuildConfig.DEBUG) StrictModeManager.enableStrictMode();
+        //StrictModeManager.allowDiskReads((Runnable) getApplicationContext());
         setContentView(R.layout.activity_firebase_ui);
         mAuth = FirebaseAuth.getInstance();
 

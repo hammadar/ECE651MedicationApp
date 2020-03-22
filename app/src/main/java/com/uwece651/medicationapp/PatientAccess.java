@@ -91,11 +91,11 @@ public class PatientAccess extends AppCompatActivity {
                 PB_addMedication();
             }});
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+        /*StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .detectAll()
                 .penaltyLog()
                 .build();
-        StrictMode.setThreadPolicy(policy);
+        StrictMode.setThreadPolicy(policy);*/
 
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override

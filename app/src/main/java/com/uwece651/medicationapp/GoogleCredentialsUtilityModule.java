@@ -27,17 +27,17 @@ import java.util.List;
 
 public class GoogleCredentialsUtilityModule {
 
-    private static final String APPLICATION_NAME = "MedicationReminder";
+    private static final String APPLICATION_NAME = "ECE651MedicationAppv2";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = /*Environment.getExternalStorageDirectory() +
-            File.separator +*/ "tokens";
+            File.separator +*/ "/tokens";
 
     /**
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
 
-    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
+    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
 
