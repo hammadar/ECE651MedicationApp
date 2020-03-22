@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="218dp"
-        android:text="This is the Medication Reminder App!" />
+        android:text="@string/this_is_the_medication_reminder_app" />
 
     <Button
         android:id="@+id/medicalProfessionalAccessButton"
@@ -21,7 +21,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="302dp"
-        android:text="Medical Professional Login"
+        android:text="@string/medical_professional_login"
         tools:layout_editor_absoluteX="71dp"
         tools:layout_editor_absoluteY="413dp" />
 
@@ -32,7 +32,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="451dp"
-        android:text="Patient Login"
+        android:text="@string/patient_login"
         tools:layout_editor_absoluteX="71dp"
         tools:layout_editor_absoluteY="478dp" />
 
@@ -43,6 +43,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="539dp"
-        android:text="New User? Register now" />
+        android:text="@string/new_user_register_now" />
 
 </RelativeLayout>

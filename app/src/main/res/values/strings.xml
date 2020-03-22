@@ -1,5 +1,18 @@
 <resources>
     <string name="app_name">Medication Reminder App</string>
+    <string name="patient_login">Patient Login</string>
+    <string name="medical_professional_login">Medical Professional Login</string>
+    <string name="new_user_register_now">New User? Register now</string>
+    <string name="this_is_the_medication_reminder_app">This is the Medication Reminder App!</string>
+    <string name="medical_professional_page">Medical Professional Page</string>
+    <string name="retrieve_patient_data">Retrieve Patient Data</string>
+    <string name="add_new_medication">Add New Medication</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="medication_info">Medication Info</string>
+    <string name="add_new">Add New</string>
+    <string name="Empty" />
+    <string name="contraindications">Contraindications</string>
+    <string name="registration_page">Registration Page</string>
     <string-array name="medication_daily_frequency">
         <item>1</item>
         <item>2</item>
