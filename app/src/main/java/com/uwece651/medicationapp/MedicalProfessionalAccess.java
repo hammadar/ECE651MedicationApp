@@ -51,6 +51,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     public static final ArrayList<String> medicationIDs = new ArrayList<String>();
     public static final ArrayList<String> patientsOfAssignedDoctor = new ArrayList<String>();
     public static final ArrayList<String> patientsOfAssignedDoctorUID = new ArrayList<String>();
+    public static final ArrayList<String> unassignedPatients = new ArrayList<String>();
+    public static final ArrayList<String> unassignedPatientsUID = new ArrayList<String>();
 
     // Private Variables
     private Button retrievePatientInfoButton;
@@ -58,6 +60,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     private Button savePatientDataButton;
     private Button addNewPatientButton;
     private Spinner patientNameDropdown;
+    private Spinner newPatientNameDropdown;
+    private Button addPatientButton;
     private FirebaseAuth mAuth;
 
     //for storing retrieved values
@@ -104,6 +108,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         addNewPatientButton= findViewById(R.id.addNewPatient);
         Button signOutButton = findViewById(R.id.signOutButton);
         patientNameDropdown=findViewById(R.id.patientId);
+        newPatientNameDropdown=findViewById(R.id.newpatientID);
+        addPatientButton=findViewById(R.id.addPatient);
 
         retrievePatientInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +143,12 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             }
         });
 
+        addPatientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addPatient();
+            }
+        });
 
         signOutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -146,6 +158,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
         getMedicationData();
         getAssignedPatients();
+        getUnassignedPatients();
     }
 
     public void getMedicationData(){
@@ -178,7 +191,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         String DoctorID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference patientDb = db.collection("Patients");
-        Log.d("DB", "Doctor ID is " + DoctorID);
+        Log.d("PatientDB", "Doctor ID is " + DoctorID);
         patientDb.whereEqualTo("assignedDoctor", DoctorID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -189,12 +202,39 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
                                                        patientsOfAssignedDoctor.add((String) document.get("name"));
                                                        patientsOfAssignedDoctorUID.add((String) document.get("uid"));
-                                                       updatePatientList();
                                                    }
+                                                   updatePatientList();
                                                    for(String obj:patientsOfAssignedDoctor)
                                                        Log.d("PatientDB", "Found Patient Name " + obj);
                                                } else {
                                                    Log.d("PatientDB", "Error getting patient list: ", task.getException());
+                                               }
+                                           }
+                                       }
+                );
+    }
+
+    public void getUnassignedPatients(){
+        String DoctorID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference patientDb = db.collection("Patients");
+        Log.d("UnassignedDB", "Doctor ID is " + DoctorID);
+        patientDb.whereEqualTo("assignedDoctor", null)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                               if (task.isSuccessful()) {
+
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                       unassignedPatients.add((String) document.get("name"));
+                                                       unassignedPatientsUID.add((String) document.get("uid"));
+                                                   }
+                                                   updateNewPatientList();
+                                                   for(String obj:unassignedPatients)
+                                                       Log.d("UnassignedDB", "Found Patient Name " + obj);
+                                               } else {
+                                                   Log.d("UnassignedDB", "Error getting patient list: ", task.getException());
                                                }
                                            }
                                        }
@@ -766,14 +806,66 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 });
     }
 
+    public void updatePatientWithDoctorID(String PatientID, String DoctorID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference patientsDb = db.collection("Patients");
+        DocumentReference docRef = patientsDb.document(PatientID);
+        docRef.update("assignedDoctor", DoctorID);
+        // remove name and UID from the array and update it back to the UI
+    }
+
     public void updatePatientList(){
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, patientsOfAssignedDoctor);
         patientNameDropdown.setAdapter(arrayAdapter);
     }
 
-    public void addNewPatient() {
+    public void updateNewPatientList(){
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, unassignedPatients);
+        newPatientNameDropdown.setAdapter(arrayAdapter);
+    }
 
-        Log.d("Registration", "CurrentUser display name = " + currentUserName);
+
+    public void addNewPatient() {
+        newPatientNameDropdown.setVisibility(View.VISIBLE);
+        addPatientButton.setVisibility(View.VISIBLE);
+        Log.d("UI", "Displaying Add Patient Fields");
+    }
+
+    public void addPatient() {
+        // update patient ID with current assigned doctor id.
+        if (newPatientNameDropdown.getSelectedItem().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Select a Patient", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            String NewPatientName = newPatientNameDropdown.getSelectedItem().toString();
+            String NewPatientID = getUnassignedUID(NewPatientName);
+            String DoctorID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+            Log.d("patientDB", "Assigning Doctor" + DoctorID + "to patient" + NewPatientID);
+            updatePatientWithDoctorID(NewPatientID, DoctorID);
+            removeFromUnassignedPatientList(NewPatientName);
+            removeFromUnassignedPatientUIDList(NewPatientID);
+            AddToPatientUIDList(NewPatientID);
+            AddToPatientList(NewPatientName);
+            // Update the doctor's dropdown with the new patient.
+            updatePatientList();
+            updateNewPatientList();
+            newPatientNameDropdown.setVisibility(View.INVISIBLE);
+            addPatientButton.setVisibility(View.INVISIBLE);
+            Toast.makeText(getApplicationContext(), NewPatientName + "is now assigned as your patient.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+    }
+
+    public String getUnassignedUID(String name){
+        for (int i =0; i < unassignedPatients.size(); i++){
+            int isMatch = name.compareToIgnoreCase(unassignedPatients.get(i));
+            if(isMatch == 0){
+                return unassignedPatientsUID.get(i);
+            }
+        }
+
+        return "";
     }
 
     public String getUID(String name){
@@ -795,6 +887,32 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             }
         }
         return "";
+    }
+
+    public void removeFromUnassignedPatientList(String elem) {
+        for (int i =0; i < unassignedPatients.size(); i++){
+            int isMatch = unassignedPatients.get(i).compareToIgnoreCase(elem);
+            if(isMatch == 0) {
+                unassignedPatients.remove(i);
+            }
+        }
+    }
+
+    public void removeFromUnassignedPatientUIDList(String elem) {
+        for (int i =0; i < unassignedPatientsUID.size(); i++){
+            int isMatch = unassignedPatientsUID.get(i).compareToIgnoreCase(elem);
+            if(isMatch == 0) {
+                unassignedPatientsUID.remove(i);
+            }
+        }
+    }
+
+    public void AddToPatientUIDList(String elem) {
+                patientsOfAssignedDoctorUID.add(elem);
+    }
+
+    public void AddToPatientList(String elem) {
+                patientsOfAssignedDoctor.add(elem);
     }
 
 }
