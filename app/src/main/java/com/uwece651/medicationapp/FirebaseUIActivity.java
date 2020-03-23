@@ -45,7 +45,7 @@ import java.util.Map;
 public class FirebaseUIActivity extends AppCompatActivity {
     private static final String TAG = FirebaseUIActivity.class.getName();
     private static final int RC_SIGN_IN = 123;
-    private static final int STORAGE_PERMISSION_CODE = 101;
+    private static final int CALENDAR_PERMISSION_CODE = 101;
     private FirebaseAuth mAuth;
 
     @Override
@@ -63,7 +63,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
+        checkPermission(Manifest.permission.WRITE_CALENDAR, CALENDAR_PERMISSION_CODE);
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         updateUI(currentUser);
@@ -251,7 +251,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
                         permissions,
                         grantResults);
 
-         if (requestCode == STORAGE_PERMISSION_CODE) {
+         if (requestCode == CALENDAR_PERMISSION_CODE) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(FirebaseUIActivity.this,

@@ -122,4 +122,23 @@ public class appArrayHandling {
         tempArray[newSize- 1] = newItem;
         return tempArray;
     }
+
+    public static int[] add(int[] originalArray, int newItem) //found code online - HR
+    {
+        if (originalArray == null) {
+            int[] item = new int[1];
+            item[0] = newItem;
+            return item;
+        }
+
+        int currentSize = originalArray.length;
+        int newSize = currentSize + 1;
+        int[] tempArray = new int[ newSize ];
+        for (int i=0; i < currentSize; i++)
+        {
+            tempArray[i] = originalArray [i];
+        }
+        tempArray[newSize- 1] = newItem;
+        return tempArray;
+    }
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -45,7 +46,8 @@ public class PatientAccess extends AppCompatActivity {
 
     private EditText patientId;
     private FirebaseAuth mAuth;
-    private GoogleCalendarServiceModule googleCalendarServiceModule;
+    private GoogleCalendarModule googleCalendarModule;
+    private Calendar calendar = Calendar.getInstance();
 
     //for storing retrieved values
     //for storing retrieved values
@@ -86,7 +88,7 @@ public class PatientAccess extends AppCompatActivity {
             }
         });
         Button PB_addMedication_button = findViewById(R.id.PB_addMedication);
-        googleCalendarServiceModule = new GoogleCalendarServiceModule(this.getBaseContext(), mAuth.getCurrentUser());
+        googleCalendarModule = new GoogleCalendarModule(getBaseContext(), calendar);
         PB_addMedication_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 PB_addMedication();
@@ -103,18 +105,12 @@ public class PatientAccess extends AppCompatActivity {
             public void onClick(View v) {
                 if (prescriptions != null && schedules != null) {
                     for (int i = 0; i < prescriptions.length; i++) {
-                        try {
+
                             Log.d("Cal on Click", "running the " + Integer.toString(i) + " time\n");
                             //Log.d("Cal Sch ID", schedules[i].getScheduleID());
                             Log.d("Cal Pres ID", prescriptions[i].getPrescriptionID());
-                            googleCalendarServiceModule.addSchedule(schedules[i], prescriptions[i]);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (GeneralSecurityException e) {
-                            e.printStackTrace();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                            googleCalendarModule.addReminderInCalendar(prescriptions[i], schedules[i]);
+
                     }
                 }
             }
