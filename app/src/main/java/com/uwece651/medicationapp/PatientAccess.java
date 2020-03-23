@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -110,6 +111,8 @@ public class PatientAccess extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (GeneralSecurityException e) {
+                            e.printStackTrace();
+                        } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }

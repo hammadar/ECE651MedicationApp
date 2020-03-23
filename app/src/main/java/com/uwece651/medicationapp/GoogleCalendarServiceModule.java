@@ -17,6 +17,7 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import com.google.firebase.auth.FirebaseUser;
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,10 +25,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 
 public class GoogleCalendarServiceModule {
@@ -57,19 +63,30 @@ public class GoogleCalendarServiceModule {
 
 
 
-    public static void addSchedule(MedicationSchedule medicationSchedule, PrescriptionData prescriptionData) throws IOException, GeneralSecurityException {
+    public static void addSchedule(MedicationSchedule medicationSchedule, PrescriptionData prescriptionData) throws IOException, GeneralSecurityException, ParseException {
 
 
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-        String startDate = dt.format(prescriptionData.getStartDate());
-        String endDate = dt.format(prescriptionData.getEndDate());
+        String startDate = dt.format(prescriptionData.getStartDate())+processTimeOfDay(medicationSchedule.getTimeOfDayCode());
+        String endDate = dt.format(prescriptionData.getEndDate()) + processTimeOfDay(medicationSchedule.getTimeOfDayCode());
         String recurrence = medicationSchedule.getDailyFrequency(); //for now assume no hourly frequency set... just go by daily frequency
 
 
-        DateTime startDateTime = new DateTime(startDate);// + processTimeOfDay(medicationSchedule.getTimeOfDayCode()));
-        DateTime endDateTime = new DateTime(endDate);// + processTimeOfDay(medicationSchedule.getTimeOfDayCode()));
+        TimeZone zone = TimeZone.getDefault();
+        /*SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        dt1.setTimeZone(zone);
+        Date startDate1 = dt1.parse(startDate);
+        Date endDate1 = dt1.parse(endDate);*/
+
+        DateTime startDateTime = DateTime.parseRfc3339(startDate);// + processTimeOfDay(medicationSchedule.getTimeOfDayCode()));
+        DateTime endDateTime = DateTime.parseRfc3339(endDate);// + processTimeOfDay(medicationSchedule.getTimeOfDayCode()));
+
+        Log.d("GCSM", startDateTime.toString());
+
+
 
         // Build a new authorized API client service.
+
         final NetHttpTransport HTTP_TRANSPORT = new NetHttpTransport();//GoogleNetHttpTransport.newTrustedTransport();
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, googleCredentialsUtilityModule.getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
@@ -78,11 +95,13 @@ public class GoogleCalendarServiceModule {
         Event event = new Event()
                 .setSummary("Take Drug: " + prescriptionData.getMedicationName());
         EventDateTime start = new EventDateTime()
-                .setDateTime(startDateTime);
+                .setDateTime(startDateTime)
+                .setTimeZone(zone.getID());
         event.setStart(start);
 
         EventDateTime end = new EventDateTime()
-                .setDateTime(endDateTime);
+                .setDateTime(endDateTime)
+                .setTimeZone(zone.getID());
         event.setEnd(end);
 
         String[] recurrenceCalendar = new String[] {"RRULE:FREQ=DAILY;COUNT=" + recurrence}; //currently set for daily recurrence. Adjust afterwards to adjust for alternate days... HR
@@ -106,22 +125,22 @@ public class GoogleCalendarServiceModule {
     public static String processTimeOfDay(String timeOfDay) {
 
         if (timeOfDay == null) {
-            return "T08:00:00Z";
+            return "T08:00:00";
         }
 
         switch (timeOfDay) {
             case "Morning":
-                return "T08:00:00Z";
+                return "T08:00:00";
             case "Afternoon":
-                return "T13:00:00Z";
+                return "T13:00:00";
             case "Evening":
-                return "T17:00:00Z";
+                return "T17:00:00";
             case "Night":
-                return "T20:00:00Z";
+                return "T20:00:00";
             case "Bedtime":
-                return "T23:00:00Z";
+                return "T23:00:00";
             default:
-                return "T08:00:00Z";
+                return "T08:00:00";
 
         }
     }
