@@ -201,8 +201,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                                if (task.isSuccessful()) {
 
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                       patientsOfAssignedDoctor.add((String) document.get("name"));
-                                                       patientsOfAssignedDoctorUID.add((String) document.get("uid"));
+                                                       Object patient_name = document.get("name");
+                                                       if (patient_name != null) {
+                                                           patientsOfAssignedDoctor.add((String) document.get("name"));
+                                                           patientsOfAssignedDoctorUID.add((String) document.get("uid"));
+                                                       }
                                                    }
                                                    updatePatientList();
                                                    for(String obj:patientsOfAssignedDoctor)
@@ -226,10 +229,12 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                            @Override
                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                if (task.isSuccessful()) {
-
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                       unassignedPatients.add((String) document.get("name"));
-                                                       unassignedPatientsUID.add((String) document.get("uid"));
+                                                       Object patient_name = document.get("name");
+                                                       if (patient_name != null) {
+                                                           unassignedPatients.add((String) document.get("name"));
+                                                           unassignedPatientsUID.add((String) document.get("uid"));
+                                                       }
                                                    }
                                                    updateNewPatientList();
                                                    for(String obj:unassignedPatients)
