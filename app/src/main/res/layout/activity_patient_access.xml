@@ -1,90 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PatientAccess">
 
     <TextView
-        android:id="@+id/textView19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="16dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="9dp"
         android:text="Patient Access Page"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.173"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.018" />
+        tools:layout_editor_absoluteY="413dp" />
 
     <Button
         android:id="@+id/retrieveMyInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginBottom="602dp"
         android:text="Retrieve Patient Data"
-        app:layout_constraintBottom_toTopOf="@+id/signOutButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView19" />
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="413dp"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/signOutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Sign Out"
-        app:layout_constraintBottom_toTopOf="@+id/PatientInfoScrollView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/retrieveMyInfo" />
+        android:layout_width="102dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="false"
+        android:gravity="right"
+        android:textSize="11sp"
+        android:layout_marginStart="297dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="698dp"
+        android:background="@android:color/transparent"
+        android:text="Sign Out" />
 
     <Button
         android:id="@+id/PB_addMedication"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="257dp"
+        android:layout_marginBottom="668dp"
         android:text="Add Medication"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/addToCalendarButton"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/signOutButton"
-        android:layout_alignParentEnd="false"
-        android:layout_marginEnd="128dp"
-        android:text="Add To Calendar"
-        app:layout_constraintBottom_toTopOf="@+id/signOutButton"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:visibility="gone"/>
 
     <ScrollView
         android:id="@+id/PatientInfoScrollView"
-        android:layout_width="283dp"
-        android:layout_height="468dp"
+        android:layout_width="342dp"
+        android:layout_height="500dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
+        android:layout_centerInParent="true"
+        android:layout_marginStart="38dp"
+        android:layout_marginBottom="116dp">
 
         <TableLayout
             android:id="@+id/patientMedDataTableLayout"
@@ -95,7 +79,14 @@
 
     </ScrollView>
 
+    <Button
+        android:id="@+id/addToCalendarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/signOutButton"
+        android:layout_alignParentEnd="false"
+        android:layout_marginTop="-680dp"
+        android:layout_marginLeft="35dp"
+        android:text="Add To Calendar" />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+</RelativeLayout>
