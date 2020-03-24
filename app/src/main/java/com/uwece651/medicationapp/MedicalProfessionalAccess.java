@@ -172,10 +172,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                            @Override
                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                if (task.isSuccessful()) {
-
+                                                   medicationNames.clear();
+                                                   medicationIDs.clear();
                                                    Integer counter = 0;
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                       medicationNames.add((String) document.get("genericName"));
+                                                       medicationNames.add((String) document.get("brandName"));
                                                        medicationIDs.add((String) document.get("medicationID"));
                                                        Log.d("DB", "Record " + counter + ": Name " + medicationNames.get(counter));
                                                        counter++;
@@ -199,7 +200,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                            @Override
                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                if (task.isSuccessful()) {
-
+                                                   patientsOfAssignedDoctor.clear();
+                                                   patientsOfAssignedDoctorUID.clear();
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
                                                        Object patient_name = document.get("name");
                                                        if (patient_name != null) {
@@ -230,6 +232,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                if (task.isSuccessful()) {
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                       unassignedPatients.clear();
+                                                       unassignedPatientsUID.clear();
                                                        Object patient_name = document.get("name");
                                                        if (patient_name != null) {
                                                            unassignedPatients.add((String) document.get("name"));
@@ -636,8 +640,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             MedicationData medData = new MedicationData(MedicationID);
 
             Log.d("Med ID", getMedicationID(medication_Name));
-            //medData.setGenericName(medication_Name);
-            //storeMedicationData(medData);
 
             MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids.get(i));
             Log.d("schedule_id: ", schedule_ids.get(i));
@@ -846,6 +848,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     }
 
     public void updatePatientList(){
+        patientNameDropdown.setAdapter(null);
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, patientsOfAssignedDoctor);
         patientNameDropdown.setAdapter(arrayAdapter);
     }
