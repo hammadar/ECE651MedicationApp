@@ -67,8 +67,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     //for storing retrieved values
     List<String> prescription_ids;
     PrescriptionData[] prescriptions; //previous two are static for each patient. Items below will change for each prescription - HR
-    String[] medication_ids;
-    String[] schedule_ids;
+    List<String> medication_ids;
+    List<String> schedule_ids;
     String medication_id;
     String schedule_id;
     String medication_Name;
@@ -82,8 +82,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     String dailyFrequencyValue;
     String timeBetweenIntakeValue;
     String currentUserName="";
-
-    private int numberOfMedications=0;
 
     List<EditText> medicationNameEditTextList = new ArrayList<EditText>();
     List<CheckBox> dayCheckboxList = new ArrayList<CheckBox>();
@@ -114,8 +112,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         retrievePatientInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearPreviousData();
                 retrievePatientInfo();
-                //displayRetrievedData();
+                addNewMedicationButton.setVisibility(View.VISIBLE);
+
+
             }
         });
         addNewMedicationButton.setOnClickListener(new View.OnClickListener() {
@@ -379,6 +380,16 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
     }
 
+    public void clearPreviousData() {
+        TableLayout tl = findViewById(R.id.medicationDataTableLayout);
+        tl.removeAllViews();
+        medicationNameEditTextList.clear();
+        dayCheckboxList.clear();
+        timesPerDaySpinnerList.clear();
+        timeBetweenIntakeEditTextList.clear();
+        calendarList.clear();
+    }
+
     public void retrievePatientInfo(){
         if (patientNameDropdown.getSelectedItem().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Select a Patient", Toast.LENGTH_SHORT).show();
@@ -397,18 +408,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
     public void addNewMedication(View view) throws InterruptedException {
 
-        numberOfMedications++;
-
-        if(prescription_ids == null){
-            prescription_ids = new ArrayList<>();
-        }
-
         /* TODO we shouldn't create the prescription ID until we click 'save' */
-        /* UUID uuid = UUID.randomUUID();
-           String randomUUIDString = uuid.toString(); */
-        prescription_ids.add(RandomGenerator.randomGenerator(20));
+        //prescription_ids.add(UUID.randomUUID().toString());
         //medication_ids = appArrayHandling.add(medication_ids, RandomGenerator.randomGenerator(20));
-        schedule_ids = appArrayHandling.add(schedule_ids, RandomGenerator.randomGenerator(20));
+        //schedule_ids = appArrayHandling.add(schedule_ids, RandomGenerator.randomGenerator(20));
 
         TableLayout tl = findViewById(R.id.medicationDataTableLayout);
 
@@ -586,6 +589,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
 
         for (int i = 0; i < medicationNameEditTextList.size(); i++) {
+            if (i > prescription_ids.size()) {
+                prescription_ids.add(UUID.randomUUID().toString());
+                medication_ids.add(UUID.randomUUID().toString());
+                schedule_ids.add(UUID.randomUUID().toString());
+            }
             medication_Name=medicationNameEditTextList.get(i).getText().toString();
 
             isSundayChecked=dayCheckboxList.get(i*7).isChecked();
@@ -613,14 +621,21 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
             Log.d("MedicalProfAccess","\n\n");
 
-            MedicationData medData = new MedicationData(getMedicationID(medication_Name));
+            String MedicationID = getMedicationID(medication_Name);
+            if (MedicationID == null || MedicationID.equals("")) {
+                // If the MedicationID is not found for the medication name, do not save the record and exit from the loop.
+                Toast.makeText(getApplicationContext(), "Medication " + medication_Name + " was not found in the Database. Correct and try again.", Toast.LENGTH_LONG).show();
+                continue;
+            }
+
+            MedicationData medData = new MedicationData(MedicationID);
 
             Log.d("Med ID", getMedicationID(medication_Name));
-            medData.setBrandName(medication_Name);
-            storeMedicationData(medData);
+            //medData.setGenericName(medication_Name);
+            //storeMedicationData(medData);
 
-            MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids[i]);
-            Log.d("schedule_id: ", schedule_ids[i]);
+            MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids.get(i));
+            Log.d("schedule_id: ", schedule_ids.get(i));
             medSchedule.setMondayChecked(isMondayChecked);
             medSchedule.setTuesdayChecked(isTuesdayChecked);
             medSchedule.setWednesdayChecked(isWednesdayChecked);
@@ -674,6 +689,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference patientDb = db.collection("Patients");
         DocumentReference docRef= patientDb.document(patientID);
+        if(prescription_ids == null){
+            prescription_ids = new ArrayList<>();
+        }
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -751,9 +769,16 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         medication_id = prescription.getMedicationID();
         schedule_id = prescription.getScheduleID();
         medication_Name = prescription.getMedicationName();
+        Log.d("GPD", "ID: " + medication_id + " - Name: "+ medication_Name);
 
-        medication_ids = appArrayHandling.add(medication_ids, medication_id);
-        schedule_ids = appArrayHandling.add(schedule_ids, schedule_id);
+        if(medication_ids == null){
+            medication_ids = new ArrayList<>();
+        }
+        if(schedule_ids == null){
+            schedule_ids = new ArrayList<>();
+        }
+        medication_ids.add(medication_id);
+        schedule_ids.add(schedule_id);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference scheduleDb = db.collection("MedicationSchedule");

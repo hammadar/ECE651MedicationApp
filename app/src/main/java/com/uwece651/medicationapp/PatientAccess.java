@@ -84,6 +84,7 @@ public class PatientAccess extends AppCompatActivity {
             public void onClick(View v) {
                 PB_addMedication();
             }});
+        clearPreviousData();
         retrievePatientInfo();
     }
 
@@ -246,6 +247,12 @@ public class PatientAccess extends AppCompatActivity {
 
 
 
+    }
+
+
+    public void clearPreviousData() {
+        TableLayout tl = findViewById(R.id.medicationDataTableLayout);
+        tl.removeAllViews();
     }
 
     public void retrievePatientInfo(){
