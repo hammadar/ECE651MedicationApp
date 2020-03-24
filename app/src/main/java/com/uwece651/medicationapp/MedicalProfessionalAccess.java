@@ -231,11 +231,12 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                            @Override
                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                if (task.isSuccessful()) {
+                                                   unassignedPatients.clear();
+                                                   unassignedPatientsUID.clear();
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                       unassignedPatients.clear();
-                                                       unassignedPatientsUID.clear();
                                                        Object patient_name = document.get("name");
                                                        if (patient_name != null) {
+                                                           Log.d("UnassignedDB", "Found non-null Named unassigned user.");
                                                            unassignedPatients.add((String) document.get("name"));
                                                            unassignedPatientsUID.add((String) document.get("uid"));
                                                        }
