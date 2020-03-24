@@ -887,7 +887,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             updateNewPatientList();
             newPatientNameDropdown.setVisibility(View.INVISIBLE);
             addPatientButton.setVisibility(View.INVISIBLE);
-            Toast.makeText(getApplicationContext(), NewPatientName + "is now assigned as your patient.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), NewPatientName + " is now assigned as your patient.", Toast.LENGTH_SHORT).show();
             return;
         }
     }
