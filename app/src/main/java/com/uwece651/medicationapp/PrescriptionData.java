@@ -1,15 +1,14 @@
 package com.uwece651.medicationapp;
 
-import java.time.LocalDate;
-
+import java.util.Date;
 
 
 public class PrescriptionData {
     private String PrescriptionID;
     private String MedicationID;
     private String ScheduleID;
-    private LocalDate StartDate;
-    private LocalDate EndDate;
+    private Date StartDate;
+    private Date EndDate;
     private String MedicationName;
     private String ScheduleShortName;
     private Integer NumberOfRefills;
@@ -54,18 +53,18 @@ public class PrescriptionData {
     public void setScheduleID (String ScheduleID) {
         this.ScheduleID = ScheduleID;
     }
-    public LocalDate getStartDate () {
+    public Date getStartDate () {
         return this.StartDate;
     }
 
-    public void setStartDate (LocalDate StartDate) {
+    public void setStartDate (Date StartDate) {
         this.StartDate = StartDate;
     }
-    public LocalDate getEndDate () {
+    public Date getEndDate () {
         return this.EndDate;
     }
 
-    public void setEndDate (LocalDate EndDate) {
+    public void setEndDate (Date EndDate) {
         this.EndDate = EndDate;
     }
     public String getMedicationName () {

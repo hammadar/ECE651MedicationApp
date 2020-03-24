@@ -84,6 +84,7 @@ public class PatientAccess extends AppCompatActivity {
             public void onClick(View v) {
                 PB_addMedication();
             }});
+        clearPreviousData();
         retrievePatientInfo();
     }
 
@@ -131,6 +132,8 @@ public class PatientAccess extends AppCompatActivity {
         EditText et= new EditText(this);
         et.setWidth(500);
         et.setText(medication_Name);
+        et.setFocusable(false);
+        et.setClickable(false);
         medicationNameEditTextList.add(et);
 
         //Weekly Frequency
@@ -147,42 +150,56 @@ public class PatientAccess extends AppCompatActivity {
         cb.setText("S");
         cb.setGravity(Gravity.CENTER);
         cb.setChecked(isSundayChecked);
+        cb.setFocusable(false);
+        cb.setClickable(false);
         dayCheckboxList.add(cb);
 
         CheckBox cb1 = new CheckBox(this);
         cb1.setText("M");
         cb1.setGravity(Gravity.CENTER);
         cb1.setChecked(isMondayChecked);
+        cb1.setFocusable(false);
+        cb1.setClickable(false);
         dayCheckboxList.add(cb1);
 
         CheckBox cb2 = new CheckBox(this);
         cb2.setText("T");
         cb2.setGravity(Gravity.CENTER);
         cb2.setChecked(isTuesdayChecked);
+        cb2.setFocusable(false);
+        cb2.setClickable(false);
         dayCheckboxList.add(cb2);
 
         CheckBox cb3 = new CheckBox(this);
         cb3.setText("W");
         cb3.setGravity(Gravity.CENTER);
         cb3.setChecked(isWednesdayChecked);
+        cb3.setFocusable(false);
+        cb3.setClickable(false);
         dayCheckboxList.add(cb3);
 
         CheckBox cb4 = new CheckBox(this);
         cb4.setText("T");
         cb4.setGravity(Gravity.CENTER);
         cb4.setChecked(isThursdayChecked);
+        cb4.setFocusable(false);
+        cb4.setClickable(false);
         dayCheckboxList.add(cb4);
 
         CheckBox cb5 = new CheckBox(this);
         cb5.setText("F");
         cb5.setGravity(Gravity.CENTER);
         cb5.setChecked(isFridayChecked);
+        cb5.setFocusable(false);
+        cb5.setClickable(false);
         dayCheckboxList.add(cb5);
 
         CheckBox cb6 = new CheckBox(this);
         cb6.setText("S");
         cb6.setGravity(Gravity.CENTER);
         cb6.setChecked(isSaturdayChecked);
+        cb6.setFocusable(false);
+        cb6.setClickable(false);
         dayCheckboxList.add(cb6);
 
         //Daily Frequency
@@ -199,7 +216,11 @@ public class PatientAccess extends AppCompatActivity {
         dailyFrequencySpinner.setAdapter(arrayAdapter);
         int spinnerposition = arrayAdapter.getPosition(dailyFrequencyValue);
         dailyFrequencySpinner.setSelection(spinnerposition);
+        dailyFrequencySpinner.setFocusable(false);
+        dailyFrequencySpinner.setClickable(false);
+        dailyFrequencySpinner.setEnabled(false);
         timesPerDaySpinnerList.add(dailyFrequencySpinner);
+
 
         //Time between intake
         TableRow tr3 = new TableRow(this);
@@ -211,6 +232,8 @@ public class PatientAccess extends AppCompatActivity {
         EditText et1= new EditText(this);
         et1.setWidth(150);
         et1.setText(timeBetweenIntakeValue);
+        et1.setFocusable(false);
+        et1.setClickable(false);
         timeBetweenIntakeEditTextList.add(et1);
 
         //Medication Name
@@ -246,6 +269,12 @@ public class PatientAccess extends AppCompatActivity {
 
 
 
+    }
+
+
+    public void clearPreviousData() {
+        TableLayout tl = findViewById(R.id.patientMedDataTableLayout);
+        tl.removeAllViews();
     }
 
     public void retrievePatientInfo(){
@@ -324,10 +353,9 @@ public class PatientAccess extends AppCompatActivity {
         });
     }
 
-    public void setClassVariables(PrescriptionData prescription) {
+    public void setClassVariables(final PrescriptionData prescription) {
         medication_id = prescription.getMedicationID();
         schedule_id = prescription.getScheduleID();
-        medication_Name = prescription.getMedicationName();
 
         medication_ids = appArrayHandling.add(medication_ids, medication_id);
         schedule_ids = appArrayHandling.add(schedule_ids, schedule_id);
@@ -352,6 +380,7 @@ public class PatientAccess extends AppCompatActivity {
                         isSundayChecked = schedule.getSundayChecked();
                         dailyFrequencyValue = schedule.getDailyFrequency();
                         timeBetweenIntakeValue = schedule.getHoursFrequency();
+                        medication_Name = prescription.getMedicationName();
                         displayRetrievedData();
 
 
