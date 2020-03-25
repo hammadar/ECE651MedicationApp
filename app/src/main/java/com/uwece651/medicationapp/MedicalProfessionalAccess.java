@@ -814,7 +814,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
 
         for (int i = 0; i < medicationNameEditTextList.size(); i++) {
-            if (i > prescription_ids.size()) {
+            if (i >= prescription_ids.size()) {
                 prescription_ids.add(UUID.randomUUID().toString());
                 medication_ids.add(UUID.randomUUID().toString());
                 schedule_ids.add(UUID.randomUUID().toString());
@@ -922,6 +922,14 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         DocumentReference docRef= patientDb.document(patientID);
         if(prescription_ids == null){
             prescription_ids = new ArrayList<>();
+        }
+
+        if (medication_ids == null) {
+            medication_ids = new ArrayList<>();
+        }
+
+        if (schedule_ids == null) {
+            schedule_ids = new ArrayList<>();
         }
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
