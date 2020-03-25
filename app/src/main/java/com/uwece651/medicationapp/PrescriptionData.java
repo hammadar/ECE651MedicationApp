@@ -1,9 +1,8 @@
 package com.uwece651.medicationapp;
 
+
 import java.time.LocalDate;
 import java.util.Date;
-
-
 
 public class PrescriptionData {
     private String PrescriptionID;
