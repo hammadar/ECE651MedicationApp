@@ -51,7 +51,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (BuildConfig.DEBUG) StrictModeManager.enableStrictMode();
+        /*if (BuildConfig.DEBUG)*/ StrictModeManager.enableStrictMode();
         //StrictModeManager.allowDiskReads((Runnable) getApplicationContext());
         setContentView(R.layout.activity_firebase_ui);
         mAuth = FirebaseAuth.getInstance();

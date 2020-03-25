@@ -295,12 +295,23 @@ public class PatientAccess extends AppCompatActivity {
         TextView tv5 = new TextView(this);
         tv5.setText("End Date: ");
 
+        final TextView tv9 = new TextView(this);
+        tv9.setWidth(600);
+        tv9.setText(new SimpleDateFormat("yyyy-MM-d").format(endDate));
+        tv9.setTypeface(null, Typeface.BOLD);
+
+        /*TableRow tr6 = new TableRow(this);
+        LinearLayout ll6 = new LinearLayout(this);
+
+        TextView tv10 = new TextView(this);
+        tv10.setText("Time Between Doses: ");
+
         EditText et1= new EditText(this);
         et1.setWidth(150);
         et1.setText(timeBetweenIntakeValue);
         et1.setFocusable(false);
         et1.setClickable(false);
-        timeBetweenIntakeEditTextList.add(et1);
+        timeBetweenIntakeEditTextList.add(et1);*/
 
 
         //Medication Name
@@ -341,7 +352,7 @@ public class PatientAccess extends AppCompatActivity {
         tl.addView(tr4);
 
         ll5.addView(tv5);
-        ll5.addView(et1);
+        ll5.addView(tv9);
         tr5.addView(ll5);
         tl.addView(tr5);
 

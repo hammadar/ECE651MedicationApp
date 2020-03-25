@@ -7,10 +7,17 @@ import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.content.ContentValues;
 import android.provider.CalendarContract;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
@@ -45,28 +52,32 @@ public class GoogleCalendarModule {
         }
 
         int[] doseTimes = getDoseTimes(numberOfTimes);
+        List<Date> dates = getDatesBetween(prescription.getStartDate(), prescription.getEndDate());
 
         for (int i = 0; i < doseTimes.length; i++) {
-            ContentValues values = new ContentValues();
-            values.put(CalendarContract.Events.CALENDAR_ID, 1);
-            values.put(CalendarContract.Events.TITLE, "Take Medicine " + prescription.getMedicationName());
-            values.put(CalendarContract.Events.ALL_DAY,0);
-            values.put(CalendarContract.Events.DTSTART, timeInMillis(prescription.getStartDate(), doseTimes[i]));
-            values.put(CalendarContract.Events.DTEND, timeInMillis(prescription.getEndDate(), doseTimes[i]+1));
-            values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
-            values.put(CalendarContract.Events.HAS_ALARM, 1);
-            Uri event = cr.insert(EVENTS_URI, values);
+            for (int j = 0; j < dates.size(); j++) {
+                ContentValues values = new ContentValues();
+                values.put(CalendarContract.Events.CALENDAR_ID, 3);
+                values.put(CalendarContract.Events.TITLE, "Take Medicine " + prescription.getMedicationName());
+                values.put(CalendarContract.Events.ALL_DAY,0);
+                values.put(CalendarContract.Events.DTSTART, timeInMillis(dates.get(j), doseTimes[i]));
+                values.put(CalendarContract.Events.DTEND, timeInMillis(dates.get(j), doseTimes[i] + 1));
+                values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+                values.put(CalendarContract.Events.HAS_ALARM, 1);
+                Uri event = cr.insert(EVENTS_URI, values);
 
-            // Display event id
-            Toast.makeText(context.getApplicationContext(), "Event added :: ID :: " + event.getLastPathSegment(), Toast.LENGTH_SHORT).show();
+                // Display event id
+                Toast.makeText(context.getApplicationContext(), "Event added :: ID :: " + event.getLastPathSegment(), Toast.LENGTH_SHORT).show();
 
-            /** Adding reminder for event added. */
-            Uri REMINDERS_URI = Uri.parse(getCalendarUriBase(true) + "reminders");
-            values = new ContentValues();
-            values.put(CalendarContract.Reminders.EVENT_ID, Long.parseLong(event.getLastPathSegment()));
-            values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-            values.put(CalendarContract.Reminders.MINUTES, 10);
-            cr.insert(REMINDERS_URI, values);
+                /** Adding reminder for event added. */
+                Uri REMINDERS_URI = Uri.parse(getCalendarUriBase(true) + "reminders");
+                values = new ContentValues();
+                values.put(CalendarContract.Reminders.EVENT_ID, Long.parseLong(event.getLastPathSegment()));
+                values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                values.put(CalendarContract.Reminders.MINUTES, 10);
+                cr.insert(REMINDERS_URI, values);
+            }
+
 
         }
 
@@ -102,6 +113,37 @@ public class GoogleCalendarModule {
     }
 
     private static long timeInMillis (Date date, int hour) {
-        return date.getTime() + hour*3600*1000;
+        long time = date.getTime();
+        long addition = (long) hour * 3600000;
+        long ret = time + addition;
+        return ret;
+    }
+
+    public static List<Date> getDatesBetween(
+            Date startDate, Date endDate) {
+        LocalDate start = convertToLocalDate(startDate);
+        LocalDate end = convertToLocalDate(endDate);
+        Date dateHolder;
+        List<Date> dates = new ArrayList<>();
+
+        while (!start.isAfter(end)) {
+            dates.add(convertToDate(start));
+            Log.d("date", start.toString());
+            start = start.plusDays(1);
+        }
+
+        return dates;
+    }
+
+    public static LocalDate convertToLocalDate(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+
+    public static Date convertToDate(LocalDate dateToConvert) {
+        return java.util.Date.from(dateToConvert.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
     }
 }
