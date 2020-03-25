@@ -51,7 +51,7 @@ public class GoogleCalendarModule {
             values.put(CalendarContract.Events.CALENDAR_ID, 1);
             values.put(CalendarContract.Events.TITLE, "Take Medicine " + prescription.getMedicationName());
             values.put(CalendarContract.Events.ALL_DAY,0);
-            values.put(CalendarContract.Events.DTSTART, timeInMillis(prescription.getStartDate(), doseTimes[i]+1));
+            values.put(CalendarContract.Events.DTSTART, timeInMillis(prescription.getStartDate(), doseTimes[i]));
             values.put(CalendarContract.Events.DTEND, timeInMillis(prescription.getEndDate(), doseTimes[i]+1));
             values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
             values.put(CalendarContract.Events.HAS_ALARM, 1);
