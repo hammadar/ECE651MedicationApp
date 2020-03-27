@@ -1,34 +1,30 @@
 package com.uwece651.medicationapp;
+import org.junit.Before;
+import org.junit.Test;
 
-import android.os.Bundle;
-
+import static org.junit.Assert.*;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import junit.framework.TestCase;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
 
+public class firebase_fortestTest{
 
-public class firebaserwtest {
+    private firebase_fortest firebase_fortest = new firebase_fortest();
 
     private FirebaseAuth mAuth;
     //protected void onCreate(Bundle savedInstanceState)
     //{
-      //  super.onCreate(savedInstanceState);
-       // mAuth = FirebaseAuth.getInstance();
-        //FirebaseUser currentUser = mAuth.getCurrentUser();
+    //  super.onCreate(savedInstanceState);
+    // mAuth = FirebaseAuth.getInstance();
+    //FirebaseUser currentUser = mAuth.getCurrentUser();
     //}
     //mAuth = FirebaseAuth.getInstance();
     String currentUserName = "Doctor";
-    private com.uwece651.medicationapp.firebase_fortest firebase_fortest;
     //currentUserName=currentUser.getDisplayName()
 
     public void submitRegistrationInfo()
@@ -60,6 +56,7 @@ public class firebaserwtest {
 
         CollectionReference Doctors = db.collection("Doctors");
         Doctors.document(doctor.getUid()).set(doctor);
+        retrieveInfo(doctor);
     }
 
     // retrieve data from Firebase
@@ -73,8 +70,9 @@ public class firebaserwtest {
     }
 
     @Test
-    public void firebase_fortest() {
+    public void testGetDoctorID() {
+        firebase_fortestTest f= new firebase_fortestTest();
+        f.submitRegistrationInfo();
         assertEquals("Testing DoctorID","9999",this.firebase_fortest.getDoctorID());
     }
-
 }
