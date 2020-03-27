@@ -10,6 +10,7 @@ import android.provider.CalendarContract;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -56,26 +57,29 @@ public class GoogleCalendarModule {
 
         for (int i = 0; i < doseTimes.length; i++) {
             for (int j = 0; j < dates.size(); j++) {
-                ContentValues values = new ContentValues();
-                values.put(CalendarContract.Events.CALENDAR_ID, 3);
-                values.put(CalendarContract.Events.TITLE, "Take Medicine " + prescription.getMedicationName());
-                values.put(CalendarContract.Events.ALL_DAY,0);
-                values.put(CalendarContract.Events.DTSTART, timeInMillis(dates.get(j), doseTimes[i]));
-                values.put(CalendarContract.Events.DTEND, timeInMillis(dates.get(j), doseTimes[i] + 1));
-                values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
-                values.put(CalendarContract.Events.HAS_ALARM, 1);
-                Uri event = cr.insert(EVENTS_URI, values);
+                if (checkDayInSchedule(dates.get(j), schedule)) {
+                    ContentValues values = new ContentValues();
+                    values.put(CalendarContract.Events.CALENDAR_ID, 3);
+                    values.put(CalendarContract.Events.TITLE, "Take Medicine " + prescription.getMedicationName());
+                    values.put(CalendarContract.Events.ALL_DAY,0);
+                    values.put(CalendarContract.Events.DTSTART, timeInMillis(dates.get(j), doseTimes[i]));
+                    values.put(CalendarContract.Events.DTEND, timeInMillis(dates.get(j), doseTimes[i] + 1));
+                    values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+                    values.put(CalendarContract.Events.HAS_ALARM, 1);
+                    Uri event = cr.insert(EVENTS_URI, values);
 
-                // Display event id
-                Toast.makeText(context.getApplicationContext(), "Event added :: ID :: " + event.getLastPathSegment(), Toast.LENGTH_SHORT).show();
+                    // Display event id
+                    Toast.makeText(context.getApplicationContext(), "Event added :: ID :: " + event.getLastPathSegment(), Toast.LENGTH_SHORT).show();
 
-                /** Adding reminder for event added. */
-                Uri REMINDERS_URI = Uri.parse(getCalendarUriBase(true) + "reminders");
-                values = new ContentValues();
-                values.put(CalendarContract.Reminders.EVENT_ID, Long.parseLong(event.getLastPathSegment()));
-                values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-                values.put(CalendarContract.Reminders.MINUTES, 10);
-                cr.insert(REMINDERS_URI, values);
+                    /** Adding reminder for event added. */
+                    Uri REMINDERS_URI = Uri.parse(getCalendarUriBase(true) + "reminders");
+                    values = new ContentValues();
+                    values.put(CalendarContract.Reminders.EVENT_ID, Long.parseLong(event.getLastPathSegment()));
+                    values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                    values.put(CalendarContract.Reminders.MINUTES, 10);
+                    cr.insert(REMINDERS_URI, values);
+                }
+
             }
 
 
@@ -119,8 +123,7 @@ public class GoogleCalendarModule {
         return ret;
     }
 
-    public static List<Date> getDatesBetween(
-            Date startDate, Date endDate) {
+    public static List<Date> getDatesBetween(Date startDate, Date endDate) {
         LocalDate start = convertToLocalDate(startDate);
         LocalDate end = convertToLocalDate(endDate);
         Date dateHolder;
@@ -145,5 +148,35 @@ public class GoogleCalendarModule {
         return java.util.Date.from(dateToConvert.atStartOfDay()
                 .atZone(ZoneId.systemDefault())
                 .toInstant());
+    }
+
+
+    public static String getDayFromDate(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
+        return simpleDateFormat.format(date);
+    }
+
+    public static boolean checkDayInSchedule(Date date, MedicationSchedule schedule) {
+        String day = getDayFromDate(date);
+
+        switch (day) {
+            case "Monday":
+                if (schedule.getMondayChecked()) {return true;}
+            case "Tuesday":
+                if (schedule.getTuesdayChecked()) {return true;}
+            case "Wednesday":
+                if (schedule.getWednesdayChecked()) {return true;}
+            case "Thursday":
+                if (schedule.getThursdayChecked()) {return true;}
+            case "Friday":
+                if (schedule.getFridayChecked()) {return true;}
+            case "Saturday":
+                if (schedule.getSaturdayChecked()) {return true;}
+            case "Sunday":
+                if (schedule.getSundayChecked()) {return true;}
+            default:
+                return false;
+
+        }
     }
 }
