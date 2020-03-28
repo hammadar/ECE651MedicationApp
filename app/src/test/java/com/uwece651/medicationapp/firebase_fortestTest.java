@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.util.Log;
 
 
@@ -44,16 +45,19 @@ import java.util.Objects;
 
 
 
-public class firebase_fortestTest {
+public class firebase_fortestTest{
 
     private FirebaseAuth mAuth;
+    private FirebaseApp firebaseApp;
     private PersonalInformation personalInformation;
     private Doctor doctor;
     private Patient patient;
     private static final FirebaseOptions OPTIONS =
             new FirebaseOptions.Builder()
-            .setApplicationId("com.uwece651.medicationapp")
+            .setApplicationId("1:242727984314:android:1de9adc2be1be7f108b683")
             .setApiKey("AIzaSyCHWCTurnALaJtiZHJGC1C3hdl8zluXBv4")
+            .setDatabaseUrl("https://ece651medicationappv2.firebaseio.com")
+            .setProjectId("ece651medicationappv2")
             .build();
     @Mock
     private Context mockApplicationContext;
@@ -64,8 +68,9 @@ public class firebase_fortestTest {
 
 
 
+
     public FirebaseAuth initAndReturnFirebaseAuth() {
-        FirebaseAuth authMock = mock(FirebaseAuth.class);
+        FirebaseAuth authMock = FirebaseAuth.getInstance(firebaseApp);//mock(FirebaseAuth.class);
         FirebaseUser mockFirebaseUser = mock(FirebaseUser.class);
         when(authMock.getCurrentUser()).thenReturn(mockFirebaseUser);
         return authMock;
@@ -96,7 +101,8 @@ public class firebase_fortestTest {
         when(mockApplicationContext.getApplicationContext()).thenReturn(mockApplicationContext);
         when(mockApplicationContext.getResources()).thenReturn(mockContextResources);
 
-        FirebaseApp.initializeApp(mockApplicationContext, OPTIONS);
+        firebaseApp = FirebaseApp.initializeApp(mockApplicationContext, OPTIONS);
+
         mAuth = initAndReturnFirebaseAuth();
         makePersonalInformation();
         makeDoctor();
@@ -121,7 +127,7 @@ public class firebase_fortestTest {
 
         registerUser(user);
         registerDoctor(doctor);
-    }*/
+    }
 
 
 
@@ -134,7 +140,7 @@ public class firebase_fortestTest {
         String DoctorID = Objects.requireNonNull(doctor.getUid());
         //FirebaseFirestore db = FirebaseFirestore.getInstance();
         //CollectionReference patientDb = db.collection("Patients");
-    }
+    }*/
 
     public PersonalInformation makePersonalInformation() {
         PersonalInformation personalInformation = new PersonalInformation("123456789");
