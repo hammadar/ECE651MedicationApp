@@ -86,6 +86,9 @@ public class firebase_fortestTest {
     @Before
     public void before() {
         MockitoAnnotations.initMocks(this);
+        when(mockApplicationContext.getApplicationContext()).thenReturn(mockApplicationContext);
+        when(mockApplicationContext.getResources()).thenReturn(mockContextResources);
+
         FirebaseApp.initializeApp(mockApplicationContext);
         mAuth = initAndReturnFirebaseAuth();
         makePersonalInformation();
