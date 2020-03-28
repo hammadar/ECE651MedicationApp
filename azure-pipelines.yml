@@ -34,8 +34,6 @@ stages:
             pathToSources: ECE651MedicationApp/app/src/main/java/
             failIfCoverageEmpty: false 
 
-
-
 #gradleWrapperFile: 'gradlew' 
     #workingDirectory: # Optional
     #options: # Optional
