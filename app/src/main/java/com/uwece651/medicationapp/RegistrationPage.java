@@ -1,5 +1,7 @@
 package com.uwece651.medicationapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -129,6 +132,14 @@ public class RegistrationPage extends AppCompatActivity {
     public void goToPatientAccess () {
         Intent patientIntent = new Intent(getBaseContext(), PatientAccess.class);
         startActivity(patientIntent);
+    }
+
+    @NonNull
+    @VisibleForTesting
+    public FirebaseAuth initAndReturnFirebaseAuth() {
+        FirebaseApp.initializeApp(this);
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        return firebaseAuth;
     }
 
 
