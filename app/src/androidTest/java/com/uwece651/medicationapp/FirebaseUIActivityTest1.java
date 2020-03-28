@@ -33,6 +33,39 @@ public class FirebaseUIActivityTest1 {
 
     @Test
     public void firebaseUIActivityTest1() {
+        ViewInteraction appCompatRadioButton = onView(
+                allOf(withId(R.id.radio_patient), withText("Patient"),
+                        childAtPosition(
+                                allOf(withId(R.id.radioGroup2),
+                                        childAtPosition(
+                                                withId(R.id.relativeLayout),
+                                                3)),
+                                0),
+                        isDisplayed()));
+        appCompatRadioButton.perform(click());
+
+        ViewInteraction appCompatRadioButton2 = onView(
+                allOf(withId(R.id.radio_med_prof), withText("Medical Professional"),
+                        childAtPosition(
+                                allOf(withId(R.id.radioGroup2),
+                                        childAtPosition(
+                                                withId(R.id.relativeLayout),
+                                                3)),
+                                1),
+                        isDisplayed()));
+        appCompatRadioButton2.perform(click());
+
+        ViewInteraction appCompatRadioButton3 = onView(
+                allOf(withId(R.id.radio_patient), withText("Patient"),
+                        childAtPosition(
+                                allOf(withId(R.id.radioGroup2),
+                                        childAtPosition(
+                                                withId(R.id.relativeLayout),
+                                                3)),
+                                0),
+                        isDisplayed()));
+        appCompatRadioButton3.perform(click());
+
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.submitRegistrationInfo), withText("Submit"),
                         childAtPosition(
@@ -51,7 +84,7 @@ public class FirebaseUIActivityTest1 {
                                         childAtPosition(
                                                 withId(android.R.id.content),
                                                 0)),
-                                2),
+                                4),
                         isDisplayed()));
         appCompatButton2.perform(click());
     }

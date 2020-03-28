@@ -26,42 +26,30 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class FirebaseUIActivityTest2 {
+public class FirebaseUIActivityTest4 {
 
     @Rule
     public ActivityTestRule<FirebaseUIActivity> mActivityTestRule = new ActivityTestRule<>(FirebaseUIActivity.class);
 
     @Test
-    public void firebaseUIActivityTest2() {
-        ViewInteraction appCompatRadioButton = onView(
-                allOf(withId(R.id.radio_med_prof), withText("Medical Professional"),
-                        childAtPosition(
-                                allOf(withId(R.id.radioGroup2),
-                                        childAtPosition(
-                                                withId(R.id.relativeLayout),
-                                                3)),
-                                1),
-                        isDisplayed()));
-        appCompatRadioButton.perform(click());
-
+    public void firebaseUIActivityTest4() {
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.submitRegistrationInfo), withText("Submit"),
-                        childAtPosition(
-                                allOf(withId(R.id.relativeLayout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                4),
-                        isDisplayed()));
-        appCompatButton.perform(click());
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.signOutButton), withText("Sign Out"),
+                allOf(withId(R.id.retrievePatientInfo), withText("Retrieve Patient Data"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                11),
+                                0),
+                        isDisplayed()));
+        appCompatButton.perform(click());
+
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.savePatientData), withText("Save Data"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                2),
                         isDisplayed()));
         appCompatButton2.perform(click());
     }
