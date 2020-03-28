@@ -2,7 +2,10 @@ package com.uwece651.medicationapp;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.util.Log;
+
 
 import androidx.annotation.NonNull;
 
@@ -12,6 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.manipulation.Ordering;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -37,12 +41,19 @@ import junit.framework.TestCase;
 import java.util.Objects;
 
 
+
 public class firebase_fortestTest {
 
     private FirebaseAuth mAuth;
     private PersonalInformation personalInformation;
     private Doctor doctor;
     private Patient patient;
+    @Mock
+    private Context mockApplicationContext;
+    @Mock
+    private Resources mockContextResources;
+    @Mock
+    private SharedPreferences mockSharedPreferences;
 
 
 
@@ -74,7 +85,8 @@ public class firebase_fortestTest {
 
     @Before
     public void before() {
-        FirebaseApp.initializeApp(mock(Application.class));
+        MockitoAnnotations.initMocks(this);
+        FirebaseApp.initializeApp(mockApplicationContext);
         mAuth = initAndReturnFirebaseAuth();
         makePersonalInformation();
         makeDoctor();
