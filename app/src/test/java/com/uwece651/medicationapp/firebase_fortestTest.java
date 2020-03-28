@@ -28,12 +28,14 @@ import static org.mockito.Mockito.when;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 
 
 import junit.framework.TestCase;
@@ -48,6 +50,11 @@ public class firebase_fortestTest {
     private PersonalInformation personalInformation;
     private Doctor doctor;
     private Patient patient;
+    private static final FirebaseOptions OPTIONS =
+            new FirebaseOptions.Builder()
+            .setApplicationId("com.uwece651.medicationapp")
+            .setApiKey("AIzaSyCHWCTurnALaJtiZHJGC1C3hdl8zluXBv4")
+            .build();
     @Mock
     private Context mockApplicationContext;
     @Mock
@@ -89,7 +96,7 @@ public class firebase_fortestTest {
         when(mockApplicationContext.getApplicationContext()).thenReturn(mockApplicationContext);
         when(mockApplicationContext.getResources()).thenReturn(mockContextResources);
 
-        FirebaseApp.initializeApp(mockApplicationContext);
+        FirebaseApp.initializeApp(mockApplicationContext, OPTIONS);
         mAuth = initAndReturnFirebaseAuth();
         makePersonalInformation();
         makeDoctor();
