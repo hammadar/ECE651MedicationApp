@@ -26,17 +26,13 @@ stages:
             testResultsFiles: '**/TEST-*.xml'
             tasks: 'build'
 
-        - task: PublishCodeCoverageResults@1
-          inputs:
-            codeCoverageTool: 'JaCoCo'
-            summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/site/jacoco/jacoco.xml"
-            #pathToSources: # Optional
-            reportDirectory: "$(System.DefaultWorkingDirectory)/**/site/jacoco"
-            #additionalCodeCoverageFiles: # Optional
-            failIfCoverageEmpty: true
-    
 # Publish code coverage results
-
+        - task: PublishCodeCoverageResults@1 
+          inputs:
+            codeCoverageTool: 'JaCoCo' 
+            summaryFileLocation: ECE651MedicationApp/app/src/main/java/test
+            pathToSources: ECE651MedicationApp/app/src/main/java/
+            failIfCoverageEmpty: false 
 
 
 
