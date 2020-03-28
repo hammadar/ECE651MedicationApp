@@ -1,4 +1,6 @@
 package com.uwece651.medicationapp;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -6,7 +8,10 @@ import androidx.annotation.NonNull;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.manipulation.Ordering;
+import org.mockito.Mock;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -18,12 +23,14 @@ import static org.mockito.Mockito.when;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import junit.framework.TestCase;
 
@@ -36,6 +43,7 @@ public class firebase_fortestTest {
     private PersonalInformation personalInformation;
     private Doctor doctor;
     private Patient patient;
+
 
 
     public FirebaseAuth initAndReturnFirebaseAuth() {
@@ -62,8 +70,11 @@ public class firebase_fortestTest {
 
 
 
+
+
     @Before
     public void before() {
+        FirebaseApp.initializeApp(mock(Application.class));
         mAuth = initAndReturnFirebaseAuth();
         makePersonalInformation();
         makeDoctor();
