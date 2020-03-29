@@ -1,7 +1,6 @@
 package com.uwece651.medicationapp;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+
+import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -11,85 +10,38 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-@LargeTest
-@RunWith(AndroidJUnit4.class)
+import static org.junit.Assert.fail;
+
 public class PatientRegistrationUIActivityTest {
     @Rule
-    public ActivityTestRule<FirebaseUIActivity> mActivityTestRule = new ActivityTestRule<>(FirebaseUIActivity.class);
+    public ActivityTestRule<RegistrationPage> mActivityTestRule = new ActivityTestRule<>(RegistrationPage.class);
+
     @Test
-    public void firebaseUIActivityTest1() {
-        ViewInteraction appCompatRadioButton = onView(
+    public void patientRegistrationTest() {
+
+        //Select Patient radio button
+        ViewInteraction patientRadioButton = onView(
                 allOf(withId(R.id.radio_patient), withText("Patient"),
-                        childAtPosition(
-                                allOf(withId(R.id.radioGroup2),
-                                        childAtPosition(
-                                                withId(R.id.relativeLayout),
-                                                3)),
-                                0),
                         isDisplayed()));
-        appCompatRadioButton.perform(click());
-        ViewInteraction appCompatRadioButton2 = onView(
-                allOf(withId(R.id.radio_med_prof), withText("Medical Professional"),
-                        childAtPosition(
-                                allOf(withId(R.id.radioGroup2),
-                                        childAtPosition(
-                                                withId(R.id.relativeLayout),
-                                                3)),
-                                1),
-                        isDisplayed()));
-        appCompatRadioButton2.perform(click());
-        ViewInteraction appCompatRadioButton3 = onView(
-                allOf(withId(R.id.radio_patient), withText("Patient"),
-                        childAtPosition(
-                                allOf(withId(R.id.radioGroup2),
-                                        childAtPosition(
-                                                withId(R.id.relativeLayout),
-                                                3)),
-                                0),
-                        isDisplayed()));
-        appCompatRadioButton3.perform(click());
-        ViewInteraction appCompatButton = onView(
+        patientRadioButton.perform(click());
+
+        //click Submit button
+        ViewInteraction submitButton = onView(
                 allOf(withId(R.id.submitRegistrationInfo), withText("Submit"),
-                        childAtPosition(
-                                allOf(withId(R.id.relativeLayout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                4),
                         isDisplayed()));
-        appCompatButton.perform(click());
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.signOutButton), withText("Sign Out"),
-                        childAtPosition(
-                                allOf(withId(R.id.relativeLayout2),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                4),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
-    }
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
+        submitButton.perform(click());
+
+        try{
+            onView(withId(R.id.patientAccessRelativeLayout)).check(matches(isDisplayed()));
+        } catch (NoMatchingViewException e){
+            fail("Patient Access Page did not open\n");
+        }
     }
 }
