@@ -7,11 +7,13 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,27 +30,107 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
-public class firebase_test_jlenos {
+public class FirebaseTest {
 
-    private FirebaseAuth mAuth;
-    private FirebaseApp firebaseApp;
-    private static final FirebaseOptions OPTIONS =
-            new FirebaseOptions.Builder()
-                    .setApplicationId("1:242727984314:android:1de9adc2be1be7f108b683")
-                    .setApiKey("AIzaSyCHWCTurnALaJtiZHJGC1C3hdl8zluXBv4")
-                    .setDatabaseUrl("https://ece651medicationappv2.firebaseio.com")
-                    .setProjectId("ece651medicationappv2")
-                    .build();
+    private PersonalInformation personalInformation;
+    private Doctor doctor;
+    //private Patient patient;
 
-    //@Before
-    //public void before() {
-    //    Context instrumentationContext = InstrumentationRegistry.getInstrumentation().getContext();
-    //   firebaseApp = FirebaseApp.initializeApp(instrumentationContext , OPTIONS);
-    //    Log.d("Firebase", firebaseApp.getName());
-    //    Log.d("FirebaseAuth", "Current User UID: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
-    // }
+
+    @Before
+    public void before() {
+        doctor = makeDoctor();
+        personalInformation = makeUser();
+        registerUser(personalInformation);
+        registerDoctor(doctor);
+
+    }
+
+
+
+    public Doctor makeDoctor() {
+        Doctor doctor = new Doctor("9999");
+        doctor.setName("Owner");
+        doctor.setType("Doctor");
+        return doctor;
+
+    }
+
+    public PersonalInformation makeUser() {
+        PersonalInformation user = new PersonalInformation("9999");
+        user.setName("Owner");
+        user.setType("Doctor");
+        return user;
+    }
+
+
+    public void registerUser(PersonalInformation user) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        CollectionReference Users = db.collection("Users");
+        Users.document(user.getUid()).set(user);
+    }
+
+    public void registerDoctor(Doctor doctor) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        CollectionReference Doctors = db.collection("Doctors");
+        Doctors.document(doctor.getUid()).set(doctor);
+    }
 
     @Test
+    public void checkUserRegistered() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference Users = db.collection("Users");
+        DocumentReference docRef = Users.document("9999");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        PersonalInformation user = document.toObject(PersonalInformation.class);
+                        assertEquals("Testing User UID:", "9999", user.getUid());
+                        assertEquals("Testing User Name:", "Owner", user.getName());
+                        assertEquals("Testing User Type:", "Doctor", user.getType());
+
+                    } else {
+                        fail("Personal Information Test: Object not retrieved\n");
+                    }
+                } else {
+                    fail("Personal Information Test: Connection to Firebase not established\n");
+                }
+            }
+        });
+    }
+
+    @Test
+    public void checkDoctorRegistered() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference doctors = db.collection("Doctors");
+        DocumentReference docRef = doctors.document("9999");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Doctor doctor = document.toObject(Doctor.class);
+                        assertEquals("Testing Doctor UID:", "9999", doctor.getUid());
+                        assertEquals("Testing Doctor Name:", "Owner", doctor.getName());
+                        assertEquals("Testing Doctor Type:", "Doctor", doctor.getType());
+
+                    } else {
+                        fail("Doctor Registered Test: Object not retrieved\n");
+                    }
+                } else {
+                    fail("Doctor Registered Test: Connection to Firebase not established\n");
+                }
+            }
+        });
+    }
+
+
     public void getUserNameFromDB() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference User = db.collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -72,7 +154,7 @@ public class firebase_test_jlenos {
         });
     }
 
-    @Test
+    /*
     public void registerUser() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         PersonalInformation user = new PersonalInformation("9999");
@@ -108,11 +190,13 @@ public class firebase_test_jlenos {
                     }
                 });
         Log.d("DB", "Finished getting user");
+    }*/
+
+
+    public void WaitForDB() throws InterruptedException {
+        sleep(10000);
     }
 
-    @Test
-    public void WaitForDB() throws InterruptedException {
-        sleep(1000);
-    }
+
 }
 
