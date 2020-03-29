@@ -1011,6 +1011,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         medication_id = prescription.getMedicationID();
         schedule_id = prescription.getScheduleID();
         medication_Name = prescription.getMedicationName();
+        startDate = prescription.getStartDate();
+        endDate = prescription.getEndDate();
         Log.d("GPD", "ID: " + medication_id + " - Name: "+ medication_Name);
 
         if(medication_ids == null){
