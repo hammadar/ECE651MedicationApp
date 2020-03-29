@@ -16,7 +16,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginBottom="602dp"
+        android:layout_marginBottom="555dp"
         android:text="Retrieve Patient Data"
         tools:layout_editor_absoluteX="71dp"
         tools:layout_editor_absoluteY="413dp" />
@@ -30,7 +30,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginBottom="507dp"
+        android:layout_marginBottom="460dp"
         android:text="Add New Medication"
         android:visibility="invisible"
         tools:layout_editor_absoluteX="71dp"
@@ -47,7 +47,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginBottom="554dp"
+        android:layout_marginBottom="507dp"
         android:text="Save Data" />
 
     <Button
@@ -59,7 +59,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginBottom="461dp"
+        android:layout_marginBottom="414dp"
         android:text="Add New Patient"
         tools:layout_editor_absoluteX="71dp"
         tools:layout_editor_absoluteY="413dp" />

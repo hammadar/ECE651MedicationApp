@@ -40,8 +40,8 @@ public class PrescriptionDataTest {
 
     @Test
     public void endDateTest() {
-        LocalDate localDate2 = LocalDate.of(2020, 1, 2);
-        assertEquals("End Date Test: ", localDate2, this.prescriptionData.getEndDate());
+        Date date2 = new GregorianCalendar(2020, 1, 2).getTime();
+        assertEquals("End Date Test: ", date2, this.prescriptionData.getEndDate());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class PrescriptionDataTest {
 
     @Test
     public void startDateTest() {
-        LocalDate localDate1 = LocalDate.of(2020, 1, 1);
-        assertEquals("Start Date Test: ", localDate1, this.prescriptionData.getStartDate());
+        Date date1 =  new GregorianCalendar(2020, 1, 1).getTime();
+        assertEquals("Start Date Test: ", date1, this.prescriptionData.getStartDate());
     }
 }

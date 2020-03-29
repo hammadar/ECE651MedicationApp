@@ -2,38 +2,27 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'jacoco'
 
+
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.uwece651.medicationapp"
-        minSdkVersion 21
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
-        debug {
-            testCoverageEnabled = true
-        }
-
-        lintOptions {
-            abortOnError false
-        }
+    lintOptions {
+        abortOnError false
     }
-    testOptions {
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses = true
-            }
-        }
     }
 }
 
@@ -41,38 +30,21 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.firebase:firebase-firestore:21.4.1'
+    implementation 'com.google.firebase:firebase-firestore:17.1.2'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
-    implementation 'com.google.firebase:firebase-auth:19.3.0'
-    testImplementation 'junit:junit:4.13'
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-}
-
-apply plugin: 'jacoco'
-
-jacoco {
-    toolVersion = "0.8.1"
-}
-
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-        html.destination file("${buildDir}/jacocoHtml")
+    implementation ('com.google.api-client:google-api-client:1.23.0') {
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
     }
-
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([debugTree])
-    executionData.from = fileTree(dir: "$buildDir", includes: [
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/code_coverage/debugAndroidTest/connected/*coverage.ec"
-    ])
+    implementation ('com.google.oauth-client:google-oauth-client-jetty:1.23.0') {
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+    implementation ('com.google.apis:google-api-services-calendar:v3-rev305-1.23.0') {
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
 }
