@@ -77,8 +77,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="false"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="42dp"
-        android:layout_marginBottom="430dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginBottom="418dp"
         android:spinnerMode="dialog"
         android:visibility="invisible" />
 
@@ -90,7 +90,7 @@
         android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="280dp"
-        android:layout_marginBottom="430dp"
+        android:layout_marginBottom="415dp"
         android:layout_toEndOf="@+id/newpatientID"
         android:text="Add"
         android:visibility="invisible"
@@ -129,6 +129,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="-1dp"
         android:layout_marginEnd="0dp"
+        android:translationZ="90dp"
         android:background="@color/colorPrimary"/>
 
     <TextView
@@ -147,6 +148,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteY="413dp"
+        android:translationZ="90dp"
         android:textColor="@color/colorText"/>
 
     <TextView
@@ -164,6 +166,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteY="413dp"
+        android:translationZ="90dp"
         android:textColor="@color/colorText"/>
 
     <Spinner
@@ -177,23 +180,24 @@
         android:selectAllOnFocus="true"
         android:textColor="@color/colorText"
         android:textSize="14dp"
+        android:translationZ="90dp"
         android:textStyle="bold" />
 
-    <Button
+    <TextView
         android:id="@+id/signOutButton"
         android:layout_width="wrap_content"
         android:layout_height="41dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="false"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="9dp"
         android:layout_marginEnd="9dp"
         android:layout_marginRight="9dp"
         android:background="@android:color/transparent"
-        android:text="Sign Out"
+        android:text="SIGN OUT"
         android:textSize="14dp"
-        android:textColor="@color/colorText"/>
+        android:translationZ="90dp"
+        android:textColor="@color/colorText"
+        android:elevation="200dp"
+        android:textStyle="bold"/>
 
 
 </RelativeLayout>
