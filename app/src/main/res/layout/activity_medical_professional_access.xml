@@ -8,6 +8,22 @@
     android:background="@color/colorBackground">
 
     <Button
+        android:id="@+id/addNewPatient"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginBottom="414dp"
+        android:background="@color/colorButton"
+        android:text="Add New Patient"
+        android:textColor="@color/colorText"
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="413dp" />
+
+    <Button
         android:id="@+id/retrievePatientInfo"
         android:layout_width="220dp"
         android:layout_height="40dp"
@@ -16,29 +32,12 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginBottom="588dp"
+        android:layout_marginBottom="556dp"
         android:background="@color/colorButton"
         android:text="Retrieve Patient Data"
         android:textColor="@color/colorText"
         tools:layout_editor_absoluteX="71dp"
         tools:layout_editor_absoluteY="413dp" />
-
-    <Button
-        android:id="@+id/addNewMedication"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="42dp"
-        android:layout_marginLeft="42dp"
-        android:layout_marginBottom="493dp"
-        android:text="Add New Medication"
-        android:visibility="invisible"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="413dp"
-        android:background="@color/colorButton"
-        android:textColor="@color/colorText" />
 
     <Button
         android:id="@+id/savePatientData"
@@ -49,13 +48,13 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginBottom="540dp"
-        android:text="Save Data"
+        android:layout_marginBottom="508dp"
         android:background="@color/colorButton"
-        android:textColor="@color/colorText"/>
+        android:text="Save Data"
+        android:textColor="@color/colorText" />
 
     <Button
-        android:id="@+id/addNewPatient"
+        android:id="@+id/addNewMedication"
         android:layout_width="220dp"
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
@@ -63,24 +62,13 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginBottom="447dp"
-        android:text="Add New Patient"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="413dp"
+        android:layout_marginBottom="461dp"
         android:background="@color/colorButton"
-        android:textColor="@color/colorText"/>
-
-    <Spinner
-        android:id="@+id/newpatientID"
-        android:layout_width="219dp"
-        android:layout_height="26dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="false"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="45dp"
-        android:layout_marginBottom="418dp"
-        android:spinnerMode="dialog"
-        android:visibility="invisible" />
+        android:text="Add New Medication"
+        android:textColor="@color/colorText"
+        android:visibility="invisible"
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="413dp" />
 
     <Button
         android:id="@+id/addPatient"
@@ -89,14 +77,25 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="280dp"
-        android:layout_marginBottom="415dp"
-        android:layout_toEndOf="@+id/newpatientID"
+        android:layout_marginLeft="290dp"
+        android:layout_marginBottom="376dp"
         android:text="Add"
         android:visibility="invisible"
         tools:layout_editor_absoluteX="71dp"
         tools:layout_editor_absoluteY="413dp"
         tools:visibility="invisible" />
+
+    <Spinner
+        android:id="@+id/newpatientID"
+        android:layout_width="219dp"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="45dp"
+        android:layout_marginBottom="376dp"
+        android:spinnerMode="dialog"
+        android:visibility="invisible" />
 
     <ScrollView
         android:id="@+id/PatientDataScrollView"
