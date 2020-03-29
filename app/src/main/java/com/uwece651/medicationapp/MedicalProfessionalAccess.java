@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -173,6 +174,23 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             }
         });
 
+        patientNameDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                clearPreviousData();
+                newPatientNameDropdown.setVisibility(View.INVISIBLE);
+                addPatientButton.setVisibility(View.INVISIBLE);
+                addNewMedicationButton.setVisibility(View.INVISIBLE);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                Toast.makeText(getApplicationContext(), "Patient was not Selected", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
         signOutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 signOut();
@@ -294,10 +312,16 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             TextView tv = new TextView(this);
             tv.setText("Medication Name:");
 
-            EditText et= new EditText(this);
+            AutoCompleteTextView et= new AutoCompleteTextView(this);
             et.setWidth(500);
             et.setText(medication_Name);
             medicationNameEditTextList.add(et);
+
+            // Add autocomplete to the edittext
+            ArrayAdapter<String> autoComplete = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, medicationNames); // , fruits);
+            //Child the root before all the push() keys are found and add a ValueEventListener()
+            et.setThreshold(1);
+            et.setAdapter(autoComplete);
 
             //Weekly Frequency
             TableRow tr1 = new TableRow(this);
@@ -561,14 +585,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         et.setWidth(500);
         medicationNameEditTextList.add(et);
         // Add autocomplete to the edittext
-        //Nothing special, create database reference.
-
-//        Log.d("DB", "ID 1" + medicationIDs[1] + "Name 1" + medicationNames[1]);
-//        Log.d("DB", "ID 1" + medicationIDs[2] + "Name 1" + medicationNames[2]);
-        //Create a new ArrayAdapter with your context and the simple layout for the dropdown menu provided by Android
         ArrayAdapter<String> autoComplete = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, medicationNames); // , fruits);
         //Child the root before all the push() keys are found and add a ValueEventListener()
-        // AutoCompleteTextView actv = new AutoCompleteTextView(this);
         et.setThreshold(1);
         et.setAdapter(autoComplete);
 
@@ -814,6 +832,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         //TODO Need to figure out this registration issue
         //prescriptionData.setAssignedByDoctorName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
+        boolean saveError = false;
 
         for (int i = 0; i < medicationNameEditTextList.size(); i++) {
             if (i >= prescription_ids.size()) {
@@ -856,6 +875,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             if (MedicationID == null || MedicationID.equals("")) {
                 // If the MedicationID is not found for the medication name, do not save the record and exit from the loop.
                 Toast.makeText(getApplicationContext(), "Medication " + medication_Name + " was not found in the Database. Correct and try again.", Toast.LENGTH_LONG).show();
+                saveError = true;
                 continue;
             }
 
@@ -892,7 +912,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             //TODO Store medication/schedule ids in array in prescriptionData object. Done - HR
 
         }
-
+        if (! saveError) {
+            Toast.makeText(getApplicationContext(), "Prescriptions Saved", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void storeMedicationData(MedicationData medData) {
@@ -989,7 +1011,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         setClassVariables(prescription);
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "No prescriptions available for that patient.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "A prescription assigned to that patient is no longer in the DB.", Toast.LENGTH_SHORT).show();
                         Log.d("Prescrip.", "get failed with ", task.getException());
                     }
                 }
