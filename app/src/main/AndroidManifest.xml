@@ -14,7 +14,7 @@
         <activity android:name=".MedicationDataView" />
         <activity
             android:name=".MedicalProfessionalAccess"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
         <activity android:name=".FirebaseUIActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,19 +6,58 @@
     android:layout_height="match_parent"
     tools:context=".PatientAccess">
 
+
+
+    <ScrollView
+        android:id="@+id/PatientInfoScrollView"
+        android:layout_width="367dp"
+        android:layout_height="630dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TableLayout
+            android:id="@+id/patientMedDataTableLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        </TableLayout>
+
+    </ScrollView>
+
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="87dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="-1dp"
+        android:layout_marginEnd="0dp"
+        android:background="@color/colorPrimary" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
         android:text="Patient Access Page"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:textStyle="bold"
+        android:textSize="16sp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteY="413dp" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/retrieveMyInfo"
@@ -29,25 +68,36 @@
         android:layout_marginStart="42dp"
         android:layout_marginBottom="602dp"
         android:text="Retrieve Patient Data"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="413dp"
+        app:layout_constraintBottom_toTopOf="@+id/signOutButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/signOutButton"
-        android:layout_width="102dp"
-        android:layout_height="20dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="41dp"
         android:layout_centerHorizontal="false"
-        android:gravity="right"
-        android:textSize="11sp"
-        android:layout_marginStart="297dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="698dp"
-        android:background="@android:color/transparent"
-        android:text="Sign Out" />
+        android:layout_marginRight="20dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="1dp"
+        android:text="Sign Out"
+        android:textSize="15sp" />
+
+
+    <Button
+        android:id="@+id/addToCalendarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/signOutButton"
+        android:layout_alignParentEnd="false"
+        android:text="Add To Calendar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="5dp" />
+
 
     <Button
         android:id="@+id/PB_addMedication"
@@ -60,33 +110,6 @@
         android:text="Add Medication"
         android:visibility="gone"/>
 
-    <ScrollView
-        android:id="@+id/PatientInfoScrollView"
-        android:layout_width="342dp"
-        android:layout_height="500dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="38dp"
-        android:layout_marginBottom="116dp">
 
-        <TableLayout
-            android:id="@+id/patientMedDataTableLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-        </TableLayout>
-
-    </ScrollView>
-
-    <Button
-        android:id="@+id/addToCalendarButton"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/signOutButton"
-        android:layout_alignParentEnd="false"
-        android:layout_marginTop="-680dp"
-        android:layout_marginLeft="35dp"
-        android:text="Add To Calendar" />
 
 </RelativeLayout>

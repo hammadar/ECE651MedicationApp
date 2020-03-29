@@ -3,6 +3,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
 
@@ -12,17 +14,17 @@ public class PrescriptionDataTest {
 
     @Before
     public void before() {
-        LocalDate localDate1 = LocalDate.of(2020, 1, 1);
-        LocalDate localDate2 = LocalDate.of(2020, 1, 2);
+        Date Date1 = new GregorianCalendar(2020, 1, 1).getTime();
+        Date Date2 =  new GregorianCalendar(2020, 1, 2).getTime();
         this.prescriptionData.setAssignedByDoctorID("12345");
         this.prescriptionData.setAssignedByDoctorName("Meow");
-        this.prescriptionData.setEndDate(localDate2);
+        this.prescriptionData.setEndDate(Date2);
         this.prescriptionData.setMedicationID("12345");
         this.prescriptionData.setMedicationName("Weed");
         this.prescriptionData.setNumberOfRefills(3);
         this.prescriptionData.setScheduleID("12345");
         this.prescriptionData.setScheduleShortName("now");
-        this.prescriptionData.setStartDate(localDate1);
+        this.prescriptionData.setStartDate(Date1);
 
     }
 
@@ -38,8 +40,8 @@ public class PrescriptionDataTest {
 
     @Test
     public void endDateTest() {
-        LocalDate localDate2 = LocalDate.of(2020, 1, 2);
-        assertEquals("End Date Test: ", localDate2, this.prescriptionData.getEndDate());
+        Date date2 = new GregorianCalendar(2020, 1, 2).getTime();
+        assertEquals("End Date Test: ", date2, this.prescriptionData.getEndDate());
     }
 
     @Test
@@ -70,7 +72,7 @@ public class PrescriptionDataTest {
 
     @Test
     public void startDateTest() {
-        LocalDate localDate1 = LocalDate.of(2020, 1, 1);
-        assertEquals("Start Date Test: ", localDate1, this.prescriptionData.getStartDate());
+        Date date1 =  new GregorianCalendar(2020, 1, 1).getTime();
+        assertEquals("Start Date Test: ", date1, this.prescriptionData.getStartDate());
     }
 }
