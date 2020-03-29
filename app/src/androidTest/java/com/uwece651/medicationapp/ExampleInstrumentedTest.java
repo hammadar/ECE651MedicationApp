@@ -24,4 +24,6 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.uwece651.medicationapp", appContext.getPackageName());
     }
+
+
 }
