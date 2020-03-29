@@ -9,13 +9,14 @@
 
     <ScrollView
         android:id="@+id/PatientInfoScrollView"
-        android:layout_width="340dp"
-        android:layout_height="520dp"
+        android:layout_width="339dp"
+        android:layout_height="458dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="false"
-        android:layout_marginLeft="41dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginLeft="42dp"
         android:layout_marginBottom="38dp">
 
         <TableLayout
@@ -99,13 +100,12 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginBottom="588dp"
+        android:layout_marginBottom="512dp"
         android:background="@color/colorButton"
         android:text="Add to Calendar"
         android:textColor="@color/colorText"
         tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="413dp"/>
-
+        tools:layout_editor_absoluteY="413dp" />
 
     <Button
         android:id="@+id/PB_addMedication"
