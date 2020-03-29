@@ -122,7 +122,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         addNewMedicationButton= findViewById(R.id.addNewMedication);
         savePatientDataButton= findViewById(R.id.savePatientData);
         addNewPatientButton= findViewById(R.id.addNewPatient);
-        Button signOutButton = findViewById(R.id.signOutButton);
+        TextView signOutButton = findViewById(R.id.signOutButton);
         patientNameDropdown=findViewById(R.id.patientId);
         newPatientNameDropdown=findViewById(R.id.newpatientID);
         addPatientButton=findViewById(R.id.addPatient);
@@ -178,6 +178,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 signOut();
             }
         });
+
+        signOutButton.bringToFront();
 
         getMedicationData();
         getAssignedPatients();
