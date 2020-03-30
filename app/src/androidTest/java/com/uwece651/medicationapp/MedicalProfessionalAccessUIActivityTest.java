@@ -21,13 +21,22 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.junit.Assert.fail;
 
-public class PatientAccessUIActivityTest {
+public class MedicalProfessionalAccessUIActivityTest {
 
     @Rule
-    public ActivityTestRule<PatientAccess> patientAccessActivityTestRule = new ActivityTestRule<>(PatientAccess.class);
+    public ActivityTestRule<MedicalProfessionalAccess> medicalProfessionalAccessActivityTestRule = new ActivityTestRule<>(MedicalProfessionalAccess.class);
+
+
 
     @Test
     public void buttonsTest() {
-        onView(withId(R.id.addToCalendarButton)).check(matches(isClickable()));
+        //ViewInteraction retrievePatientDataButton = onView(allOf(withId(R.id.retrievePatientInfo), withText("Retrieve Patient Data"), isDisplayed()));
+        onView(withId(R.id.retrievePatientInfo)).check(matches(isClickable()));
+        onView(withId(R.id.addNewPatient)).check(matches(isClickable()));
+        onView(withId(R.id.savePatientData)).check(matches(isClickable()));
+        onView(withId(R.id.addNewMedication)).check(matches(isClickable()));
     }
+
+
+
 }
