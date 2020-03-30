@@ -1,18 +1,15 @@
 package com.uwece651.medicationapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -77,6 +74,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     private Spinner patientNameDropdown;
     private Spinner newPatientNameDropdown;
     private Button addPatientButton;
+    private TextView signOutButton;
     private FirebaseAuth mAuth;
 
     //for storing retrieved values
@@ -109,12 +107,12 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     List<EditText> endDateEditTextList = new ArrayList<EditText>();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        assert currentUser != null;
         currentUserName=currentUser.getDisplayName();
 
         setContentView(R.layout.activity_medical_professional_access);
@@ -123,7 +121,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         addNewMedicationButton= findViewById(R.id.addNewMedication);
         savePatientDataButton= findViewById(R.id.savePatientData);
         addNewPatientButton= findViewById(R.id.addNewPatient);
-        TextView signOutButton = findViewById(R.id.signOutButton);
+        signOutButton = findViewById(R.id.signOutButton);
         patientNameDropdown=findViewById(R.id.patientId);
         newPatientNameDropdown=findViewById(R.id.newpatientID);
         addPatientButton=findViewById(R.id.addPatient);
@@ -216,8 +214,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                                if (task.isSuccessful()) {
                                                    medicationNames.clear();
                                                    medicationIDs.clear();
-                                                   Integer counter = 0;
-                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                   int counter = 0;
+                                                   for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                                        medicationNames.add((String) document.get("brandName"));
                                                        medicationIDs.add((String) document.get("medicationID"));
                                                        Log.d("DB", "Record " + counter + ": Name " + medicationNames.get(counter));
@@ -244,7 +242,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                                if (task.isSuccessful()) {
                                                    patientsOfAssignedDoctor.clear();
                                                    patientsOfAssignedDoctorUID.clear();
-                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                   for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                                        Object patient_name = document.get("name");
                                                        if (patient_name != null) {
                                                            patientsOfAssignedDoctor.add((String) document.get("name"));
@@ -275,7 +273,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                                                if (task.isSuccessful()) {
                                                    unassignedPatients.clear();
                                                    unassignedPatientsUID.clear();
-                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                   for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                                        Object patient_name = document.get("name");
                                                        if (patient_name != null) {
                                                            Log.d("UnassignedDB", "Found non-null Named unassigned user.");
@@ -297,111 +295,107 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     public void displayRetrievedData(){
 
 
-        //TODO for loop  number of prescriptions in patient class?
 
 
-            //setClassVariables(prescription);
+        TableLayout tl = findViewById(R.id.medicationDataTableLayout);
+
+        //Medication Name
+        TableRow tr = new TableRow(this);
+
+        LinearLayout ll= new LinearLayout(this);
+        TextView tv = new TextView(this);
+        tv.setText("Medication Name:");
+
+        AutoCompleteTextView et= new AutoCompleteTextView(this);
+        et.setWidth(500);
+        et.setText(medication_Name);
+        medicationNameEditTextList.add(et);
+
+        // Add autocomplete to the edittext
+        ArrayAdapter<String> autoComplete = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, medicationNames); // , fruits);
+        //Child the root before all the push() keys are found and add a ValueEventListener()
+        et.setThreshold(1);
+        et.setAdapter(autoComplete);
+
+        //Weekly Frequency
+        TableRow tr1 = new TableRow(this);
+        LinearLayout ll1= new LinearLayout(this);
+
+        ll1.setOrientation(LinearLayout.HORIZONTAL);
+
+        TextView tv1 = new TextView(this);
+        tv1.setText("Days:");
 
 
-            TableLayout tl = findViewById(R.id.medicationDataTableLayout);
+        CheckBox cb = new CheckBox(this);
+        cb.setText("S");
+        cb.setGravity(Gravity.CENTER);
+        cb.setChecked(isSundayChecked);
+        dayCheckboxList.add(cb);
 
-            //Medication Name
-            TableRow tr = new TableRow(this);
+        CheckBox cb1 = new CheckBox(this);
+        cb1.setText("M");
+        cb1.setGravity(Gravity.CENTER);
+        cb1.setChecked(isMondayChecked);
+        dayCheckboxList.add(cb1);
 
-            LinearLayout ll= new LinearLayout(this);
-            TextView tv = new TextView(this);
-            tv.setText("Medication Name:");
+        CheckBox cb2 = new CheckBox(this);
+        cb2.setText("T");
+        cb2.setGravity(Gravity.CENTER);
+        cb2.setChecked(isTuesdayChecked);
+        dayCheckboxList.add(cb2);
 
-            AutoCompleteTextView et= new AutoCompleteTextView(this);
-            et.setWidth(500);
-            et.setText(medication_Name);
-            medicationNameEditTextList.add(et);
+        CheckBox cb3 = new CheckBox(this);
+        cb3.setText("W");
+        cb3.setGravity(Gravity.CENTER);
+        cb3.setChecked(isWednesdayChecked);
+        dayCheckboxList.add(cb3);
 
-            // Add autocomplete to the edittext
-            ArrayAdapter<String> autoComplete = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, medicationNames); // , fruits);
-            //Child the root before all the push() keys are found and add a ValueEventListener()
-            et.setThreshold(1);
-            et.setAdapter(autoComplete);
+        CheckBox cb4 = new CheckBox(this);
+        cb4.setText("T");
+        cb4.setGravity(Gravity.CENTER);
+        cb4.setChecked(isThursdayChecked);
+        dayCheckboxList.add(cb4);
 
-            //Weekly Frequency
-            TableRow tr1 = new TableRow(this);
-            LinearLayout ll1= new LinearLayout(this);
+        CheckBox cb5 = new CheckBox(this);
+        cb5.setText("F");
+        cb5.setGravity(Gravity.CENTER);
+        cb5.setChecked(isFridayChecked);
+        dayCheckboxList.add(cb5);
 
-            ll1.setOrientation(LinearLayout.HORIZONTAL);
+        CheckBox cb6 = new CheckBox(this);
+        cb6.setText("S");
+        cb6.setGravity(Gravity.CENTER);
+        cb6.setChecked(isSaturdayChecked);
+        dayCheckboxList.add(cb6);
 
-            TextView tv1 = new TextView(this);
-            tv1.setText("Days:");
+        //Daily Frequency
+        TableRow tr2 = new TableRow(this);
+        LinearLayout ll2= new LinearLayout(this);
 
+        TextView tv2 = new TextView(this);
+        tv2.setText("Times per day:");
 
-            CheckBox cb = new CheckBox(this);
-            cb.setText("S");
-            cb.setGravity(Gravity.CENTER);
-            cb.setChecked(isSundayChecked);
-            dayCheckboxList.add(cb);
+        Spinner dailyFrequencySpinner = new Spinner(this);
+        final String[] dailyFrequencyArray = getResources().getStringArray(R.array.medication_daily_frequency);
 
-            CheckBox cb1 = new CheckBox(this);
-            cb1.setText("M");
-            cb1.setGravity(Gravity.CENTER);
-            cb1.setChecked(isMondayChecked);
-            dayCheckboxList.add(cb1);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dailyFrequencyArray);
+        dailyFrequencySpinner.setAdapter(arrayAdapter);
+        int spinnerposition = arrayAdapter.getPosition(dailyFrequencyValue);
+        dailyFrequencySpinner.setSelection(spinnerposition);
+        timesPerDaySpinnerList.add(dailyFrequencySpinner);
 
-            CheckBox cb2 = new CheckBox(this);
-            cb2.setText("T");
-            cb2.setGravity(Gravity.CENTER);
-            cb2.setChecked(isTuesdayChecked);
-            dayCheckboxList.add(cb2);
+        //Time between intake
+        TableRow tr3 = new TableRow(this);
+        LinearLayout ll3= new LinearLayout(this);
 
-            CheckBox cb3 = new CheckBox(this);
-            cb3.setText("W");
-            cb3.setGravity(Gravity.CENTER);
-            cb3.setChecked(isWednesdayChecked);
-            dayCheckboxList.add(cb3);
+        TextView tv3 = new TextView(this);
+        tv3.setText("Hours between intake:");
 
-            CheckBox cb4 = new CheckBox(this);
-            cb4.setText("T");
-            cb4.setGravity(Gravity.CENTER);
-            cb4.setChecked(isThursdayChecked);
-            dayCheckboxList.add(cb4);
-
-            CheckBox cb5 = new CheckBox(this);
-            cb5.setText("F");
-            cb5.setGravity(Gravity.CENTER);
-            cb5.setChecked(isFridayChecked);
-            dayCheckboxList.add(cb5);
-
-            CheckBox cb6 = new CheckBox(this);
-            cb6.setText("S");
-            cb6.setGravity(Gravity.CENTER);
-            cb6.setChecked(isSaturdayChecked);
-            dayCheckboxList.add(cb6);
-
-            //Daily Frequency
-            TableRow tr2 = new TableRow(this);
-            LinearLayout ll2= new LinearLayout(this);
-
-            TextView tv2 = new TextView(this);
-            tv2.setText("Times per day:");
-
-            Spinner dailyFrequencySpinner = new Spinner(this);
-            final String[] dailyFrequencyArray = getResources().getStringArray(R.array.medication_daily_frequency);
-
-            ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dailyFrequencyArray);
-            dailyFrequencySpinner.setAdapter(arrayAdapter);
-            int spinnerposition = arrayAdapter.getPosition(dailyFrequencyValue);
-            dailyFrequencySpinner.setSelection(spinnerposition);
-            timesPerDaySpinnerList.add(dailyFrequencySpinner);
-
-            //Time between intake
-            TableRow tr3 = new TableRow(this);
-            LinearLayout ll3= new LinearLayout(this);
-
-            TextView tv3 = new TextView(this);
-            tv3.setText("Hours between intake:");
-
-            EditText et1= new EditText(this);
-            et1.setWidth(150);
-            et1.setText(timeBetweenIntakeValue);
-            timeBetweenIntakeEditTextList.add(et1);
+        EditText et1= new EditText(this);
+        et1.setWidth(150);
+        et1.setText(timeBetweenIntakeValue);
+        timeBetweenIntakeEditTextList.add(et1);
 
         //Start/End date for medication
         TableRow tr4 = new TableRow(this);
@@ -523,17 +517,17 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             tr3.addView(ll3);
             tl.addView(tr3);
 
+            // Prescription Start Date
             ll4.addView(tv4);
             ll4.addView(et2);
             tr4.addView(ll4);
             tl.addView(tr4);
 
+            // Prescription End Date
             ll5.addView(tv5);
             ll5.addView(et3);
             tr5.addView(ll5);
             tl.addView(tr5);
-
-
 
     }
 
@@ -554,11 +548,9 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         }
         else{
             String patient_name = patientNameDropdown.getSelectedItem().toString();
-            Log.d("MedicalProfAccess","patient_name= " + patient_name);
             String patient_id=getUID(patient_name);
-
+            Log.d("MedicalProfAccess","patient_name= " + patient_name);
             Log.d("MedicalProfAccess","patientID = " + patient_id);
-
             retrieveAssociatedPrescriptions(patient_id);
         }
     }
@@ -783,18 +775,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         tr3.addView(ll3);
         tl.addView(tr3);
 
-        //calendar
-//        ll4.addView(tv4);
-//        ll4.addView(calendar);
-//        tr4.addView(ll4);
-//
-//        tl.addView(tr4);
-
+        // Calendar Start Date
         ll4.addView(tv4);
         ll4.addView(et2);
         tr4.addView(ll4);
         tl.addView(tr4);
 
+        // Calendar End Date
         ll5.addView(tv5);
         ll5.addView(et3);
         tr5.addView(ll5);
@@ -805,14 +792,11 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     public void savePatientData() throws ParseException {
 
         String patient_name = patientNameDropdown.getSelectedItem().toString();
+        if (patient_name.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "The selected Patient is not valid", Toast.LENGTH_SHORT).show();
+            return;
+        }
         String patient_Id=getUID(patient_name);
-
-        //Need to get UID based on name
-
-
-        String prescriptionID;
-        String medicationID;
-        String scheduleID;
         String medication_Name;
         Boolean isMondayChecked;
         Boolean isTuesdayChecked;
@@ -826,11 +810,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         PrescriptionData prescriptionData;
         Date startDate;
         Date endDate;
-
-
-        //PrescriptionData prescriptionData= new PrescriptionData(prescriptionID);
-        //TODO Need to figure out this registration issue
-        //prescriptionData.setAssignedByDoctorName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
         boolean saveError = false;
 
@@ -853,7 +832,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             dailyFrequencyValue=timesPerDaySpinnerList.get(i).getSelectedItem().toString();
             timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
             startDate = new  SimpleDateFormat("yyyy-MM-d").parse(startDateEditTextList.get(i).getText().toString());
             endDate = new  SimpleDateFormat("yyyy-MM-d").parse(endDateEditTextList.get(i).getText().toString());
 
@@ -880,7 +858,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             }
 
             MedicationData medData = new MedicationData(MedicationID);
-
             Log.d("Med ID", getMedicationID(medication_Name));
 
             MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids.get(i));
@@ -904,24 +881,13 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             prescriptionData.setStartDate(startDate);
             prescriptionData.setEndDate(endDate);
 
-
             storePrescriptionData(prescriptionData);
-
             savePatientPrescriptions(patient_Id);
-
-            //TODO Store medication/schedule ids in array in prescriptionData object. Done - HR
 
         }
         if (! saveError) {
             Toast.makeText(getApplicationContext(), "Prescriptions Saved", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void storeMedicationData(MedicationData medData) {
-        //FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        //CollectionReference MedicationData = db.collection("MedicationData");
-        //MedicationData.document(medData.getMedicationID()).set(medData);
     }
 
     public void storeMedicationSchedule(MedicationSchedule medSchedule) {
@@ -962,12 +928,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        //Patient retrievedPatient = document.toObject(Patient.class);
-                        //Log.d("retrievedPatient", retrievedPatient.getUid());
                         prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
-                        //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
-
-
 
                         if (prescription_ids != null) {
                             for (int i = 0; i < prescription_ids.size(); i++) {
@@ -983,8 +944,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         else{
                             Toast.makeText(getApplicationContext(), "No prescriptions saved", Toast.LENGTH_SHORT).show();
                         }
-
-
                     } else {
                         Log.d("Pat. Prescr.", "get failed with ", task.getException());
                             }
@@ -1016,9 +975,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                     }
                 }
             };
-
-
-
         });
 
     }
@@ -1077,9 +1033,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                     }
                 }
             };
-
-
-
         });
     }
 
@@ -1115,10 +1068,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     }
 
     public void updateNewPatientList(){
+        newPatientNameDropdown.setAdapter(null);
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, unassignedPatients);
         newPatientNameDropdown.setAdapter(arrayAdapter);
     }
-
 
     public void addNewPatient() {
         newPatientNameDropdown.setVisibility(View.VISIBLE);
@@ -1130,9 +1083,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         // update patient ID with current assigned doctor id.
         if (newPatientNameDropdown.getSelectedItem().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Select a Patient", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        else {
+        } else {
             String NewPatientName = newPatientNameDropdown.getSelectedItem().toString();
             String NewPatientID = getUnassignedUID(NewPatientName);
             String DoctorID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
@@ -1148,7 +1099,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             newPatientNameDropdown.setVisibility(View.INVISIBLE);
             addPatientButton.setVisibility(View.INVISIBLE);
             Toast.makeText(getApplicationContext(), NewPatientName + " is now assigned as your patient.", Toast.LENGTH_SHORT).show();
-            return;
         }
     }
 

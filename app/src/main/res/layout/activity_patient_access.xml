@@ -107,16 +107,6 @@
         tools:layout_editor_absoluteX="71dp"
         tools:layout_editor_absoluteY="413dp" />
 
-    <Button
-        android:id="@+id/PB_addMedication"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="257dp"
-        android:layout_marginBottom="668dp"
-        android:text="Add Medication"
-        android:visibility="gone"/>
 
 
 
