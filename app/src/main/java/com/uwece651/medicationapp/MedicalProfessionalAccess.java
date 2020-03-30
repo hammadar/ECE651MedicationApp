@@ -820,6 +820,14 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 schedule_ids.add(UUID.randomUUID().toString());
             }
             medication_Name=medicationNameEditTextList.get(i).getText().toString();
+            String MedicationID = getMedicationID(medication_Name);
+            if (MedicationID == null || MedicationID.equals("")) {
+                // If the MedicationID is not found for the medication name, do not save the record and exit from the loop.
+                Toast.makeText(getApplicationContext(), "Medication " + medication_Name + " was not found in the Database. Correct and try again.", Toast.LENGTH_LONG).show();
+                saveError = true;
+                continue;
+            }
+            Log.d("Med ID", MedicationID);
 
             isSundayChecked=dayCheckboxList.get(i*7).isChecked();
             isMondayChecked=dayCheckboxList.get(i*7 +1).isChecked();
@@ -829,12 +837,39 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             isFridayChecked=dayCheckboxList.get(i*7 + 5).isChecked();
             isSaturdayChecked=dayCheckboxList.get(i*7 + 6).isChecked();
 
+            if (!isSundayChecked && !isMondayChecked && !isTuesdayChecked && !isWednesdayChecked && !isThursdayChecked && !isFridayChecked && !isSaturdayChecked) {
+                Toast.makeText(getApplicationContext(), "Please select at least one day of the week to schedule.", Toast.LENGTH_LONG).show();
+                saveError = true;
+                continue;
+            }
+
             dailyFrequencyValue=timesPerDaySpinnerList.get(i).getSelectedItem().toString();
+            if (dailyFrequencyValue.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Please indicate the medication frequency per day.", Toast.LENGTH_LONG).show();
+                saveError = true;
+                continue;
+            }
             timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
-
+            if (timeBetweenIntakeValue.isEmpty() && dailyFrequencyValue.equals("1")) {
+                Toast.makeText(getApplicationContext(), "Please indicate the time between medications as there are more than 1.", Toast.LENGTH_LONG).show();
+                saveError = true;
+                continue;
+            }
+            Date today = new Date();
             startDate = new  SimpleDateFormat("yyyy-MM-d").parse(startDateEditTextList.get(i).getText().toString());
+            if (i >= prescription_ids.size()) {
+                if (startDate == null || startDate.compareTo(today) == -1 ){
+                    Toast.makeText(getApplicationContext(), "The start date for the prescription cannot be earlier than today.", Toast.LENGTH_LONG).show();
+                    saveError = true;
+                    continue;
+                }
+            }
             endDate = new  SimpleDateFormat("yyyy-MM-d").parse(endDateEditTextList.get(i).getText().toString());
-
+            if (endDate == null || endDate.compareTo(startDate) == -1) {
+                Toast.makeText(getApplicationContext(), "The end date must be later than the start date.", Toast.LENGTH_LONG).show();
+                saveError = true;
+                continue;
+            }
             Log.d("MedicalProfAccess","patient_Id = " + patient_Id);
             Log.d("MedicalProfAccess", "prescription_id =" + prescription_ids.get(i));
             Log.d("MedicalProfAccess","medication_Name = " + medication_Name);
@@ -849,16 +884,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
             Log.d("MedicalProfAccess","\n\n");
 
-            String MedicationID = getMedicationID(medication_Name);
-            if (MedicationID == null || MedicationID.equals("")) {
-                // If the MedicationID is not found for the medication name, do not save the record and exit from the loop.
-                Toast.makeText(getApplicationContext(), "Medication " + medication_Name + " was not found in the Database. Correct and try again.", Toast.LENGTH_LONG).show();
-                saveError = true;
-                continue;
-            }
 
-            MedicationData medData = new MedicationData(MedicationID);
-            Log.d("Med ID", getMedicationID(medication_Name));
 
             MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids.get(i));
             Log.d("schedule_id: ", schedule_ids.get(i));
@@ -875,7 +901,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
 
             prescriptionData = new PrescriptionData(prescription_ids.get(i));
             Log.d("prescription_id: ", prescription_ids.get(i));
-            prescriptionData.setMedicationID(medData.getMedicationID());
+            prescriptionData.setMedicationID(MedicationID);
             prescriptionData.setScheduleID(medSchedule.getScheduleID());
             prescriptionData.setMedicationName(medication_Name);
             prescriptionData.setStartDate(startDate);
