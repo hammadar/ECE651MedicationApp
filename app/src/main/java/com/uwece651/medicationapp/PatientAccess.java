@@ -93,13 +93,8 @@ public class PatientAccess extends AppCompatActivity {
                 signOut();
             }
         });
-        Button PB_addMedication_button = findViewById(R.id.PB_addMedication);
-        googleCalendarModule = new GoogleCalendarModule(getBaseContext(), calendar);
-        PB_addMedication_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                PB_addMedication();
-            }});
 
+        googleCalendarModule = new GoogleCalendarModule(getBaseContext(), calendar);
 
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,9 +111,8 @@ public class PatientAccess extends AppCompatActivity {
                 }
             }
         });
-
+        // Methods to run before page load
         clearPreviousData();
-
         retrievePatientInfo();
     }
 
@@ -139,19 +133,13 @@ public class PatientAccess extends AppCompatActivity {
                 });
     }
 
-
-    public void PB_addMedication() {
-        Intent intent = new Intent(getBaseContext(), MedicationDataView.class);
-        startActivity(intent);
-    }
+    /* TODO migrate code to new view medication page */
+    //public void PB_addMedication() {
+    //    Intent intent = new Intent(getBaseContext(), MedicationDataView.class);
+    //    startActivity(intent);
+    // }
 
     public void displayRetrievedData(){
-
-
-        //TODO for loop  number of prescriptions in patient class?
-
-
-        //setClassVariables(prescription);
 
 
         TableLayout tl = findViewById(R.id.patientMedDataTableLayout);
@@ -346,11 +334,13 @@ public class PatientAccess extends AppCompatActivity {
         tr3.addView(ll3);
         tl.addView(tr3);
 
+        // Prescription Start Date
         ll4.addView(tv4);
         ll4.addView(tv8);
         tr4.addView(ll4);
         tl.addView(tr4);
 
+        // Prescription End Date
         ll5.addView(tv5);
         ll5.addView(tv9);
         tr5.addView(ll5);
@@ -358,21 +348,15 @@ public class PatientAccess extends AppCompatActivity {
 
     }
 
-
     public void clearPreviousData() {
         TableLayout tl = findViewById(R.id.patientMedDataTableLayout);
         tl.removeAllViews();
     }
 
     public void retrievePatientInfo(){
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
         Log.d("PatientAccess","CurrentUser ID = " + currentUser.getUid());
-
         retrieveAssociatedPrescriptions(currentUser.getUid());
-
-
     }
 
     public void retrieveAssociatedPrescriptions(String patientID) {
@@ -387,17 +371,12 @@ public class PatientAccess extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        //Patient retrievedPatient = document.toObject(Patient.class);
-                        //Log.d("retrievedPatient", retrievedPatient.getUid());
                         prescription_ids = (List<String>) document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
-                        //List<String> retrievedIDs = (List<String>)document.get("associatedPrescriptions");
                         if (prescription_ids != null) {
                             for (int i = 0; i < prescription_ids.size(); i++) {
                                 Log.d("prescriptionID", prescription_ids.get(i));
                             }
-
                             if (prescription_ids.size() != 0) {
-                                //prescriptions = new PrescriptionData[prescription_ids.size()];
                                 for (int i = 0; i < prescription_ids.size(); i++) {
                                     Log.d("RAP", "running " + i + " time\n");
                                     getPrescriptionData(prescription_ids.get(i));
