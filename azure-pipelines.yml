@@ -30,8 +30,8 @@ stages:
         - task: PublishCodeCoverageResults@1 
           inputs:
             codeCoverageTool: 'JaCoCo' 
-            summaryFileLocation: ECE651MedicationApp/app/src/main/java/test
-            pathToSources: ECE651MedicationApp/app/src/main/java/
+            summaryFileLocation: ECE651MedicationApp/app/src/main/java/
+            pathToSources: ECE651MedicationApp/app/src/main/java/test
             failIfCoverageEmpty: false 
 
 #gradleWrapperFile: 'gradlew' 
