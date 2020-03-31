@@ -8,8 +8,8 @@ public class MedicationDataTest {
 
     private MedicationData medicationData = new MedicationData("1234");
 
-    @Before
-    public void before() {
+    @Test
+    public void All_MedicationDataTest() {
         this.medicationData.setBrandName("BrandName");
         this.medicationData.setContraindications("Weirdness");
         this.medicationData.setDrugInteractions("Another Drug");
@@ -22,66 +22,29 @@ public class MedicationDataTest {
         this.medicationData.setSideEffects("Death");
         this.medicationData.setStorage("Cold");
         this.medicationData.setUsedFor("Fun");
-
-    }
-
-    @Test
-    public void testBrandName(){
+        //-------------------------------------
         assertEquals("Testing brand name: ", "BrandName", this.medicationData.getBrandName());
-    }
-
-    @Test
-    public void testContraindictions() {
+        //-------------------------------------
         assertEquals("Testing contraindictions: ", "Weirdness", this.medicationData.getContraindications());
-    }
-
-    @Test
-    public void testDrugInteractions() {
+        //---------------------------------------
         assertEquals("Testing drug interactions: ", "Another Drug", this.medicationData.getDrugInteractions());
-    }
-
-    @Test
-    public void testGenericName() {
+        //--------------------------------------
         assertEquals("Testing generic name: ", "Meh", this.medicationData.getGenericName());
-    }
-
-    @Test
-    public void testInstructions() {
+        //------------------------------------
         assertEquals("Testing instructions: ", "Eat once a day", this.medicationData.getInstructions());
-    }
-
-    @Test
-    public void testMissedDose() {
+        //-------------------------------------
         assertEquals("Testing missed dose: ", "2", this.medicationData.getMissedDose());
-    }
-
-    @Test
-    public void testNotes() {
+        //----------------------------------------
         assertEquals("Testing Notes: ", "Urgh", this.medicationData.getNotes());
-    }
-
-    @Test
-    public void testOverdose() {
+        //------------------------------------
         assertEquals("Testing Overdose: ", "5", this.medicationData.getOverdose());
-    }
-
-    @Test
-    public void testPrecautions() {
+        //--------------------------------
         assertEquals("Testing precautions: ", "??", this.medicationData.getPrecautions());
-    }
-
-    @Test
-    public void testSideEffects() {
+        //-------------------------------------
         assertEquals("Testing side effects: ", "Death", this.medicationData.getSideEffects());
-    }
-
-    @Test
-    public void testStorage() {
+        //-----------------------------------------
         assertEquals("Testing storage: ", "Cold", this.medicationData.getStorage());
-    }
-
-    @Test
-    public void testUsedFor() {
+        //------------------------------------------
         assertEquals("Testing used for: ", "Fun", this.medicationData.getUsedFor());
     }
 }
