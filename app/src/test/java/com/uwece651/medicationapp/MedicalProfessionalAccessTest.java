@@ -19,7 +19,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 
-
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 
@@ -27,13 +27,19 @@ import static org.junit.Assert.fail;
 @RunWith(RobolectricTestRunner.class)
 public class MedicalProfessionalAccessTest {
 
-    @Rule
-    public ActivityTestRule<MedicalProfessionalAccess> rule = new ActivityTestRule<>(MedicalProfessionalAccess.class);
+    private MedicalProfessionalAccess activity;
 
+    @Before
+    public void before() {
+        activity = Robolectric.buildActivity(MedicalProfessionalAccess.class)
+                .create()
+                .resume()
+                .get();
+    }
 
     @Test
     public void test1() {
-        MedicalProfessionalAccess activity = rule.getActivity();
+        assertNotNull(activity);
 
     }
 
