@@ -29,6 +29,7 @@ android {
             abortOnError false
         }
     }
+
     testOptions {
         unitTests.all {
             jacoco {
