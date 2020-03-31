@@ -1,35 +1,39 @@
 package com.uwece651.medicationapp;
+
+
+import androidx.test.filters.LargeTest;
+import androidx.test.filters.MediumTest;
+import androidx.test.filters.SmallTest;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
+import androidx.test.core.app.ActivityScenario;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import android.support.test.filters.MediumTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-
-import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 
-import static org.junit.Assert.*;
 
+import static org.junit.Assert.fail;
+
+
+@MediumTest
+@RunWith(RobolectricTestRunner.class)
 public class MedicalProfessionalAccessTest {
 
-    private MedicalProfessionalAccess medicalProfessionalAccess;
-
     @Rule
-    public ActivityTestRule
-    @Before()
-    public void before() {
-        medicalProfessionalAccess = new MedicalProfessionalAccess();
-    }
+    public ActivityTestRule<MedicalProfessionalAccess> rule = new ActivityTestRule<>(MedicalProfessionalAccess.class);
+
 
     @Test
     public void test1() {
+        MedicalProfessionalAccess activity = rule.getActivity();
 
     }
 
