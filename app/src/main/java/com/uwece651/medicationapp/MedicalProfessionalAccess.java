@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -97,6 +98,7 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     String dailyFrequencyValue;
     String timeBetweenIntakeValue;
     String currentUserName="";
+    int prescriptionDBSize;
 
     List<EditText> medicationNameEditTextList = new ArrayList<EditText>();
     List<CheckBox> dayCheckboxList = new ArrayList<CheckBox>();
@@ -539,6 +541,8 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         timesPerDaySpinnerList.clear();
         timeBetweenIntakeEditTextList.clear();
         calendarList.clear();
+        endDateEditTextList.clear();
+        startDateEditTextList.clear();
     }
 
     public void retrievePatientInfo(){
@@ -814,12 +818,15 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         boolean saveError = false;
 
         for (int i = 0; i < medicationNameEditTextList.size(); i++) {
-            if (i >= prescription_ids.size()) {
-                prescription_ids.add(UUID.randomUUID().toString());
-                medication_ids.add(UUID.randomUUID().toString());
-                schedule_ids.add(UUID.randomUUID().toString());
+            if (prescription_ids == null) {
+                prescription_ids = new ArrayList<>();
             }
-            medication_Name=medicationNameEditTextList.get(i).getText().toString();
+            medication_Name = medicationNameEditTextList.get(i).getText().toString();
+            if (medication_Name.isEmpty() || medication_Name.equals(" ")) {
+                Toast.makeText(getApplicationContext(), "You must enter a medication name.", Toast.LENGTH_SHORT).show();
+                saveError = true;
+                continue;
+            }
             String MedicationID = getMedicationID(medication_Name);
             if (MedicationID == null || MedicationID.equals("")) {
                 // If the MedicationID is not found for the medication name, do not save the record and exit from the loop.
@@ -850,26 +857,49 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 continue;
             }
             timeBetweenIntakeValue=timeBetweenIntakeEditTextList.get(i).getText().toString();
-            if (timeBetweenIntakeValue.isEmpty() && dailyFrequencyValue.equals("1")) {
-                Toast.makeText(getApplicationContext(), "Please indicate the time between medications as there are more than 1.", Toast.LENGTH_LONG).show();
+            if (timeBetweenIntakeValue.isEmpty() && !dailyFrequencyValue.equals("1")) {
+                Toast.makeText(getApplicationContext(), "Please indicate the time between medications as there are " + dailyFrequencyValue + ".", Toast.LENGTH_LONG).show();
                 saveError = true;
                 continue;
             }
             Date today = new Date();
-            startDate = new  SimpleDateFormat("yyyy-MM-d").parse(startDateEditTextList.get(i).getText().toString());
-            if (i >= prescription_ids.size()) {
-                if (startDate == null || startDate.compareTo(today) == -1 ){
-                    Toast.makeText(getApplicationContext(), "The start date for the prescription cannot be earlier than today.", Toast.LENGTH_LONG).show();
+            today = setTime(today, 0, 0, 0, 0);
+            String startDateText = startDateEditTextList.get(i).getText().toString();
+            if (startDateText.equals("")) {
+                Toast.makeText(getApplicationContext(), "Prescription start date is a required field.", Toast.LENGTH_LONG).show();
+                saveError = true;
+                continue;
+            }
+            startDate = new  SimpleDateFormat("yyyy-MM-d").parse(startDateText);
+            if (i >= prescriptionDBSize) {
+                assert startDate != null;
+                //Log.d("DATE", today.toString() + " vs " + startDate.toString());
+                if (startDate.compareTo(today) < 0 ){
+                    Toast.makeText(getApplicationContext(), "The start date for a new prescription cannot be earlier than today.", Toast.LENGTH_LONG).show();
                     saveError = true;
                     continue;
                 }
             }
-            endDate = new  SimpleDateFormat("yyyy-MM-d").parse(endDateEditTextList.get(i).getText().toString());
-            if (endDate == null || endDate.compareTo(startDate) == -1) {
+            String endDateText = endDateEditTextList.get(i).getText().toString();
+            if (endDateText.equals("")) {
+                Toast.makeText(getApplicationContext(), "Prescription end date is a required field.", Toast.LENGTH_LONG).show();
+                saveError = true;
+                continue;
+            }
+            endDate = new  SimpleDateFormat("yyyy-MM-d").parse(endDateText);
+            assert endDate != null;
+            if (endDate.compareTo(startDate) < 0) {
                 Toast.makeText(getApplicationContext(), "The end date must be later than the start date.", Toast.LENGTH_LONG).show();
                 saveError = true;
                 continue;
             }
+
+            if (i >= prescriptionDBSize) {
+                prescription_ids.add(UUID.randomUUID().toString());
+                medication_ids.add(UUID.randomUUID().toString());
+                schedule_ids.add(UUID.randomUUID().toString());
+            }
+
             Log.d("MedicalProfAccess","patient_Id = " + patient_Id);
             Log.d("MedicalProfAccess", "prescription_id =" + prescription_ids.get(i));
             Log.d("MedicalProfAccess","medication_Name = " + medication_Name);
@@ -883,7 +913,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             Log.d("MedicalProfAccess","dailyFrequencyValue = " + dailyFrequencyValue);
             Log.d("MedicalProfAccess","timeBetweenIntakeValue = " + timeBetweenIntakeValue);
             Log.d("MedicalProfAccess","\n\n");
-
 
 
             MedicationSchedule medSchedule = new MedicationSchedule(schedule_ids.get(i));
@@ -911,9 +940,16 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
             savePatientPrescriptions(patient_Id);
 
         }
+        // Check if nothing fetched
+        if (medicationNameEditTextList.size() == 0) {
+            Toast.makeText(getApplicationContext(), "No Prescriptions Loaded", Toast.LENGTH_SHORT).show();
+            saveError = true;
+        }
         if (! saveError) {
             Toast.makeText(getApplicationContext(), "Prescriptions Saved", Toast.LENGTH_SHORT).show();
+            prescriptionDBSize = prescription_ids.size();
         }
+
     }
 
     public void storeMedicationSchedule(MedicationSchedule medSchedule) {
@@ -936,33 +972,27 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference patientDb = db.collection("Patients");
         DocumentReference docRef= patientDb.document(patientID);
-        if(prescription_ids == null){
-            prescription_ids = new ArrayList<>();
-        }
-
-        if (medication_ids == null) {
-            medication_ids = new ArrayList<>();
-        }
-
-        if (schedule_ids == null) {
-            schedule_ids = new ArrayList<>();
-        }
+        prescription_ids = new ArrayList<>();
+        medication_ids = new ArrayList<>();
+        schedule_ids = new ArrayList<>();
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    assert document != null;
                     if (document.exists()) {
                         prescription_ids = (List<String>)document.get("associatedPrescriptions");//retrievedPatient.getAssociatedPrescriptions();
 
                         if (prescription_ids != null) {
-                            for (int i = 0; i < prescription_ids.size(); i++) {
+                            prescriptionDBSize = prescription_ids.size();
+                            for (int i = 0; i < prescriptionDBSize; i++) {
                                 Log.d("prescriptionID", prescription_ids.get(i));
                             }
 
                             prescriptions = new PrescriptionData[prescription_ids.size()];
-                            for (int i = 0; i < prescription_ids.size(); i++) {
+                            for (int i = 0; i < prescriptionDBSize; i++) {
                                 Log.d("RAP", "running " + i + " time\n");
                                 getPrescriptionData(prescription_ids.get(i));
                             }
@@ -1016,9 +1046,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
     public void setClassVariables(final PrescriptionData prescription) {
         medication_id = prescription.getMedicationID();
         schedule_id = prescription.getScheduleID();
-        medication_Name = prescription.getMedicationName();
-        startDate = prescription.getStartDate();
-        endDate = prescription.getEndDate();
         Log.d("GPD", "ID: " + medication_id + " - Name: "+ medication_Name);
 
         if(medication_ids == null){
@@ -1040,6 +1067,10 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        medication_Name = prescription.getMedicationName();
+                        medication_Name = prescription.getMedicationName();
+                        startDate = prescription.getStartDate();
+                        endDate = prescription.getEndDate();
                         MedicationSchedule schedule = document.toObject(MedicationSchedule.class);
                         isMondayChecked = schedule.getMondayChecked();
                         isTuesdayChecked = schedule.getTuesdayChecked();
@@ -1050,7 +1081,6 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                         isSundayChecked = schedule.getSundayChecked();
                         dailyFrequencyValue = schedule.getDailyFrequency();
                         timeBetweenIntakeValue = schedule.getHoursFrequency();
-                        medication_Name = prescription.getMedicationName();
                         displayRetrievedData();
 
 
@@ -1186,6 +1216,16 @@ public class MedicalProfessionalAccess extends AppCompatActivity {
                 patientsOfAssignedDoctor.add(elem);
     }
 
+    public static Date setTime( final Date date, final int hourOfDay, final int minute, final int second, final int ms )
+    {
+        final GregorianCalendar gc = new GregorianCalendar();
+        gc.setTime( date );
+        gc.set( Calendar.HOUR_OF_DAY, hourOfDay );
+        gc.set( Calendar.MINUTE, minute );
+        gc.set( Calendar.SECOND, second );
+        gc.set( Calendar.MILLISECOND, ms );
+        return gc.getTime();
+    }
 }
 
 
