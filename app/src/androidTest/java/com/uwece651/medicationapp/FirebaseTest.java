@@ -1,14 +1,17 @@
 package com.uwece651.medicationapp;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static java.lang.Thread.sleep;
@@ -36,6 +39,12 @@ public class FirebaseTest {
     private Doctor doctor;
     //private Patient patient;
 
+
+    @Rule
+    public GrantPermissionRule readPermissionRule = GrantPermissionRule.grant(Manifest.permission.READ_CALENDAR);
+
+    @Rule
+    public GrantPermissionRule writePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_CALENDAR);
 
     @Before
     public void before() {

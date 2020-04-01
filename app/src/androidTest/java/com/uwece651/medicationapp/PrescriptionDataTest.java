@@ -1,5 +1,10 @@
 package com.uwece651.medicationapp;
+import android.Manifest;
+
+import androidx.test.rule.GrantPermissionRule;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -11,6 +16,12 @@ import static org.junit.Assert.*;
 public class PrescriptionDataTest {
 
     private PrescriptionData prescriptionData = new PrescriptionData("12345");
+
+    @Rule
+    public GrantPermissionRule readPermissionRule = GrantPermissionRule.grant(Manifest.permission.READ_CALENDAR);
+
+    @Rule
+    public GrantPermissionRule writePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_CALENDAR);
 
     @Before
     public void before() {
