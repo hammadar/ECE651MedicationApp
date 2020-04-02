@@ -1,5 +1,10 @@
 package com.uwece651.medicationapp;
+import android.Manifest;
+
+import androidx.test.rule.GrantPermissionRule;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -8,6 +13,11 @@ public class DoctorTest {
 
     private Doctor doctor = new Doctor("123456");
 
+    @Rule
+    public GrantPermissionRule readPermissionRule = GrantPermissionRule.grant(Manifest.permission.READ_CALENDAR);
+
+    @Rule
+    public GrantPermissionRule writePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_CALENDAR);
     @Before
     public void before() {
         this.doctor.addPatient("Vader");

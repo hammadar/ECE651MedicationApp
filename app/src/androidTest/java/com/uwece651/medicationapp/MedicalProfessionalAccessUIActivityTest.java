@@ -1,9 +1,12 @@
 package com.uwece651.medicationapp;
 
+import android.Manifest;
+
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -26,6 +29,11 @@ public class MedicalProfessionalAccessUIActivityTest {
     @Rule
     public ActivityTestRule<MedicalProfessionalAccess> medicalProfessionalAccessActivityTestRule = new ActivityTestRule<>(MedicalProfessionalAccess.class);
 
+    @Rule
+    public GrantPermissionRule readPermissionRule = GrantPermissionRule.grant(Manifest.permission.READ_CALENDAR);
+
+    @Rule
+    public GrantPermissionRule writePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_CALENDAR);
 
 
     @Test
