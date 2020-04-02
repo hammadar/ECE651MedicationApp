@@ -43,6 +43,13 @@ public class MedicalProfessionalAccessUIActivityTest {
         onView(withId(R.id.addNewPatient)).check(matches(isClickable()));
         onView(withId(R.id.savePatientData)).check(matches(isClickable()));
         onView(withId(R.id.addNewMedication)).check(matches(isClickable()));
+        onView(withId(R.id.signOutButton)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void otherElementsTest() {
+        onView(withId(R.id.patientId)).check(matches(isClickable()));
+        onView(withId(R.id.PatientDataScrollView)).check(matches(isDisplayed()));
     }
 
 

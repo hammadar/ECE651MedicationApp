@@ -38,5 +38,11 @@ public class PatientAccessUIActivityTest {
     @Test
     public void buttonsTest() {
         onView(withId(R.id.addToCalendarButton)).check(matches(isClickable()));
+        onView(withId(R.id.signOutButton)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void otherElementsTest() {
+        onView(withId(R.id.PatientInfoScrollView)).check(matches(isDisplayed()));
     }
 }
