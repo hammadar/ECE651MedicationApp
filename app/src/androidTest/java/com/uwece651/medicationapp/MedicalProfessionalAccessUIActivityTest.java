@@ -40,10 +40,12 @@ public class MedicalProfessionalAccessUIActivityTest {
     public void buttonsTest() {
         //ViewInteraction retrievePatientDataButton = onView(allOf(withId(R.id.retrievePatientInfo), withText("Retrieve Patient Data"), isDisplayed()));
         onView(withId(R.id.retrievePatientInfo)).check(matches(isClickable()));
-        onView(withId(R.id.addNewPatient)).check(matches(isClickable()));
-        onView(withId(R.id.savePatientData)).check(matches(isClickable()));
         onView(withId(R.id.addNewMedication)).check(matches(isClickable()));
+        onView(withId(R.id.savePatientData)).check(matches(isClickable()));
+        onView(withId(R.id.addNewPatient)).check(matches(isClickable()));
         onView(withId(R.id.signOutButton)).check(matches(isClickable()));
+        onView(withId(R.id.addNewMedication)).check(matches(isClickable()));
+
     }
 
     @Test
